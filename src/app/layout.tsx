@@ -19,9 +19,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div id="root-layout" className="min-h-screen bg-[#f5f5f5] flex flex-col">
+        <div id="root-layout" className="min-h-screen flex flex-col">
           <Navbar />
-          <div id="layout-main" className="flex grow">
+          <div id="layout-main" className="flex grow py-12">
             {children}
           </div>
           <Footer />

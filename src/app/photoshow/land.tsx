@@ -1,98 +1,34 @@
+"use client"
+
 import React from 'react'
 import Image from 'next/image'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card"
+
 
 import UploadFile from '@/components/upload-file'
-import { IoImagesOutline } from "react-icons/io5";
+import ToolCard from '@/components/tool-card'
 
-const Example = {
-  title: '现已支持',
-  action: '试一试',
-  list: [
-    {
-      icon: '',
-      title: '去除背景',
-      desc: '精确提取图片中主体',
-    },
-    {
-      icon: '',
-      title: '物体消除',
-      desc: '擦掉您想要移除的区域',
-    },
-    {
-      icon: '',
-      title: '背景替换',
-      desc: '以当前图片为基础，生成一张新的图片',
-    },
-    {
-      icon: '',
-      title: '图片矢量化',
-      desc: '将图片转化为可无限放大的矢量图',
-    },
-    {
-      icon: '',
-      title: '图片放大',
-      desc: '支持2x，4x，8x放大图片',
-    },
-    {
-      icon: '',
-      title: '超级图片放大',
-      desc: '对图片进行AI生成，添加原图没有的细节',
-    },
-    {
-      icon: '',
-      title: '黑白上色',
-      desc: '对黑白照片进行上色',
-    },
-    {
-      icon: '',
-      title: 'AI换脸',
-      desc: '更换图片人物的脸',
-    },
-    {
-      icon: '',
-      title: '图片拓展',
-      desc: '将图片的边界进行拓展',
-    },
-    {
-      icon: '',
-      title: '图片修改',
-      desc: '将图片的内容进行AI修改',
-    },
-    {
-      icon: '',
-      title: '以图生图',
-      desc: '以当前图片为基础，生成一张新的图片',
-    },
-    {
-      icon: '',
-      title: '草稿生图',
-      desc: '将一张手稿生成一个精美的图片',
-    },
-  ]
+import Locale from '../../locales'
+
+interface PropsData {
+  file: File | undefined
+  setFile: (file: File | undefined) => void
 }
 
-
-function PhotoshowLand() {
+function PhotoshowLand({setFile}: PropsData) {
   return (
-    <div id="photoshow-land" className='max-w-screen-md mx-auto p-4'>
+    <div id="photoshow-land" className='max-w-screen-md mx-auto'>
 
       <section className="title flex justify-center py-8 mt-8">
         <div className='flex items-center space-x-2'>
           <Image src="/logo.png" alt="logo" width={60} height={60}></Image>
-          <h2 className='text-4xl font-bold'>图片全能工具箱</h2>
+          <h2 className='text-4xl font-bold'>AI图片全能工具箱</h2>
         </div>
       </section>
 
       <section className="upload w-full mt-8">
-        <UploadFile />
+        <UploadFile setFile={setFile} />
         <div className="w-full text-sm text-center text-gray-400 mt-4">或</div>
         <div className="flex w-full items-center space-x-2 mt-4">
           <Input className='bg-white text-gray-500 text-sm' type="email" placeholder="请输入您想要生成的图片描述，直接生成" />
@@ -102,25 +38,15 @@ function PhotoshowLand() {
 
       <section className="example mt-8">
         <div className="w-full text-sm text-center text-gray-400">现已支持</div>
-        <ul className="w-full mt-4 grid grid-cols-2 gap-x-8 gap-y-4">
+        <ul className="w-full mt-4 grid grid-cols-2 gap-x-4 gap-y-2 sm:gap-x-8 sm:gap-y-4">
           {
-            Example.list.map((item, index) => {
-              return (
-                <li key={index}>
-                  <Card className='cursor-pointer text-slate-600 hover:text-violet-500'>
-                    <CardHeader className='p-4'>
-                      <div className="w-full flex space-x-4">
-                        <IoImagesOutline className='w-8 h-8' />
-                        <div className="flex-1">
-                          <CardTitle className='text-sm font-medium'>{item.title}</CardTitle>
-                          <CardDescription className='text-xs opacity-50'>{item.desc}</CardDescription>
-                        </div>
-                      </div>
-                    </CardHeader>
-                  </Card>
-                </li>
-              )
-            })
+            Locale.Photo.Example.list.map((item, index) =>
+            (
+              <li key={index}>
+                <ToolCard icon={item.icon} title={item.title} desc={item.desc} />
+              </li>
+            )
+            )
           }
 
         </ul>
