@@ -93,27 +93,27 @@ function PhotoshowLand() {
 
       <section className="upload w-full mt-8">
         <UploadFile />
-        <div className="w-full text-md text-center text-gray-400 mt-4">或</div>
+        <div className="w-full text-sm text-center text-gray-400 mt-4">或</div>
         <div className="flex w-full items-center space-x-2 mt-4">
-          <Input className='bg-white text-gray-500 text-md' type="email" placeholder="请输入您想要生成的图片描述，直接生成" />
-          <Button type="submit" size="sm" className='bg-violet-500 px-6'>生成</Button>
+          <Input className='bg-white text-gray-500 text-sm' type="email" placeholder="请输入您想要生成的图片描述，直接生成" />
+          <Button type="submit" size="sm" className='bg-violet-500 px-6 text-sm'>生成</Button>
         </div>
       </section>
 
       <section className="example mt-8">
-        <div className="w-full text-md text-center text-gray-400">现已支持</div>
+        <div className="w-full text-sm text-center text-gray-400">现已支持</div>
         <ul className="w-full mt-4 grid grid-cols-2 gap-x-8 gap-y-4">
           {
             Example.list.map((item, index) => {
               return (
                 <li key={index}>
-                  <Card className='cursor-pointer text-gray-700 hover:text-violet-500'>
+                  <Card className='cursor-pointer text-slate-600 hover:text-violet-500'>
                     <CardHeader className='p-4'>
                       <div className="w-full flex space-x-4">
                         <IoImagesOutline className='w-8 h-8' />
                         <div className="flex-1">
-                          <CardTitle className='font-medium'>{item.title}</CardTitle>
-                          <CardDescription className='opacity-70'>{item.desc}</CardDescription>
+                          <CardTitle className='text-sm font-medium'>{item.title}</CardTitle>
+                          <CardDescription className='text-xs opacity-50'>{item.desc}</CardDescription>
                         </div>
                       </div>
                     </CardHeader>

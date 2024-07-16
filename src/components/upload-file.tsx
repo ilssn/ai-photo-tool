@@ -44,11 +44,11 @@ function UploadFile({setFile }: UplodFileProps) {
         onDrag={handleDragging}
       >
         <div
-          className='flex rounded-2xl flex-col items-center justify-center border-4 border-dashed border-gray-100 px-4 py-0 text-center sm:py-2 cursor-pointer'
+          className='flex rounded-2xl flex-col items-center justify-center border-4 border-dashed border-gray-100 px-4 py-2 text-center sm:py-4 cursor-pointer'
           onClick={() => fileRef.current?.click()}
         >
           <RiUpload2Line className='text-5xl text-bold text-white' style={{ color: 'white' }} />
-          <p className="text-sm text-white mx-16 mt-4 text-center font-bold opacity-100">
+          <p className="text-sm text-white mx-16 text-center font-bold opacity-100">
             点击或拖拽上传
           </p>
           <input
