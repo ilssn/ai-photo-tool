@@ -14,12 +14,12 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import Loading from "./loading"
-import { env } from "@/env.mjs";
+// import { env } from "@/env.mjs";
 import { useConfigStore } from "@/stores";
-import { AUTH_CODE, AUTH_TOKEN } from "@/constants"
+import { AUTH_CODE } from "@/constants"
 import { useRouter } from 'next/navigation'
 
-const AUTH_URL = env.NEXT_PUBLIC_AUTH_URL;
+const AUTH_URL = process.env.NEXT_PUBLIC_302AI_AUTH;
 
 const LockSVG = () => (
   <svg className="lock_svg__icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="50" height="50"><path d="M153.6 469.312v469.376h716.8V469.312H153.6zM64 384h896v640H64V384zm403.2 329.92c-26.752-14.72-44.8-42.304-44.8-73.92 0-47.104 40.128-85.312 89.6-85.312 49.472 0 89.6 38.208 89.6 85.312 0 31.616-18.048 59.136-44.8 73.92v115.968a44.8 44.8 0 0 1-89.6 0V713.92zM332.8 384h358.4V256c0-94.272-80.256-170.688-179.2-170.688-98.944 0-179.2 76.416-179.2 170.688v128zM512 0c148.48 0 268.8 114.56 268.8 256v128H243.2V256C243.2 114.56 363.52 0 512 0z" fill="currentColor"></path></svg>
@@ -36,7 +36,7 @@ export const fetchAuth = async (user: string, code: string): Promise<any> => {
 };
 
 export function LoginForm() {
-  const { setToken, setUser, setCode, setRegion, setDomain, setModel } = useConfigStore();
+  const { setToken, setUser, setCode, setRegion, setDomain } = useConfigStore();
   const [loading, setLoading] = useState(true)
   const [cache, setCache] = useState(true)
   const [inputCode, setInputCode] = useState('')
@@ -69,8 +69,6 @@ export function LoginForm() {
         if (res.data.region === 0) {
           setDomain('https://302ai.cn')
         }
-        // save modal
-        setModel(res.data.model_name || 'gpt-4o')
         // save token
         setToken(res.data.api_key)
         // save user
