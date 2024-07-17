@@ -65,61 +65,73 @@ const en: LocaleType = {
       action: '试一试',
       list: [
         {
+          id: 1,
           icon: '',
           title: '去除背景',
           desc: '精确提取图片中主体',
         },
         {
+          id: 2,
           icon: '',
           title: '物体消除',
           desc: '擦掉您想要移除的区域',
         },
         {
+          id: 3,
           icon: '',
           title: '背景替换',
           desc: '以当前图片为基础，生成一张新的图片',
         },
         {
+          id: 4,
           icon: '',
           title: '图片矢量化',
           desc: '将图片转化为可无限放大的矢量图',
         },
         {
+          id: 5,
           icon: '',
           title: '图片放大',
           desc: '支持2x，4x，8x放大图片',
         },
         {
+          id: 6,
           icon: '',
           title: '超级图片放大',
           desc: '对图片进行AI生成，添加原图没有的细节',
         },
         {
+          id: 7,
           icon: '',
           title: '黑白上色',
           desc: '对黑白照片进行上色',
         },
         {
+          id: 8,
           icon: '',
           title: 'AI换脸',
           desc: '更换图片人物的脸',
         },
         {
+          id: 9,
           icon: '',
           title: '图片拓展',
           desc: '将图片的边界进行拓展',
         },
         {
+          id: 10,
           icon: '',
           title: '图片修改',
           desc: '将图片的内容进行AI修改',
         },
         {
+          id: 11,
           icon: '',
           title: '以图生图',
           desc: '以当前图片为基础，生成一张新的图片',
         },
         {
+          id: 12,
           icon: '',
           title: '草稿生图',
           desc: '将一张手稿生成一个精美的图片',

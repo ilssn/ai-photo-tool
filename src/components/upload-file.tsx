@@ -8,7 +8,7 @@ import { RiUpload2Line } from "react-icons/ri";
 const ALLOWED_FILES = ['image/png', 'image/jpeg', 'image/webp'];
 
 interface UplodFileProps {
-  setFile?: (file: File | undefined) => void
+  setFile?: (file: File | null) => void
 }
 
 function UploadFile({setFile }: UplodFileProps) {

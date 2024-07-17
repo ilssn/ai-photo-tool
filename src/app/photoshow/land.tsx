@@ -4,20 +4,21 @@ import React from 'react'
 import Image from 'next/image'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-
-
 import UploadFile from '@/components/upload-file'
 import ToolCard from '@/components/tool-card'
+import { Tool } from '@/types'
+import Locale from '@/locales'
 
-import Locale from '../../locales'
-const Tools = Locale.Photo.Tool.list
+const tools = Locale.Photo.Tool.list
 
 interface PropsData {
-  file: File | undefined
-  setFile: (file: File | undefined) => void
+  tool: Tool
+  setTool: (tool: Tool) => void
+  file: File | null 
+  setFile: (file: File | null) => void
 }
 
-function PhotoshowLand({ setFile }: PropsData) {
+function PhotoshowLand({ setTool, setFile }: PropsData) {
   return (
     <div id="photoshow-land" className='max-w-screen-sm mx-auto'>
 
@@ -30,21 +31,21 @@ function PhotoshowLand({ setFile }: PropsData) {
 
       <section className="upload w-full mt-8">
         <UploadFile setFile={setFile} />
-        <div className="w-full text-sm text-center text-slate-500 mt-4">或</div>
+        {/* <div className="w-full text-sm text-center text-slate-500 mt-4">或</div>
         <div className="flex w-full items-center space-x-2 mt-4">
           <Input className='bg-white text-slate-600 text-sm' type="email" placeholder="请输入您想要生成的图片描述，直接生成" />
           <Button type="submit" size="sm" className='px-6 text-sm'>生成</Button>
-        </div>
+        </div> */}
       </section>
 
       <section className="example mt-8">
         <div className="w-full text-sm text-center text-slate-500">现已支持</div>
         <ul className="w-full mt-4 grid grid-cols-2 gap-x-4 gap-y-2 sm:gap-x-8 sm:gap-y-4">
           {
-           Tools.map((item, index) =>
+           tools.map((it, idx) =>
             (
-              <li key={index}>
-                <ToolCard icon={item.icon} title={item.title} desc={item.desc} />
+              <li key={idx} onClick={() => setTool(it)}>
+                <ToolCard icon={it.icon} title={it.title} desc={it.desc} />
               </li>
             )
             )
