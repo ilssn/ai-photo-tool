@@ -18,7 +18,7 @@ interface PropsData {
   setFile: (file: File | null) => void
 }
 
-function PhotoshowLand({ setTool, setFile }: PropsData) {
+function PhotoshowLand({ setTool, file, setFile }: PropsData) {
   const uploadRef = React.useRef<HTMLDivElement | undefined>()
 
   const handleSeletTool = (it: Tool) => {
@@ -36,7 +36,7 @@ function PhotoshowLand({ setTool, setFile }: PropsData) {
       </section>
 
       <section className="upload w-full mt-8">
-        <UploadFile ref={uploadRef} setFile={setFile} />
+        <UploadFile ref={uploadRef} file={file} setFile={setFile} />
         {/* <div className="w-full text-sm text-center text-slate-500 mt-4">或</div>
         <div className="flex w-full items-center space-x-2 mt-4">
           <Input className='bg-white text-slate-600 text-sm' type="email" placeholder="请输入您想要生成的图片描述，直接生成" />
