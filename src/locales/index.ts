@@ -1,7 +1,8 @@
 'use client'
 import cn from "./cn";
 import en from "./en";
-import { merge } from "../utils/merge";
+// import { merge } from "../utils/merge";
+import SystemManager from "@/utils/System";
 
 import type { LocaleType } from "./cn";
 export type { LocaleType, PartialLocaleType } from "./cn";
@@ -27,7 +28,7 @@ const fallbackLang = en;
 const targetLang = ALL_LANGS[getLang()] as LocaleType;
 
 // if target lang missing some fields, it will use fallback lang string
-merge(fallbackLang, targetLang);
+SystemManager.mergeData(fallbackLang, targetLang);
 
 export default fallbackLang as LocaleType;
 

@@ -1,4 +1,4 @@
-export default class LocalStorageManager {
+export default class StorageManager {
   // 提供一个方法来将值存储到LocalStorage
   static setItem(key: string, value: any): void {
       try {

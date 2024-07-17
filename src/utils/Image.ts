@@ -1,44 +1,101 @@
-export function downloadImage(uri: string, name: string) {
-  const link = document.createElement('a')
-  link.href = uri
-  link.download = name
+export default class ImageManager {
 
-  // this is necessary as link.click() does not work on the latest firefox
-  link.dispatchEvent(
-    new MouseEvent('click', {
-      bubbles: true,
-      cancelable: true,
-      view: window,
+  // 下载图片为文件
+  static imageToFile = async (url: string) => {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) {
+        throw new Error(`Get origin image error: ${res.statusText}`);
+      }
+      const blob = await res.blob();
+      // 创建一个File对象
+      const file = new File([blob], 'file.jpg', { type: blob.type });
+      return file;
+    } catch (error) {
+      // console.error('Error transferring image:', error);
+      return null
+    }
+  }
+
+  // 读取文件为图片
+  static fielToImage = async (file: File) => {
+    return new Promise((resolve, reject) => {
+      try {
+        const url = URL.createObjectURL(file)
+        resolve(url)
+      } catch (error) {
+        reject('File to image error')
+      }
     })
-  )
+  }
 
-  setTimeout(() => {
-    // For Firefox it is necessary to delay revoking the ObjectURL
-    // window.URL.revokeObjectURL(base64)
-    link.remove()
-  }, 100)
-}
-
-
-export function downloadVideo(url:string, filename:string) {
-  fetch(url)
-    .then(response => response.blob())
-    .then(blob => {
-      // 创建下载链接
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = filename;
-      link.style.display = 'none';
-      document.body.appendChild(link);
-      
-      // 触发点击事件进行下载
-      link.click();
-      
-      // 清理链接对象和URL对象
-      document.body.removeChild(link);
-      URL.revokeObjectURL(link.href);
+  // 读取file为base64
+  static fileToBase64 = async (file: any) => {
+    return new Promise((resolve, reject) => {
+      try {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          const result = event?.target?.result;
+          resolve(result)
+        };
+        reader.readAsDataURL(file);
+      } catch (error) {
+        reject('file to base64 error')
+      }
     })
-    .catch(error => {
-      console.error('下载视频出错:', error);
+  }
+
+  // 转换图片格式 
+  static pngToJpg = async (url: string) => {
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.src = url;
+      image.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = image.width;
+        canvas.height = image.height;
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(image, 0, 0);
+        const jpegData = canvas.toDataURL('image/jpeg');
+        resolve(jpegData);
+      };
+      image.onerror = reject;
     });
+  }
+
+  // 转换文件格式
+  static pngFileToJpgFile = async (file: File) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const url = URL.createObjectURL(file)
+        const jpg = await ImageManager.pngToJpg(url) as string
+        const result = await ImageManager.imageToFile(jpg)
+        resolve(result)
+      } catch (error) {
+        reject('png file to jpg file error')
+      }
+    })
+  }
+
+  // 读取图片宽高
+  static readImageSize = async (file: File) => {
+    return new Promise((resolve, reject) => {
+      try {
+        const url = URL.createObjectURL(file)
+        const img = new Image()
+        img.src = url
+        img.onload = () => {
+          if (img.width && img.height) {
+            resolve({ width: img.width, height: img.height })
+          }
+        }
+        img.onerror = () => {
+          reject('Load image error')
+        }
+      } catch (error) {
+        reject(error)
+      }
+    })
+  }
+
 }
