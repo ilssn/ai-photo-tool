@@ -44,7 +44,7 @@ function UploadFile({setFile }: UplodFileProps) {
         onDrag={handleDragging}
       >
         <div
-          className='flex rounded-2xl flex-col items-center justify-center border-4 border-dashed border-gray-100 px-4 py-2 text-center sm:py-4 cursor-pointer'
+          className='flex rounded-2xl flex-col items-center justify-center border-4 border-dashed border-gray-100 px-4 py-2 text-center sm:py-2 cursor-pointer'
           onClick={() => fileRef.current?.click()}
         >
           <RiUpload2Line className='text-5xl text-bold text-white' style={{ color: 'white' }} />

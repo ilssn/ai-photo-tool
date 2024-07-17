@@ -60,7 +60,7 @@ const cn = {
     },
     Edit: {
     },
-    Example: {
+    Tool: {
       title: '现已支持',
       action: '试一试',
       list: [
