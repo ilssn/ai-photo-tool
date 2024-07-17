@@ -22,7 +22,6 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
 
   React.useEffect(() => {
     if (file) {
-      console.log('file::', file)
       const url = URL.createObjectURL(file)
       setSrc(url)
     }
