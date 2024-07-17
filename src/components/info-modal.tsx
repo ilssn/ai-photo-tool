@@ -11,7 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-// import { InfoContent } from "./info-content";
+import { InfoContent } from "./info-content";
 
 export function InfoModal() {
   return (
@@ -28,7 +28,7 @@ export function InfoModal() {
             图片全能工具箱
           </DialogDescription>
         </DialogHeader>
-        {/* <InfoContent /> */}
+        <InfoContent />
       </DialogContent>
     </Dialog>
   );
