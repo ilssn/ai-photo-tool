@@ -14,11 +14,18 @@ const tools = Locale.Photo.Tool.list
 interface PropsData {
   tool: Tool
   setTool: (tool: Tool) => void
-  file: File | null 
+  file: File | null
   setFile: (file: File | null) => void
 }
 
 function PhotoshowLand({ setTool, setFile }: PropsData) {
+  const uploadRef = React.useRef<HTMLDivElement | undefined>()
+
+  const handleSeletTool = (it: Tool) => {
+    setTool(it)
+    uploadRef?.current?.click()
+  }
+
   return (
     <div id="photoshow-land" className='max-w-screen-sm mx-auto'>
 
@@ -30,7 +37,7 @@ function PhotoshowLand({ setTool, setFile }: PropsData) {
       </section>
 
       <section className="upload w-full mt-8">
-        <UploadFile setFile={setFile} />
+        <UploadFile ref={uploadRef} setFile={setFile} />
         {/* <div className="w-full text-sm text-center text-slate-500 mt-4">或</div>
         <div className="flex w-full items-center space-x-2 mt-4">
           <Input className='bg-white text-slate-600 text-sm' type="email" placeholder="请输入您想要生成的图片描述，直接生成" />
@@ -39,15 +46,15 @@ function PhotoshowLand({ setTool, setFile }: PropsData) {
       </section>
 
       <section className="example mt-8">
-        <div className="w-full text-sm text-center text-slate-500">现已支持</div>
+        {/* <div className="w-full text-sm text-center text-slate-500">快速开始</div> */}
+        <div className="w-full text-sm text-center text-slate-500">点击下方按钮快速使用</div>
         <ul className="w-full mt-4 grid grid-cols-2 gap-x-4 gap-y-2 sm:gap-x-8 sm:gap-y-4">
           {
-           tools.map((it, idx) =>
-            (
-              <li key={idx} onClick={() => setTool(it)}>
+            tools.map((it, idx) =>
+              <li
+                key={idx} onClick={() => handleSeletTool(it)}>
                 <ToolCard icon={it.icon} title={it.title} desc={it.desc} />
               </li>
-            )
             )
           }
 
