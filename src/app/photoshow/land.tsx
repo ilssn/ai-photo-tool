@@ -28,7 +28,6 @@ function PhotoshowLand({ setTool, setFile }: PropsData) {
 
   return (
     <div id="photoshow-land" className='max-w-screen-sm mx-auto'>
-
       <section className="title flex justify-center py-8 mt-8">
         <div className='flex items-center space-x-2'>
           <Image src="/logo.png" alt="logo" width={50} height={50}></Image>
@@ -46,8 +45,8 @@ function PhotoshowLand({ setTool, setFile }: PropsData) {
       </section>
 
       <section className="example mt-8">
-        {/* <div className="w-full text-sm text-center text-slate-500">快速开始</div> */}
-        <div className="w-full text-sm text-center text-slate-500">点击下方按钮快速使用</div>
+        <div className="w-full text-sm text-center text-slate-500">现已支持</div>
+        {/* <div className="w-full text-sm text-center text-slate-500">点击下方按钮快速使用</div> */}
         <ul className="w-full mt-4 grid grid-cols-2 gap-x-4 gap-y-2 sm:gap-x-8 sm:gap-y-4">
           {
             tools.map((it, idx) =>

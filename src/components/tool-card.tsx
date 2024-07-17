@@ -5,8 +5,8 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card"
-import { IoImagesOutline } from "react-icons/io5";
 import { twMerge } from 'tailwind-merge';
+import RemoveIcon from "../icons/test.svg";
 
 interface PropsData {
   icon: string
@@ -23,7 +23,7 @@ function ToolCard({icon, title, desc, active}: PropsData) {
       )}>
       <CardHeader className='p-2'>
         <div className="w-full flex space-x-2 items-center">
-          <IoImagesOutline className='w-7 h-7' />
+          <RemoveIcon />
           <div className="flex-1">
             <CardTitle className='text-sm font-medium'>{title}</CardTitle>
             <div className="text-xs opacity-50">{desc}</div>

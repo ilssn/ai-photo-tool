@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="245" height="245" viewBox="0 0 245 245">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #515151;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 10px;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <path id="矩形_2_拷贝_8" data-name="矩形 2 拷贝 8" class="cls-1" d="M189.99,90.653V65.991A10.014,10.014,0,0,0,179.955,56H153.436"/>
+  <path id="矩形_2_拷贝_9" data-name="矩形 2 拷贝 9" class="cls-1" d="M154.323,188.464h24.762a10.014,10.014,0,0,0,10.034-9.994V152.059"/>
+  <path id="矩形_2_拷贝_10" data-name="矩形 2 拷贝 10" class="cls-1" d="M54.029,90.877V66.134a9.987,9.987,0,0,1,9.947-10.026H90.263"/>
+  <path id="矩形_2_拷贝_10-2" data-name="矩形 2 拷贝 10" class="cls-1" d="M89.384,189.009H64.838a9.987,9.987,0,0,1-9.946-10.026v-26.5"/>
+  <path id="矩形_2_拷贝_5" data-name="矩形 2 拷贝 5" class="cls-1" d="M100.22,90.26h43.2a10,10,0,0,1,10,10v40.016a10,10,0,0,1-10,10h-43.2a10,10,0,0,1-10-10V100.259A10,10,0,0,1,100.22,90.26Z"/>
+</svg>

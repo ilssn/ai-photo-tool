@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="245" height="245" viewBox="0 0 245 245">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #515151;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 10px;
+      }
+
+      .cls-1, .cls-2 {
+        fill-rule: evenodd;
+      }
+
+      .cls-2 {
+        fill: #515151;
+      }
+    </style>
+  </defs>
+  <path id="矩形_2_拷贝_4" data-name="矩形 2 拷贝 4" class="cls-1" d="M72.014,65h101a10,10,0,0,1,10,10v95a10,10,0,0,1-10,10h-101a10,10,0,0,1-10-10V75A10,10,0,0,1,72.014,65Z"/>
+  <path id="形状_1" data-name="形状 1" class="cls-2" d="M93,134l-6,19,19-5,31-31-14.5-13Z"/>
+  <path id="形状_2" data-name="形状 2" class="cls-2" d="M129,99l13,13,10-10a7.576,7.576,0,0,0-1-10c-4.875-4.875-10.125-3.125-13-1C136.689,91.969,129,99,129,99Z"/>
+</svg>

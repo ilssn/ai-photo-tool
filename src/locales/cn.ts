@@ -66,7 +66,7 @@ const cn = {
       list: [
         {
           id: 1,
-          icon: '',
+          icon: '/icons/rm-bg.svg',
           title: '去除背景',
           desc: '精确提取图片中主体',
         },
