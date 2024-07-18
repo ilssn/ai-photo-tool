@@ -3,18 +3,18 @@
     <style>
       .cls-1 {
         fill: none;
-        stroke: #515151;
+        stroke: currentColor;
         stroke-linecap: round;
         stroke-linejoin: round;
         stroke-width: 10px;
       }
 
       .cls-1, .cls-2 {
-        fill-rule: evenodd;
+        fill-rule: currentColor;
       }
 
       .cls-2 {
-        fill: #515151;
+        fill: currentColor;
       }
     </style>
   </defs>

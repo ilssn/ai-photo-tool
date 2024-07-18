@@ -6,7 +6,8 @@ import {
   CardDescription,
 } from "@/components/ui/card"
 import { twMerge } from 'tailwind-merge';
-import RemoveIcon from "../icons/test.svg";
+// import RemoveIcon from "../icons/test.svg";
+import RemoveIcon from "../icons/rm-bg.svg";
 
 interface PropsData {
   icon: string

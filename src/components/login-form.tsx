@@ -16,7 +16,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import Loading from "./loading"
 // import { env } from "@/env.mjs";
 import { useConfigStore } from "@/stores";
-import { AUTH_CODE } from "@/constants"
+import { AUTH_CODE, AUTH_TOKEN } from "@/constants"
 import { useRouter } from 'next/navigation'
 
 const AUTH_URL = process.env.NEXT_PUBLIC_302AI_AUTH;
@@ -64,6 +64,7 @@ export function LoginForm() {
         // save code
         if (cache) {
           window.localStorage.setItem(AUTH_CODE, authCode)
+          window.localStorage.setItem(AUTH_TOKEN, res.data.api_key)
         }
         // set domain
         if (res.data.region === 0) {

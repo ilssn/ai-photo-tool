@@ -1,3 +1,5 @@
+import ImageManager from "./Image";
+
 export default class SystemManager {
 	// 合并数据
 	static mergeData = (target: any, source: any) => {
@@ -69,10 +71,17 @@ export default class SystemManager {
 
 
 	// 下载图片
-	static downloadImage = (url: string, name: string) => {
+	static downloadImage = async (url: string, name?: string) => {
+		const file = await ImageManager.imageToFile(url)
+		const metaType = file?.type.split('/')[1] || url.split('.')[1]
+    const localUrl = URL.createObjectURL(file as File);
+    const currentTime = SystemManager.getNowformatTime()
+    const resultName = name || `result-${currentTime}.${metaType}`
+
+
 		const link = document.createElement('a')
-		link.href = url
-		link.download = name
+		link.href = localUrl
+		link.download = resultName
 
 		// this is necessary as link.click() does not work on the latest firefox
 		link.dispatchEvent(
