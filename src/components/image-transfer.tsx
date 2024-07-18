@@ -22,7 +22,6 @@ interface PropsData {
 function ImageTransfer({ tool, src, setSrc, status, setStatus, result, setResult, onGenerateImage }: PropsData) {
 
   const handleStart = async () => {
-    console.log('too:::;;::', tool.name)
     const action = {
       name: tool.name,
       src: src,
