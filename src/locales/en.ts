@@ -87,8 +87,8 @@ const en: LocaleType = {
         },
         {
           id: 4,
-          name: 'vector',
-          icon: 'vector',
+          name: 'vectorize',
+          icon: 'vectorize',
           title: '图片矢量化',
           desc: '将图片转化为可无限放大的矢量图',
         },
@@ -115,8 +115,8 @@ const en: LocaleType = {
         },
         {
           id: 8,
-          name: 'replace-face',
-          icon: 'replace-face',
+          name: 'swap-face',
+          icon: 'swap-face',
           title: 'AI换脸',
           desc: '更换图片人物的脸',
         },
@@ -136,8 +136,8 @@ const en: LocaleType = {
         },
         {
           id: 11,
-          name: 'by-img',
-          icon: 'by-img',
+          name: 'recreate-img',
+          icon: 'recreate-img',
           title: '以图生图',
           desc: '以当前图片为基础，生成一张新的图片',
         },

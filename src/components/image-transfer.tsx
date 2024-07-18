@@ -3,6 +3,8 @@ import Image from 'next/image'
 import { twMerge } from 'tailwind-merge'
 import { Button } from '@/components/ui/button'
 import ImageCompare from './image-compare'
+import ScaleBar from './scale-bar'
+import UploadBar from './upload-bar'
 import { updateTask } from '@/app/photoshow/query'
 import { Tool } from '@/types'
 import ImageManager from '@/utils/Image'
@@ -20,11 +22,18 @@ interface PropsData {
 }
 
 function ImageTransfer({ tool, src, setSrc, status, setStatus, result, setResult, onGenerateImage }: PropsData) {
+  // upscale
+  const [scale, setScale] = React.useState('2')
+  // swap-face
+  const [mask, setMask] = React.useState<File | null>(null)
+
 
   const handleStart = async () => {
     const action = {
       name: tool.name,
-      src: src,
+      src,
+      scale,
+      mask,
     }
     setStatus('Pending')
     const res = await onGenerateImage(action)
@@ -56,17 +65,29 @@ function ImageTransfer({ tool, src, setSrc, status, setStatus, result, setResult
     handleReset()
   }, [tool])
 
+  // debug
+  React.useEffect(() => {
+    console.log('mask::', mask)
+  }, [mask])
+
+
+
   return (
     <div id="tool-remove-bg" className="w-full space-y-4">
       <div className="w-0 h-0"></div>
       <div className="show rounded-xl overflow-hidden mosaic-bg relative">
-        <Image width={200} height={200} alt="image" src={src} className={twMerge('w-full', result ? 'opacity-0' : '')}></Image>
-        {
-          status === 'Pending' && <div className={twMerge('scan w-full absolute top-0 transition-all duration-200 pointer-events-none',)}>
+        <Image width={200} height={200} alt="image" src={src} className={
+          twMerge('w-full', result ? 'opacity-0' : '')}
+        >
+        </Image>
+
+        {status === 'Pending' &&
+          <div className={twMerge('scan w-full absolute top-0 transition-all duration-200 pointer-events-none',)}>
           </div>
         }
-        {
-          result && <div className='w-full absolute top-0'>
+
+        {result &&
+          <div className='w-full absolute top-0'>
             <ImageCompare
               beforeSrc={src}
               afterSrc={result}
@@ -76,9 +97,25 @@ function ImageTransfer({ tool, src, setSrc, status, setStatus, result, setResult
         }
       </div>
 
-      <div className="action flex justify-between">
-        <Button variant="outline" className='border-primary text-primary' onClick={handleStop}>退出</Button>
-        <Button variant="default" disabled={status !== 'Ready'} onClick={handleStart}>开始</Button>
+      <div className="flex justify-between space-x-4">
+        <Button variant="outline" className='border-primary text-primary' onClick={handleStop}>
+          退出
+        </Button>
+
+        {status === 'Ready' &&
+          <div className="action-bar flex-1 flex items-center">
+            {tool.name === 'upscale' &&
+              <ScaleBar scale={scale} setScale={setScale} />
+            }
+            {tool.name === 'swap-face' &&
+              <UploadBar mask={mask} setMask={setMask} />
+            }
+          </div>
+        }
+
+        <Button variant="default" disabled={status !== 'Ready'} onClick={handleStart}>
+          开始
+        </Button>
       </div>
     </div>
 
