@@ -129,8 +129,8 @@ const en: LocaleType = {
         },
         {
           id: 10,
-          name: 'modify',
-          icon: 'modify',
+          name: 'inpaint-img',
+          icon: 'inpaint-img',
           title: '图片修改',
           desc: '将图片的内容进行AI修改',
         },

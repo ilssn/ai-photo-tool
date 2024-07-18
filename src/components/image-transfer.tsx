@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import ImageCompare from './image-compare'
 import ScaleBar from './scale-bar'
 import UploadBar from './upload-bar'
+import PromptBar from './prompt-bar'
 import { updateTask } from '@/app/photoshow/query'
 import { Tool } from '@/types'
 import ImageManager from '@/utils/Image'
@@ -24,6 +25,8 @@ interface PropsData {
 function ImageTransfer({ tool, src, setSrc, status, setStatus, result, setResult, onGenerateImage }: PropsData) {
   // upscale
   const [scale, setScale] = React.useState('2')
+  // prompt
+  const [prompt, setPrompt] = React.useState('')
   // swap-face
   const [mask, setMask] = React.useState<File | null>(null)
 
@@ -34,6 +37,7 @@ function ImageTransfer({ tool, src, setSrc, status, setStatus, result, setResult
       src,
       scale,
       mask,
+      prompt,
     }
     setStatus('Pending')
     const res = await onGenerateImage(action)
@@ -109,6 +113,12 @@ function ImageTransfer({ tool, src, setSrc, status, setStatus, result, setResult
             }
             {tool.name === 'swap-face' &&
               <UploadBar mask={mask} setMask={setMask} />
+            }
+            {tool.name === 'recreate-img' &&
+              <PromptBar prompt={prompt} setPrompt={setPrompt} />
+            }
+            {tool.name === 'inpaint-img' &&
+              <PromptBar prompt={prompt} setPrompt={setPrompt} />
             }
           </div>
         }
