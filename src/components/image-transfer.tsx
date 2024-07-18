@@ -70,9 +70,9 @@ function ImageTransfer({ tool, src, setSrc, status, setStatus, result, setResult
   }, [tool])
 
   // debug
-  React.useEffect(() => {
-    console.log('mask::', mask)
-  }, [mask])
+  // React.useEffect(() => {
+  //   console.log('mask::', mask)
+  // }, [mask])
 
 
 

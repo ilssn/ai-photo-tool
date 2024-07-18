@@ -52,6 +52,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
       return res
     } catch (error) {
       console.log('error::', error)
+      alert('请求错误，请更换图片重试！')
       return null
     }
 

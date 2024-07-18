@@ -71,27 +71,27 @@ const cn = {
           title: '去除背景',
           desc: '精确提取图片中主体',
         },
-        {
-          id: 2,
-          name: 'remove-obj',
-          icon: 'remove-obj',
-          title: '物体消除',
-          desc: '擦掉您想要移除的区域',
-        },
-        {
-          id: 3,
-          name: 'replace-bg',
-          icon: 'replace-bg',
-          title: '背景替换',
-          desc: '以当前图片为基础，生成一张新的图片',
-        },
-        {
-          id: 4,
-          name: 'vectorize',
-          icon: 'vectorize',
-          title: '图片矢量化',
-          desc: '将图片转化为可无限放大的矢量图',
-        },
+        // {
+        //   id: 2,
+        //   name: 'remove-obj',
+        //   icon: 'remove-obj',
+        //   title: '物体消除',
+        //   desc: '擦掉您想要移除的区域',
+        // },
+        // {
+        //   id: 3,
+        //   name: 'replace-bg',
+        //   icon: 'replace-bg',
+        //   title: '背景替换',
+        //   desc: '以当前图片为基础，生成一张新的图片',
+        // },
+        // {
+        //   id: 4,
+        //   name: 'vectorize',
+        //   icon: 'vectorize',
+        //   title: '图片矢量化',
+        //   desc: '将图片转化为可无限放大的矢量图',
+        // },
         {
           id: 5,
           name: 'upscale',
@@ -99,13 +99,13 @@ const cn = {
           title: '图片放大',
           desc: '支持2x，4x，8x放大图片',
         },
-        {
-          id: 6,
-          name: 'super-upscale',
-          icon: 'super-upscale',
-          title: '超级图片放大',
-          desc: '对图片进行AI生成，添加原图没有的细节',
-        },
+        // {
+        //   id: 6,
+        //   name: 'super-upscale',
+        //   icon: 'super-upscale',
+        //   title: '超级图片放大',
+        //   desc: '对图片进行AI生成，添加原图没有的细节',
+        // },
         {
           id: 7,
           name: 'colorize',
@@ -120,13 +120,13 @@ const cn = {
           title: 'AI换脸',
           desc: '更换图片人物的脸',
         },
-        {
-          id: 9,
-          name: 'uncrop',
-          icon: 'uncrop',
-          title: '图片拓展',
-          desc: '将图片的边界进行拓展',
-        },
+        // {
+        //   id: 9,
+        //   name: 'uncrop',
+        //   icon: 'uncrop',
+        //   title: '图片拓展',
+        //   desc: '将图片的边界进行拓展',
+        // },
         {
           id: 10,
           name: 'inpaint-img',
@@ -141,13 +141,13 @@ const cn = {
           title: '以图生图',
           desc: '以当前图片为基础，生成一张新的图片',
         },
-        {
-          id: 12,
-          name: 'by-sketch',
-          icon: 'by-sketch',
-          title: '草稿生图',
-          desc: '将一张手稿生成一个精美的图片',
-        },
+        // {
+        //   id: 12,
+        //   name: 'by-sketch',
+        //   icon: 'by-sketch',
+        //   title: '草稿生图',
+        //   desc: '将一张手稿生成一个精美的图片',
+        // },
       ]
     }
   }
