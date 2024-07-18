@@ -5,13 +5,11 @@ import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from "@/components/ui/scroll-area"
 import ToolCard from '@/components/tool-card'
+import ImageTransfer from '@/components/image-transfer'
 import { Tool } from '@/types'
 import Locale from '@/locales'
 
-// import { RiDownloadFill } from "react-icons/ri";
 import { RiDownload2Fill } from "react-icons/ri";
-
-import ToolRemoveBg from '@/components/tool-remove-bg'
 
 import { generateImage } from './query'
 
@@ -99,14 +97,19 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
         </div>
 
         <div className="w-full grow flex items-center">
-          <ToolRemoveBg
-            onGenerateImage={handlerOngenerateImage}
-            src={src}
-            setSrc={setSrc}
-            result={result}
-            setResult={setResult}
-            status={status}
-            setStatus={setStatus} />
+          {
+            src &&
+            <ImageTransfer
+              onGenerateImage={handlerOngenerateImage}
+              tool={tool}
+              setTool={setTool}
+              src={src}
+              setSrc={setSrc}
+              result={result}
+              setResult={setResult}
+              status={status}
+              setStatus={setStatus} />
+          }
         </div>
 
 

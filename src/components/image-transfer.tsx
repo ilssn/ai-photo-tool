@@ -3,8 +3,13 @@ import Image from 'next/image'
 import { twMerge } from 'tailwind-merge'
 import { Button } from '@/components/ui/button'
 import ImageCompare from './image-compare'
+import { updateTask } from '@/app/photoshow/query'
+import { Tool } from '@/types'
+import ImageManager from '@/utils/Image'
 
 interface PropsData {
+  tool: Tool
+  setTool: (tool: Tool) => void
   src: string
   setSrc: (src: string) => void
   result: string
@@ -14,24 +19,43 @@ interface PropsData {
   onGenerateImage: (action: any) => Promise<any>
 }
 
-function ToolRemoveBg({ src, status, setStatus, result, setResult, onGenerateImage }: PropsData) {
+function ImageTransfer({ tool, src, setSrc, status, setStatus, result, setResult, onGenerateImage }: PropsData) {
 
   const handleStart = async () => {
+    console.log('too:::;;::', tool.name)
     const action = {
-      type: 'remove-bg',
+      name: tool.name,
       src: src,
     }
     setStatus('Pending')
     const res = await onGenerateImage(action)
     if (res && res.imageSrc) {
       setResult(res.imageSrc)
+      setStatus('Done')
+    } else {
+      handleReset()
     }
-    setStatus('Done')
   }
 
   const handleStop = async () => {
+    updateTask({})
     setStatus('Finish')
   }
+
+  const handleReset = async () => {
+    if (result) {
+      const localSrc = await ImageManager.localizeImage(result) as string
+      setSrc(localSrc)
+      setResult('')
+    }
+    setStatus('Ready')
+    updateTask({})
+  }
+
+  React.useEffect(() => {
+    console.log('tool::', tool)
+    handleReset()
+  }, [tool])
 
   return (
     <div id="tool-remove-bg" className="w-full space-y-4">
@@ -62,4 +86,4 @@ function ToolRemoveBg({ src, status, setStatus, result, setResult, onGenerateIma
   )
 }
 
-export default ToolRemoveBg
+export default ImageTransfer

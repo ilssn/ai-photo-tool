@@ -27,13 +27,13 @@ export const updateTask = (value: any) => {
 
 // Task: fetch
 export const fetchTask = async (id: string) => {
-  const token = GetToken();
+  const token = getToken();
   return new Promise((resolve, reject) => {
     let counter = 0;
     const maxAttempts = 30;
 
     const fetchApi = (id: string) => {
-      fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}task/${id}/fetch
+      fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/task/${id}/fetch
       `, {
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -52,7 +52,7 @@ export const fetchTask = async (id: string) => {
           } else {
             if (counter < maxAttempts) {
               counter++;
-              const task = GetTaskService()
+              const task = getTask()
               if (task.id) {
                 setTimeout(() => fetchApi(id), 5000); // 每隔5秒轮询一次
               }
@@ -69,15 +69,47 @@ export const fetchTask = async (id: string) => {
   });
 }
 
+// 上传图片
+async function uploadImage(file: File) {
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('prefix', 'photoshow');
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_302AI_UPLOAD}`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+    const { body } = response;
+    if (!body) {
+      return;
+    }
+    const data = await response.json();
+    return data.data.url;
+  } catch (error) {
+    // console.error('Error transferring image:', error);
+  }
+}
+
 // 生成图片
 export async function generateImage(action: any): Promise<Result> {
   return new Promise(async (resolve, reject) => {
     let res = null
     let result = { imageSrc: '' }
     try {
-      if (action.type === 'remove-bg') {
+      if (action.name === 'remove-bg') {
         const file = await ImageManager.imageToFile(action.src) as File
         res = await removeBackground(file)
+        result.imageSrc = res.output
+      }
+      if (action.name === 'colorize') {
+        const file = await ImageManager.imageToFile(action.src) as File
+        const url = await uploadImage(file)
+        res = await colorizeImage(url)
         result.imageSrc = res.output
       }
 
@@ -131,3 +163,39 @@ export async function removeBackground(file: File): Promise<any> {
   })
 }
 
+// 黑白上色
+export async function colorizeImage(url: string): Promise<any> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let result = null
+      const token = getToken()
+      const formData = new FormData();
+      formData.append('image', url);
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/302/submit/colorize`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          // "Content-Type": "multipart/form-data",
+          "Authorization": `Bearer ${token}`,
+        },
+      })
+      if (!res.ok) {
+        throw await res.json()
+      }
+
+      result = await res.json()
+      updateTask(result)
+      if (result.output) {
+        resolve(result)
+        return
+      }
+      result = await fetchTask(result.id)
+      resolve(result)
+
+    } catch (error) {
+      reject(error)
+    }
+  })
+
+}

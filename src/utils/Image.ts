@@ -98,4 +98,15 @@ export default class ImageManager {
     })
   }
 
+  // 本地化图片地址
+  static localizeImage = async (url: string) => {
+    try {
+      const file = await ImageManager.imageToFile(url)
+      const src = URL.createObjectURL(file as File);
+      return src
+    } catch (error) {
+      return null
+    }
+  }
+
 }

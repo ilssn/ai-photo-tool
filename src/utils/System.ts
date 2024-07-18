@@ -73,8 +73,8 @@ export default class SystemManager {
 	// 下载图片
 	static downloadImage = async (url: string, name?: string) => {
 		const file = await ImageManager.imageToFile(url)
-		const metaType = file?.type.split('/')[1] || url.split('.')[1]
     const localUrl = URL.createObjectURL(file as File);
+		const metaType = file?.type.split('/')[1] || url.split('.')[1]
     const currentTime = SystemManager.getNowformatTime()
     const resultName = name || `result-${currentTime}.${metaType}`
 
