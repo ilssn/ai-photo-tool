@@ -76,7 +76,6 @@ export default class SystemManager {
 		const currentTime = SystemManager.getNowformatTime()
 		const metaType = file?.type.split('/')[1] || url.split('.')[1]
 		const resultName = name || `result-${currentTime}.${metaType.split('+')[0]}`
-		console.log('resultname::', resultName)
 		const localUrl = URL.createObjectURL(file as File);
 		const link = document.createElement('a')
 		link.href = localUrl

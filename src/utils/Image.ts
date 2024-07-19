@@ -11,7 +11,6 @@ export default class ImageManager {
       // 创建一个File对象
       let fileName = 'file.jpg'
       if (url.includes('.svg')) {
-        console.log('type;:', blob.type)
         fileName = 'file.svg'
       }
       const file = new File([blob], fileName, { type: blob.type });
