@@ -73,12 +73,11 @@ export default class SystemManager {
 	// 下载图片
 	static downloadImage = async (url: string, name?: string) => {
 		const file = await ImageManager.imageToFile(url)
-    const localUrl = URL.createObjectURL(file as File);
+		const currentTime = SystemManager.getNowformatTime()
 		const metaType = file?.type.split('/')[1] || url.split('.')[1]
-    const currentTime = SystemManager.getNowformatTime()
-    const resultName = name || `result-${currentTime}.${metaType}`
-
-
+		const resultName = name || `result-${currentTime}.${metaType.split('+')[0]}`
+		console.log('resultname::', resultName)
+		const localUrl = URL.createObjectURL(file as File);
 		const link = document.createElement('a')
 		link.href = localUrl
 		link.download = resultName
@@ -96,7 +95,7 @@ export default class SystemManager {
 			// For Firefox it is necessary to delay revoking the ObjectURL
 			// window.URL.revokeObjectURL(base64)
 			link.remove()
-		}, 100)
+		}, 300)
 	}
 
 

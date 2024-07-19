@@ -9,7 +9,12 @@ export default class ImageManager {
       }
       const blob = await res.blob();
       // 创建一个File对象
-      const file = new File([blob], 'file.jpg', { type: blob.type });
+      let fileName = 'file.jpg'
+      if (url.includes('.svg')) {
+        console.log('type;:', blob.type)
+        fileName = 'file.svg'
+      }
+      const file = new File([blob], fileName, { type: blob.type });
       return file;
     } catch (error) {
       // console.error('Error transferring image:', error);

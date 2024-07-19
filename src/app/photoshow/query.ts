@@ -193,10 +193,14 @@ export async function generateImage(action: any): Promise<Result> {
         res = await inpaintImage(file, prompt)
         result.imageSrc = res.output
       }
-      
+
 
       // 返回结果
-      resolve(result)
+      if (result.imageSrc) {
+        resolve(result)
+      } else {
+        reject('Create image error!')
+      }
     } catch (error) {
       reject(error)
     }
@@ -290,33 +294,32 @@ export async function vectorizeImage(file: File): Promise<any> {
       const token = getToken()
       const formData = new FormData();
       formData.append('image', file);
-
-      const res = await fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/vectorizer/v1/vectorize`, {
+      // Step 1:
+      const res = await fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/vectorizer/api/v1/vectorize`, {
         method: 'POST',
         body: formData,
         headers: {
           // "Content-Type": "application/json",
-          "Accept": "image/*",
+          'Accept': 'application/json',
+          // "Accept": "image/*",
           "Authorization": `Bearer ${token}`,
         },
       })
 
       if (!res.ok) {
-        throw await res.json()
+        throw new Error("Network response was not ok " + res.statusText);
       }
 
-      // 直接返回结果
-      result = await res.json()
-      if (result.output) {
-        resolve(result)
-        return
-      }
-
-      // 等待任务结果
-      updateTask(result)
-      result = await fetchTask(result.id)
-      resolve(result)
-
+      // Step 2: Convert the response to text
+      const svgText = await res.text();
+      // Step 3: Create a Blob from the SVG text
+      const svgBlob = new Blob([svgText], { type: "image/svg+xml" });
+      // Step 4: Create a File from the Blob
+      const svgFile = new File([svgBlob], 'result.svg', { type: "image/svg+xml" });
+      // Now you have an SVG file object that you can use
+      console.log(svgFile);
+      const url = await uploadImage(svgFile)
+      resolve({ output: url })
     } catch (error) {
       reject(error)
     }
