@@ -93,7 +93,7 @@ export const aiTranslate = (str: string) => {
               content: str,
             }],
         stream: false,
-        model: 'gpt-3.5-turbo-16k',
+        model: 'gpt-4o-mini',
       }
 
       const requestOptions = {

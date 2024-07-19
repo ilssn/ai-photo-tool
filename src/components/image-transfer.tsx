@@ -48,6 +48,11 @@ function ImageTransfer({ tool, src, setSrc, status, setStatus, result, setResult
     }
   }
 
+  const handleReStart = async () => {
+    setResult('')
+    handleStart()
+  }
+
   const handleStop = async () => {
     updateTask({})
     setStatus('Finish')
@@ -74,55 +79,105 @@ function ImageTransfer({ tool, src, setSrc, status, setStatus, result, setResult
   // }, [mask])
 
   return (
-    <div id="tool-remove-bg" className="w-full space-y-4">
-      <div className="w-0 h-0"></div>
-      <div className="show rounded-xl overflow-hidden mosaic-bg relative">
-        <Image width={200} height={200} alt="image" src={src} className={
-          twMerge('w-full', result ? 'opacity-0' : '')}
-        >
-        </Image>
+    <div id="image-transfer" className="w-full h-full space-y-4 flex flex-col">
+      {/* 占位区 */}
+      <div className="w-full h-0"></div>
 
-        {status === 'Pending' &&
-          <div className={twMerge('scan w-full absolute top-0 transition-all duration-200 pointer-events-none',)}>
-          </div>
-        }
+      {/* 展示区 */}
+      <div className="show w-full grow flex flex-col justify-center items-center space-y-4">
 
-        {result &&
-          <div className='w-full absolute top-0'>
-            <ImageCompare
-              beforeSrc={src}
-              afterSrc={result}
-              initPosition={30}
-            />
-          </div>
-        }
+        <div className="w-full rounded-xl overflow-hidden mosaic-bg relative">
+          <Image width={200} height={200} alt="image" src={src} className={
+            twMerge('w-full h-auto m-auto', result ? 'opacity-0' : '')}
+          >
+          </Image>
+
+          {status === 'Pending' &&
+            <div className={twMerge('scan w-full absolute top-0 transition-all duration-200 pointer-events-none',)}>
+            </div>
+          }
+
+          {result &&
+            <div className='w-full absolute top-0'>
+              <ImageCompare
+                beforeSrc={src}
+                afterSrc={result}
+                initPosition={30}
+              />
+            </div>
+          }
+        </div>
+
+        <div className="w-full justify-center items-center">
+          {status === 'Ready' &&
+            <div className="w-full">
+              {tool.name === 'upscale' &&
+                <ScaleBar scale={scale} setScale={setScale} />
+              }
+              {tool.name === 'swap-face' &&
+                <UploadBar mask={mask} setMask={setMask} />
+              }
+              {tool.name === 'recreate-img' &&
+                <PromptBar prompt={prompt} setPrompt={setPrompt} />
+              }
+              {tool.name === 'inpaint-img' &&
+                <PromptBar prompt={prompt} setPrompt={setPrompt} />
+              }
+            </div>
+          }
+          {status === 'Pending' &&
+            <div className='text-center text-sm text-violet-500'>
+              图片生成中，请耐心等待1-5分钟~
+            </div>
+          }
+          {status === 'Done' &&
+            <div className='text-center text-sm text-violet-500'>
+              图片已经生成，可点击右上角按钮快速保存！
+            </div>
+          }
+        </div>
+
       </div>
 
-      <div className="flex justify-between space-x-4">
+
+      {/* 操作区 */}
+      <div className="action flex justify-between space-x-4">
         <Button variant="outline" className='border-primary text-primary' onClick={handleStop}>
           退出
         </Button>
 
-        {status === 'Ready' &&
-          <div className="action-bar flex-1 flex items-center">
-            {tool.name === 'upscale' &&
-              <ScaleBar scale={scale} setScale={setScale} />
-            }
-            {tool.name === 'swap-face' &&
-              <UploadBar mask={mask} setMask={setMask} />
-            }
-            {tool.name === 'recreate-img' &&
-              <PromptBar prompt={prompt} setPrompt={setPrompt} />
-            }
-            {tool.name === 'inpaint-img' &&
-              <PromptBar prompt={prompt} setPrompt={setPrompt} />
-            }
-          </div>
-        }
+        {/* <div className="action-bar flex-1 flex justify-center items-center">
+          {status === 'Pending' &&
+            <div>图片生成中，请等待1-5分～</div>
+          }
+          {status !== 'Pending' &&
+            <div className="w-full">
+              {tool.name === 'upscale' &&
+                <ScaleBar scale={scale} setScale={setScale} />
+              }
+              {tool.name === 'swap-face' &&
+                <UploadBar mask={mask} setMask={setMask} />
+              }
+              {tool.name === 'recreate-img' &&
+                <PromptBar prompt={prompt} setPrompt={setPrompt} />
+              }
+              {tool.name === 'inpaint-img' &&
+                <PromptBar prompt={prompt} setPrompt={setPrompt} />
+              }
+            </div>
+          }
+        </div> */}
 
-        <Button variant="default" disabled={status !== 'Ready'} onClick={handleStart}>
-          开始
-        </Button>
+        {status === 'Done'
+          ?
+          <Button variant="default" onClick={handleReStart}>
+            重试
+          </Button>
+          :
+          <Button variant="default" disabled={status !== 'Ready'} onClick={handleStart}>
+            开始
+          </Button>
+        }
       </div>
     </div>
 

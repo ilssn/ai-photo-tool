@@ -16,10 +16,10 @@ export function InfoContent() {
       const item = `本工具由302.AI用户 ${data.created_by} 创建, 302.AI是一个AI生成和分享的平台，可以一键生成自己的AI工具`
       infos.push(item)
     }
-    if (data.model_name) {
-      const item = `本工具使用的模型为 <${data.model_name}>`
-      infos.push(item)
-    }
+    // if (data.model_name) {
+    //   const item = `本工具使用的模型为 <${data.model_name}>`
+    //   infos.push(item)
+    // }
     if (data.limit_cost) {
       const item = `本工具的总限额为 <${data.limit_cost}PTC>, 已经使用 <${data.cost}PTC>`
       infos.push(item)
@@ -29,7 +29,7 @@ export function InfoContent() {
       infos.push(item)
     }
     if (data) {
-      const item = `工具的搜索记录均保存在本机，不会被上传，生成此工具的用户无法看到你的查询记录`
+      const item = `本工具的生成记录均保存在本机，不会被上传，生成此工具的用户无法看到你的生成记录`
       infos.push(item)
     }
     if (data) {
