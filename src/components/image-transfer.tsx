@@ -30,7 +30,6 @@ function ImageTransfer({ tool, src, setSrc, status, setStatus, result, setResult
   // swap-face
   const [mask, setMask] = React.useState<File | null>(null)
 
-
   const handleStart = async () => {
     const action = {
       name: tool.name,
@@ -73,8 +72,6 @@ function ImageTransfer({ tool, src, setSrc, status, setStatus, result, setResult
   // React.useEffect(() => {
   //   console.log('mask::', mask)
   // }, [mask])
-
-
 
   return (
     <div id="tool-remove-bg" className="w-full space-y-4">
