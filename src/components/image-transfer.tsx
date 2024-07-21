@@ -146,28 +146,6 @@ function ImageTransfer({ tool, src, setSrc, status, setStatus, result, setResult
           退出
         </Button>
 
-        {/* <div className="action-bar flex-1 flex justify-center items-center">
-          {status === 'Pending' &&
-            <div>图片生成中，请等待1-5分～</div>
-          }
-          {status !== 'Pending' &&
-            <div className="w-full">
-              {tool.name === 'upscale' &&
-                <ScaleBar scale={scale} setScale={setScale} />
-              }
-              {tool.name === 'swap-face' &&
-                <UploadBar mask={mask} setMask={setMask} />
-              }
-              {tool.name === 'recreate-img' &&
-                <PromptBar prompt={prompt} setPrompt={setPrompt} />
-              }
-              {tool.name === 'inpaint-img' &&
-                <PromptBar prompt={prompt} setPrompt={setPrompt} />
-              }
-            </div>
-          }
-        </div> */}
-
         {status === 'Done'
           ?
           <Button variant="default" onClick={handleReStart}>
