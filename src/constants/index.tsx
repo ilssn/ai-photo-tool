@@ -10,5 +10,7 @@ export const PHOTO_DEFAULT_ACTION_DATA = {
 }
 
 export const PHOTO_DEFAULT_PAYLOAD = {
-  scale: '2'
+  scale: '2',
+  prompt: '',
+  mask: null,
 }

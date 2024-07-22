@@ -141,13 +141,13 @@ const en: LocaleType = {
           title: '以图生图',
           desc: '以当前图片为基础，生成一张新的图片',
         },
-        // {
-        //   id: 12,
-        //   name: 'by-sketch',
-        //   icon: 'by-sketch',
-        //   title: '草稿生图',
-        //   desc: '将一张手稿生成一个精美的图片',
-        // },
+        {
+          id: 12,
+          name: 'sketch-img',
+          icon: 'sketch-img',
+          title: '草稿生图',
+          desc: '将一张手稿生成一个精美的图片',
+        },
       ]
     }
   }

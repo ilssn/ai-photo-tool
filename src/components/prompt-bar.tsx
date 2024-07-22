@@ -9,6 +9,7 @@ interface PromptBarProps {
 function PromptBar({ payload, setPayload }: PromptBarProps) {
 
   const handleInputChange = ({ target }: any) => {
+    console.log('ddd:::', target.value)
     setPayload((preData: any) => { return { ...preData, prompt: target.value } });
   }
 

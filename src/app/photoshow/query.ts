@@ -219,6 +219,15 @@ export async function generateImage(src: string, action: Action): Promise<Result
         res = await inpaintImage(file, prompt)
         result.imageSrc = res.output
       }
+      if (action.type === 'sketch-img') {
+        const file = await ImageManager.imageToFile(src) as File
+        let prompt = action.payload.prompt
+        if (SystemManager.containsChinese(prompt)) {
+          prompt = await aiTranslate(prompt)
+        }
+        res = await sketchImage(file, prompt)
+        result.imageSrc = res.output
+      }
 
 
       // 返回结果
@@ -471,7 +480,7 @@ export async function superUpscaleImage(file: File, scale: string, prompt: strin
 
       // save task
       updTask(data)
-      
+
       if (data.status === 'succeeded') {
         if (data.output.startsWith('[')) {
           result.output = JSON.parse(data.output)[0]
@@ -606,6 +615,47 @@ export async function inpaintImage(file: File, prompt: string): Promise<any> {
       // }
       // result = await fetchTask(result.id)
       // resolve(result)
+      if (data.image) {
+        const base64 = 'data:image/png;base64,' + data.image
+        const file = await ImageManager.imageToFile(base64)
+        const url = await uploadImage(file as File)
+        resolve({ output: url })
+      } else {
+        reject('Recreate image faild!')
+      }
+
+    } catch (error) {
+      reject(error)
+    }
+  })
+
+}
+
+// 草稿
+export async function sketchImage(file: File, prompt: string): Promise<any> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const token = getToken()
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('prompt', prompt);
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/sd/v2beta/stable-image/control/sketch`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          // "Content-Type": "multipart/form-data",
+          // 'Accept': 'image/*',
+          'Accept': 'application/json',
+          "Authorization": `Bearer ${token}`,
+        },
+      })
+      if (!res.ok) {
+        throw await res.json()
+      }
+
+      const data = await res.json()
+
       if (data.image) {
         const base64 = 'data:image/png;base64,' + data.image
         const file = await ImageManager.imageToFile(base64)

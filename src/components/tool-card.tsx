@@ -20,7 +20,7 @@ import SwapFaceIcon from "../icons/swap-face.svg";
 import UncropIcon from "../icons/uncrop.svg";
 import InpaintIcon from "../icons/inpaint-img.svg";
 import RecreateImgIcon from "../icons/recreate-img.svg";
-import BySketchIcon from "../icons/by-sketch.svg";
+import SketchImgIcon from "../icons/sketch-img.svg";
 
 
 interface PropsData {
@@ -54,8 +54,8 @@ function MachIcon({ icon }: { icon: string }) {
       return <InpaintIcon />
     case 'recreate-img':
       return <RecreateImgIcon />
-    case 'by-sketch':
-      return <BySketchIcon />
+    case 'sketch-img':
+      return <SketchImgIcon />
     default:
       return <RiImageEditLine className='w-8 h-8' />
   }

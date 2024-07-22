@@ -15,7 +15,7 @@ export interface Action {
 
 export interface History {
   id: number
-  tool: string
+  tool: Tool,
   src: string
   action: any
   result: string

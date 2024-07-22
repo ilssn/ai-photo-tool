@@ -154,6 +154,9 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
               {tool.name === 'inpaint-img' &&
                 <PromptBar payload={payload} setPayload={setPayload} />
               }
+              {tool.name === 'sketch-img' &&
+                <PromptBar payload={payload} setPayload={setPayload} />
+              }
             </div>
           }
 
