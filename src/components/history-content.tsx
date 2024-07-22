@@ -47,7 +47,7 @@ export function HistoryContent() {
                     <div className="bg-white rounded-sm overflow-hidden">
                       <Image width={80} height={40} alt={"result image"} src={it.result} />
                     </div>
-                    <div className="flex-1 flex flex-col justify-between">
+                    <div className="flex-1 flex flex-col justify-start space-y-2 ">
                       <div className="font-medium text-primary text-base">{it.tool.title}</div>
                       <div className="text-sm text-slate-500">{SystemManager.formatTimestamp(it.id)}</div>
                     </div>

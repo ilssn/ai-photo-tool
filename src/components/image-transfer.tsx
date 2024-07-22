@@ -31,12 +31,8 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
     setResult('')
     setStatus('Pending')
     const res = await onGenerateImage({ type: tool.name, payload, })
-    if (res && res.imageSrc) {
-      setResult(res.imageSrc)
-      setStatus('Done')
-    } else {
-      handleReset()
-    }
+    setResult(res.imageSrc)
+    setStatus('Done')
   }
 
   const handleStop = async () => {
@@ -51,9 +47,8 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
       setResult('')
     }
     setStatus('Ready')
-    // setPayload({})
+    setPayload({})
     updTask({})
-    // setAction
   }
 
   React.useEffect(() => {
@@ -82,7 +77,6 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
     img.onerror = () => {
       console.log('Load image error')
     }
-    // handleReset()
   }, [src])
 
   // debug
@@ -98,7 +92,7 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
       {/* 展示区 */}
       <div className="show w-full grow flex flex-col justify-center items-center space-y-4">
 
-        <div className="w-full rounded-xl overflow-hidden mosaic-bg relative" style={{maxWidth: maxWidth}}>
+        <div className="w-full rounded-xl overflow-hidden mosaic-bg relative" style={{ maxWidth: maxWidth }}>
           <NextImage width={200} height={200} alt="image" src={src} className={
             twMerge('w-full h-auto m-auto', result ? 'opacity-0' : '')}
           >
@@ -121,7 +115,7 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
         </div>
 
         <div className="w-full justify-center items-center">
-          {status === 'Ready' &&
+          {(status === 'Ready' || status === 'Done' ) &&
             <div className="w-full">
               {tool.name === 'upscale' &&
                 <ScaleBar payload={payload} setPayload={setPayload} />
@@ -152,11 +146,11 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
               图片生成中，请耐心等待1-5分钟~
             </div>
           }
-          {status === 'Done' &&
+          {/* {status === 'Done' &&
             <div className='text-center text-sm text-violet-500'>
               图片已经生成，可点击右上角按钮快速保存！
             </div>
-          }
+          } */}
         </div>
 
       </div>
