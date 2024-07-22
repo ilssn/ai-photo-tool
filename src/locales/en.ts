@@ -78,13 +78,13 @@ const en: LocaleType = {
         //   title: '物体消除',
         //   desc: '擦掉您想要移除的区域',
         // },
-        // {
-        //   id: 3,
-        //   name: 'replace-bg',
-        //   icon: 'replace-bg',
-        //   title: '背景替换',
-        //   desc: '以当前图片为基础，生成一张新的图片',
-        // },
+        {
+          id: 3,
+          name: 'replace-bg',
+          icon: 'replace-bg',
+          title: '背景替换',
+          desc: '以当前图片为基础，生成一张新的图片',
+        },
         {
           id: 4,
           name: 'vectorize',
@@ -99,13 +99,13 @@ const en: LocaleType = {
           title: '图片放大',
           desc: '支持2x，4x，8x放大图片',
         },
-        // {
-        //   id: 6,
-        //   name: 'super-upscale',
-        //   icon: 'super-upscale',
-        //   title: '超级图片放大',
-        //   desc: '对图片进行AI生成，添加原图没有的细节',
-        // },
+        {
+          id: 6,
+          name: 'super-upscale',
+          icon: 'super-upscale',
+          title: '超级图片放大',
+          desc: '对图片进行AI生成，添加原图没有的细节',
+        },
         {
           id: 7,
           name: 'colorize',

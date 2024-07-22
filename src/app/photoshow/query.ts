@@ -4,6 +4,7 @@ import StorageManager from "@/utils/Storage"
 import ImageManager from "@/utils/Image";
 import { Action, History } from "@/types";
 import { AUTH_TOKEN, TASK_KEY, HISTORY_KEY } from "@/constants"
+import { AccessibilityIcon } from "@radix-ui/react-icons";
 
 interface Result {
   imageSrc: string
@@ -184,6 +185,16 @@ export async function generateImage(src: string, action: Action): Promise<Result
         const res = await upscaleImage(file, scale)
         result.imageSrc = res.output
       }
+      if (action.type === 'super-upscale') {
+        const file = await ImageManager.imageToFile(src) as File
+        const scale = action.payload.scale
+        let prompt = action.payload.prompt
+        if (SystemManager.containsChinese(prompt)) {
+          prompt = await aiTranslate(prompt)
+        }
+        const res = await superUpscaleImage(file, scale, prompt)
+        result.imageSrc = res.output
+      }
       if (action.type === 'swap-face') {
         const targetFile = await ImageManager.imageToFile(src) as File
         const maskFile = action.payload.mask
@@ -287,7 +298,7 @@ export async function removeBackground(file: File): Promise<any> {
       }
 
       const data = await res.json()
- 
+
       if (data.image) {
         const base64 = 'data:image/png;base64,' + data.image
         const file = await ImageManager.imageToFile(base64)
@@ -420,6 +431,58 @@ export async function upscaleImage(file: File, scale: Number): Promise<any> {
         return
       }
       result = await fetchTask(result.id)
+      resolve(result)
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+
+// 超级放大
+export async function superUpscaleImage(file: File, scale: string, prompt: string): Promise<any> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const token = getToken()
+      let result = {output: ''}
+
+      const formdata = new FormData();
+      formdata.append("image", file);
+      formdata.append("scale_factor", scale);
+      formdata.append("prompt", prompt);
+      formdata.append("negative_prompt", "");
+      formdata.append("dynamic", "6");
+      formdata.append("creativity", "0.35");
+      formdata.append("resemblance", "0.6");
+
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/302/submit/super-upscale`, {
+        method: 'POST',
+        body: formdata,
+        headers: {
+          // "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      })
+      if (!res.ok) {
+        throw await res.json()
+      }
+
+      const data = await res.json()
+
+      // save task
+      updTask(data)
+      
+      if (data.status === 'succeeded') {
+        if (data.output.startsWith('[')) {
+          result.output = JSON.parse(data.output)[0]
+        } else {
+          result.output = data.output
+        }
+        resolve(result)
+        return
+      }
+
+      result = await fetchTask(data.id) as any
       resolve(result)
     } catch (error) {
       reject(error)

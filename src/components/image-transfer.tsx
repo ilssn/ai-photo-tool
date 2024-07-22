@@ -27,7 +27,7 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
   const handleStart = async () => {
     setResult('')
     setStatus('Pending')
-    const res = await onGenerateImage({ type: tool.name, payload,})
+    const res = await onGenerateImage({ type: tool.name, payload, })
     if (res && res.imageSrc) {
       setResult(res.imageSrc)
       setStatus('Done')
@@ -98,6 +98,16 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
             <div className="w-full">
               {tool.name === 'upscale' &&
                 <ScaleBar setPayload={setPayload} />
+              }
+              {tool.name === 'super-upscale' &&
+                <div className="w-full flex space-x-4 items-end">
+                  <div className="flex">
+                    <ScaleBar setPayload={setPayload} />
+                  </div>
+                  <div className="flex-1">
+                    <PromptBar setPayload={setPayload} />
+                  </div>
+                </div>
               }
               {tool.name === 'swap-face' &&
                 <UploadBar setPayload={setPayload} />
