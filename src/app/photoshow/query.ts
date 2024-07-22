@@ -223,8 +223,8 @@ export async function generateImage(src: string, action: Action): Promise<Result
 }
 
 
-// 去除背景
-export async function removeBackground(file: File): Promise<any> {
+// 去除背景:302
+export async function xremoveBackground(file: File): Promise<any> {
   return new Promise(async (resolve, reject) => {
     try {
       let result = null
@@ -262,6 +262,46 @@ export async function removeBackground(file: File): Promise<any> {
       reject(error)
     }
   })
+}
+
+// 去除背景：sd
+export async function removeBackground(file: File): Promise<any> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const token = getToken()
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/sd/v2beta/stable-image/edit/remove-background`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          // "Content-Type": "multipart/form-data",
+          // 'Accept': 'image/*',
+          'Accept': 'application/json',
+          "Authorization": `Bearer ${token}`,
+        },
+      })
+      if (!res.ok) {
+        throw await res.json()
+      }
+
+      const data = await res.json()
+ 
+      if (data.image) {
+        const base64 = 'data:image/png;base64,' + data.image
+        const file = await ImageManager.imageToFile(base64)
+        const url = await uploadImage(file as File)
+        resolve({ output: url })
+      } else {
+        reject('Recreate image faild!')
+      }
+
+    } catch (error) {
+      reject(error)
+    }
+  })
+
 }
 
 // 黑白上色
