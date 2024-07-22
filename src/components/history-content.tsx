@@ -10,10 +10,9 @@ import SystemManager from "@/utils/System";
 import { MdOutlineCleaningServices } from "react-icons/md";
 
 import { RiDownload2Fill } from "react-icons/ri";
-import { BUILD_ID_FILE } from "next/dist/shared/lib/constants";
 
 export function HistoryContent() {
-  const historys = getHistorys()
+  const historys = getHistorys().reverse()
   const [showList, setShowList] = React.useState(historys)
 
   if (!historys.length) return "暂无数据！";
