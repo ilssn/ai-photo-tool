@@ -156,6 +156,63 @@ async function uploadImage(file: File) {
   }
 }
 
+// 匹配图片尺寸
+function matchImageSize(inputWidth: number, inputHeight: number) {
+  let isSwitch = false
+  let width = 0
+  let height = 0
+  // 取整并记录是否对调
+  if (inputWidth > inputHeight) {
+    width = Math.floor(inputWidth)
+    height = Math.floor(inputHeight)
+  } else {
+    isSwitch = true
+    width = Math.floor(inputHeight)
+    height = Math.floor(inputWidth)
+  }
+  // 原始宽高比例
+  const ratio = width / height;
+
+  // 定义取得宽高的数组
+  const sizes = [256, 320, 384, 448, 512, 576, 640, 704, 768, 832, 896, 960, 1024];
+
+  // 初始化最接近原始宽度和高度的新宽度和高度为第一个数值
+  let newWidth = sizes[0];
+  let newHeight = sizes[0];
+
+  // 找到最接近原始宽度的新宽度
+
+  if (width > sizes[sizes.length - 1]) {
+    newWidth = sizes[sizes.length - 1]
+  } else {
+    for (let i = 0; i < sizes.length; i++) {
+      if (sizes[i] >= width) {
+        newWidth = sizes[i];
+        break;
+      }
+    }
+  }
+
+  // 根据比例计算新高度
+  newHeight = Math.floor(newWidth / ratio);
+
+  // 找到最接近原始高度的新高度
+  for (let i = 0; i < sizes.length; i++) {
+    if (sizes[i] >= newHeight) {
+      newHeight = sizes[i];
+      break;
+    }
+  }
+
+  // 根据比例计算新宽度
+  // newWidth = Math.floor(newHeight * ratio);
+  if (isSwitch) {
+    return { width: newHeight, height: newWidth };
+  }
+  // 返回新的宽高
+  return { width: newWidth, height: newHeight };
+}
+
 // 生成图片
 export async function generateImage(src: string, action: Action): Promise<Result> {
   console.log('action::', action)
@@ -166,24 +223,24 @@ export async function generateImage(src: string, action: Action): Promise<Result
       if (action.type === 'remove-bg') {
         const file = await ImageManager.imageToFile(src) as File
         res = await removeBackground(file)
-        result.imageSrc = res.output
+        // result.imageSrc = res.output
       }
       if (action.type === 'colorize') {
         const file = await ImageManager.imageToFile(src) as File
         const url = await uploadImage(file)
         res = await colorizeImage(url)
-        result.imageSrc = res.output
+        // result.imageSrc = res.output
       }
       if (action.type === 'vectorize') {
         const file = await ImageManager.imageToFile(src) as File
         res = await vectorizeImage(file)
-        result.imageSrc = res.output
+        // result.imageSrc = res.output
       }
       if (action.type === 'upscale') {
         const scale = Number(action.payload.scale)
         const file = await ImageManager.imageToFile(src) as File
         const res = await upscaleImage(file, scale)
-        result.imageSrc = res.output
+        // result.imageSrc = res.output
       }
       if (action.type === 'super-upscale') {
         const file = await ImageManager.imageToFile(src) as File
@@ -193,13 +250,13 @@ export async function generateImage(src: string, action: Action): Promise<Result
           prompt = await aiTranslate(prompt)
         }
         const res = await superUpscaleImage(file, scale, prompt)
-        result.imageSrc = res.output
+        // result.imageSrc = res.output
       }
       if (action.type === 'swap-face') {
         const targetFile = await ImageManager.imageToFile(src) as File
         const maskFile = action.payload.mask
         res = await swapFace(targetFile, maskFile)
-        result.imageSrc = res.output
+        // result.imageSrc = res.output
       }
       if (action.type === 'recreate-img') {
         const file = await ImageManager.imageToFile(src) as File
@@ -208,7 +265,7 @@ export async function generateImage(src: string, action: Action): Promise<Result
           prompt = await aiTranslate(prompt)
         }
         res = await recreatImage(file, prompt)
-        result.imageSrc = res.output
+        // result.imageSrc = res.output
       }
       if (action.type === 'inpaint-img') {
         const file = await ImageManager.imageToFile(src) as File
@@ -217,7 +274,7 @@ export async function generateImage(src: string, action: Action): Promise<Result
           prompt = await aiTranslate(prompt)
         }
         res = await inpaintImage(file, prompt)
-        result.imageSrc = res.output
+        // result.imageSrc = res.output
       }
       if (action.type === 'sketch-img') {
         const file = await ImageManager.imageToFile(src) as File
@@ -226,9 +283,26 @@ export async function generateImage(src: string, action: Action): Promise<Result
           prompt = await aiTranslate(prompt)
         }
         res = await sketchImage(file, prompt)
-        result.imageSrc = res.output
+        // result.imageSrc = res.output
+      }
+      if (action.type === 'replace-bg') {
+        const file = await ImageManager.imageToFile(src) as File
+        let prompt = action.payload.prompt
+        if (SystemManager.containsChinese(prompt)) {
+          prompt = await aiTranslate(prompt)
+        }
+        const light = 'None'
+        res = await lightImage(file, prompt, light)
+        // result.imageSrc = res.output
       }
 
+
+      // if array
+      if (res.output.startsWith('[')) {
+        result.imageSrc = JSON.parse(res.output)[0]
+      } else {
+        result.imageSrc = res.output
+      }
 
       // 返回结果
       if (result.imageSrc) {
@@ -452,7 +526,7 @@ export async function superUpscaleImage(file: File, scale: string, prompt: strin
   return new Promise(async (resolve, reject) => {
     try {
       const token = getToken()
-      let result = {output: ''}
+      let result = { output: '' }
 
       const formdata = new FormData();
       formdata.append("image", file);
@@ -584,7 +658,7 @@ export async function recreatImage(file: File, prompt: string): Promise<any> {
 
 }
 
-// 以图修改
+// 图片修改
 export async function inpaintImage(file: File, prompt: string): Promise<any> {
   return new Promise(async (resolve, reject) => {
     try {
@@ -670,4 +744,47 @@ export async function sketchImage(file: File, prompt: string): Promise<any> {
     }
   })
 
+}
+
+
+// 替换背景
+export async function lightImage(file: File, prompt: string, light: string,): Promise<any> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let result = null
+      const token = getToken()
+      const img: any = await ImageManager.readImageSize(file)
+      const { width, height } = matchImageSize(img.width, img.height)
+      const formData = new FormData();
+      formData.append('subject_image', file);
+      formData.append('prompt', prompt);
+      formData.append('width', width + '');
+      formData.append('height', height + '');
+      formData.append('light_source', light);
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/302/submit/relight`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          // "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      })
+      if (!res.ok) {
+        throw await res.json()
+      }
+
+      result = await res.json()
+      // save task
+      updTask(result)
+      if (result.output) {
+        resolve(result)
+        return
+      }
+      result = await fetchTask(result.id) as any
+      resolve(result)
+    } catch (error) {
+      reject(error)
+    }
+  })
 }

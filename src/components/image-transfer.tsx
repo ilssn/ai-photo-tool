@@ -157,6 +157,9 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
               {tool.name === 'sketch-img' &&
                 <PromptBar payload={payload} setPayload={setPayload} />
               }
+              {tool.name === 'replace-bg' &&
+                <PromptBar payload={payload} setPayload={setPayload} />
+              }
             </div>
           }
 
