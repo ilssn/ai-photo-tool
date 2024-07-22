@@ -8,3 +8,7 @@ export const PHOTO_DEFAULT_ACTION_DATA = {
   type: '',
   payload: {},
 }
+
+export const PHOTO_DEFAULT_PAYLOAD = {
+  scale: '2'
+}

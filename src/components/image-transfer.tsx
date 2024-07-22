@@ -6,8 +6,10 @@ import ImageCompare from './image-compare'
 import ScaleBar from './scale-bar'
 import UploadBar from './upload-bar'
 import PromptBar from './prompt-bar'
+import AlertBar from './alert-bar'
 import { updTask } from '@/app/photoshow/query'
-import { Tool, Action, Status } from '@/types'
+import { Tool, Status } from '@/types'
+import { PHOTO_DEFAULT_PAYLOAD } from '@/constants'
 import ImageManager from '@/utils/Image'
 
 interface PropsData {
@@ -23,16 +25,20 @@ interface PropsData {
 
 function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, result, setResult, }: PropsData) {
   const [maxWidth, setMaxWidth] = React.useState('1200px')
-  const [payload, setPayload] = React.useState<any>({
-    scale: '2'
-  })
+  const [errorInfo, setErrorInfo] = React.useState<any>(null)
+  const [payload, setPayload] = React.useState<any>(PHOTO_DEFAULT_PAYLOAD)
 
   const handleStart = async () => {
-    setResult('')
-    setStatus('Pending')
-    const res = await onGenerateImage({ type: tool.name, payload, })
-    setResult(res.imageSrc)
-    setStatus('Done')
+    try {
+      setResult('')
+      setStatus('Pending')
+      const res = await onGenerateImage({ type: tool.name, payload, })
+      setResult(res.imageSrc)
+      setStatus('Done')
+    } catch (error) {
+      setErrorInfo(error)
+      setStatus('Error')
+    }
   }
 
   const handleStop = async () => {
@@ -47,7 +53,7 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
       setResult('')
     }
     setStatus('Ready')
-    setPayload({})
+    setPayload(PHOTO_DEFAULT_PAYLOAD)
     updTask({})
   }
 
@@ -91,6 +97,9 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
 
       {/* 展示区 */}
       <div className="show w-full grow flex flex-col justify-center items-center space-y-4">
+        {status === 'Error' &&
+          <AlertBar errInfo={errorInfo} />
+        }
 
         <div className="w-full rounded-xl overflow-hidden mosaic-bg relative" style={{ maxWidth: maxWidth }}>
           <NextImage width={200} height={200} alt="image" src={src} className={
@@ -114,8 +123,14 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
           }
         </div>
 
-        <div className="w-full justify-center items-center">
-          {(status === 'Ready' || status === 'Done' ) &&
+        <div className="w-full justify-center items-center space-y-4">
+          {status === 'Pending' &&
+            <div className='text-center text-sm text-violet-500'>
+              图片生成中，请耐心等待1-5分钟~
+            </div>
+          }
+
+          {status !== 'Pending' &&
             <div className="w-full">
               {tool.name === 'upscale' &&
                 <ScaleBar payload={payload} setPayload={setPayload} />
@@ -141,11 +156,9 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
               }
             </div>
           }
-          {status === 'Pending' &&
-            <div className='text-center text-sm text-violet-500'>
-              图片生成中，请耐心等待1-5分钟~
-            </div>
-          }
+
+
+
           {/* {status === 'Done' &&
             <div className='text-center text-sm text-violet-500'>
               图片已经生成，可点击右上角按钮快速保存！
@@ -162,7 +175,7 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
           退出
         </Button>
 
-        {status === 'Done'
+        {status === 'Done' || status === 'Error'
           ?
           <Button variant="default" onClick={handleStart}>
             重试
