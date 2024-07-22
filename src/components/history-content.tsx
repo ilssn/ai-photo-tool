@@ -38,7 +38,7 @@ export function HistoryContent() {
       </div>
 
       <ScrollArea className="h-[300px] w-full rounded-md border p-4 mt-2">
-        <ul className="text-sm space-y-2">
+        <ul className="text-sm space-y-4">
           {
             showList.map((it: any, idx: number) => {
               return <li key={idx}>
