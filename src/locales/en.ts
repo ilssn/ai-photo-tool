@@ -83,7 +83,7 @@ const en: LocaleType = {
           name: 'replace-bg',
           icon: 'replace-bg',
           title: '背景替换',
-          desc: '以当前图片为基础，生成一张新的图片',
+          desc: '快速替换图片背景',
         },
         {
           id: 4,
