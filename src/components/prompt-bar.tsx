@@ -2,15 +2,19 @@ import React from 'react'
 import { Input } from "@/components/ui/input"
 
 interface PromptBarProps {
-  prompt: string
-  setPrompt: (prompt: string) => void
+  setPayload: (data: any) => void
 }
 
-function PromptBar({ prompt, setPrompt }: PromptBarProps) {
+function PromptBar({ setPayload }: PromptBarProps) {
+  const [prompt, setPrompt] = React.useState('')
 
   const handleInputChange = ({ target }: any) => {
     setPrompt(target.value)
   }
+
+  React.useEffect(() => {
+    setPayload((preData: any) => { return { ...preData, prompt } });
+  }, [prompt])
 
   return (
     <div className='w-full flex justify-center'>

@@ -2,17 +2,16 @@ import React from 'react'
 import { Button } from './ui/button'
 import { RiUpload2Fill } from "react-icons/ri";
 import { IoIosLink } from "react-icons/io";
-// import { TiDeleteOutline } from "react-icons/ti";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 
 const ALLOWED_FILES = ['image/png', 'image/jpeg', 'image/webp'];
 
 interface UplodaBarProps {
-  mask: File | null
-  setMask: (file: File | null) => void
+  setPayload: (data: any) => void
 }
 
-function UploadBar({ mask, setMask }: UplodaBarProps) {
+function UploadBar({ setPayload }: UplodaBarProps) {
+  const [mask, setMask] = React.useState<File | null>(null)
   const fileRef = React.useRef<HTMLInputElement | null>(null)
 
   // 选中
@@ -31,6 +30,10 @@ function UploadBar({ mask, setMask }: UplodaBarProps) {
       fileRef.current.value = ''
     }
   }, [])
+
+  React.useEffect(() => {
+    setPayload((preData: any) => { return { ...preData, mask } });
+  }, [mask])
 
   return (
     <div className='w-full flex justify-center'>

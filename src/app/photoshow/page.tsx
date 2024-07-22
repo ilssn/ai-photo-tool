@@ -5,6 +5,7 @@ import PhotoshowEdit from "./edit"
 import PhotoshowLogin from "./login"
 import { useConfigStore } from "@/stores";
 import { Tool } from "@/types"
+
 import Locale from '@/locales'
 
 const tools = Locale.Photo.Tool.list
@@ -23,8 +24,8 @@ export default function PhotoshowPage() {
 
       {
         !file
-          ? <PhotoshowLand setTool={setTool} tool={tool} setFile={setFile} file={file} />
-          : <PhotoshowEdit setTool={setTool} tool={tool} setFile={setFile} file={file} />
+          ? <PhotoshowLand tool={tool} setTool={setTool} file={file} setFile={setFile} />
+          : <PhotoshowEdit tool={tool} setTool={setTool} file={file} setFile={setFile} />
       }
     </div>
   )

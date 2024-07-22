@@ -2,6 +2,7 @@
 import SystemManager from "@/utils/System";
 import StorageManager from "@/utils/Storage"
 import ImageManager from "@/utils/Image";
+import { Action } from "@/types";
 import { AUTH_TOKEN, TASK_KEY } from "@/constants"
 
 interface Result {
@@ -142,51 +143,52 @@ async function uploadImage(file: File) {
 }
 
 // 生成图片
-export async function generateImage(action: any): Promise<Result> {
+export async function generateImage(src: string, action: Action): Promise<Result> {
+  console.log('action::', action)
   return new Promise(async (resolve, reject) => {
     let res = null
     let result = { imageSrc: '' }
     try {
-      if (action.name === 'remove-bg') {
-        const file = await ImageManager.imageToFile(action.src) as File
+      if (action.type === 'remove-bg') {
+        const file = await ImageManager.imageToFile(src) as File
         res = await removeBackground(file)
         result.imageSrc = res.output
       }
-      if (action.name === 'colorize') {
-        const file = await ImageManager.imageToFile(action.src) as File
+      if (action.type === 'colorize') {
+        const file = await ImageManager.imageToFile(src) as File
         const url = await uploadImage(file)
         res = await colorizeImage(url)
         result.imageSrc = res.output
       }
-      if (action.name === 'vectorize') {
-        const file = await ImageManager.imageToFile(action.src) as File
+      if (action.type === 'vectorize') {
+        const file = await ImageManager.imageToFile(src) as File
         res = await vectorizeImage(file)
         result.imageSrc = res.output
       }
-      if (action.name === 'upscale') {
-        const scale = Number(action.scale)
-        const file = await ImageManager.imageToFile(action.src) as File
+      if (action.type === 'upscale') {
+        const scale = Number(action.payload.scale)
+        const file = await ImageManager.imageToFile(src) as File
         const res = await upscaleImage(file, scale)
         result.imageSrc = res.output
       }
-      if (action.name === 'swap-face') {
-        const targetFile = await ImageManager.imageToFile(action.src) as File
-        const maskFile = action.mask
+      if (action.type === 'swap-face') {
+        const targetFile = await ImageManager.imageToFile(src) as File
+        const maskFile = action.payload.mask
         res = await swapFace(targetFile, maskFile)
         result.imageSrc = res.output
       }
-      if (action.name === 'recreate-img') {
-        const file = await ImageManager.imageToFile(action.src) as File
-        let prompt = action.prompt
+      if (action.type === 'recreate-img') {
+        const file = await ImageManager.imageToFile(src) as File
+        let prompt = action.payload.prompt
         if (SystemManager.containsChinese(prompt)) {
           prompt = await aiTranslate(prompt)
         }
         res = await recreatImage(file, prompt)
         result.imageSrc = res.output
       }
-      if (action.name === 'inpaint-img') {
-        const file = await ImageManager.imageToFile(action.src) as File
-        let prompt = action.prompt
+      if (action.type === 'inpaint-img') {
+        const file = await ImageManager.imageToFile(src) as File
+        let prompt = action.payload.prompt
         if (SystemManager.containsChinese(prompt)) {
           prompt = await aiTranslate(prompt)
         }

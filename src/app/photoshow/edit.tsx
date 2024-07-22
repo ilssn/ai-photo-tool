@@ -1,12 +1,12 @@
 "use client"
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from "@/components/ui/scroll-area"
 import ToolCard from '@/components/tool-card'
 import ImageTransfer from '@/components/image-transfer'
-import { Tool } from '@/types'
+import { Tool, Action, Status } from '@/types'
 import Locale from '@/locales'
 
 import { RiDownload2Fill } from "react-icons/ri";
@@ -25,9 +25,9 @@ interface PropsData {
 }
 
 function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
+  const [status, setStatus] = useState<Status>('Ready')
   const [src, setSrc] = useState('')
   const [result, setResult] = useState('')
-  const [status, setStatus] = useState<'Ready' | 'Pending' | 'Done' | 'Finish'>('Ready')
 
   React.useEffect(() => {
     if (file) {
@@ -47,7 +47,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
   // 生成图片
   const handlerOngenerateImage = async (action: any) => {
     try {
-      const res = await generateImage(action)
+      const res = await generateImage(src, action)
       console.log('suc::', res)
       return res
     } catch (error) {
@@ -101,15 +101,15 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
           {
             src &&
             <ImageTransfer
-              onGenerateImage={handlerOngenerateImage}
               tool={tool}
-              setTool={setTool}
+              onGenerateImage={handlerOngenerateImage}
               src={src}
               setSrc={setSrc}
+              status={status}
+              setStatus={setStatus}
               result={result}
               setResult={setResult}
-              status={status}
-              setStatus={setStatus} />
+            />
           }
         </div>
 

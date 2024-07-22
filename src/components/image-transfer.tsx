@@ -7,50 +7,33 @@ import ScaleBar from './scale-bar'
 import UploadBar from './upload-bar'
 import PromptBar from './prompt-bar'
 import { updateTask } from '@/app/photoshow/query'
-import { Tool } from '@/types'
+import { Tool, Action, Status } from '@/types'
 import ImageManager from '@/utils/Image'
 
 interface PropsData {
   tool: Tool
-  setTool: (tool: Tool) => void
+  onGenerateImage: (action: any) => Promise<any>
   src: string
   setSrc: (src: string) => void
+  status: string
+  setStatus: (status: Status) => void
   result: string
   setResult: (result: string) => void
-  status: string
-  setStatus: (status: 'Ready' | 'Pending' | 'Done' | 'Finish') => void
-  onGenerateImage: (action: any) => Promise<any>
 }
 
-function ImageTransfer({ tool, src, setSrc, status, setStatus, result, setResult, onGenerateImage }: PropsData) {
-  // upscale
-  const [scale, setScale] = React.useState('2')
-  // prompt
-  const [prompt, setPrompt] = React.useState('')
-  // swap-face
-  const [mask, setMask] = React.useState<File | null>(null)
+function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, result, setResult, }: PropsData) {
+  const [payload, setPayload] = React.useState<any>({})
 
   const handleStart = async () => {
-    const action = {
-      name: tool.name,
-      src,
-      scale,
-      mask,
-      prompt,
-    }
+    setResult('')
     setStatus('Pending')
-    const res = await onGenerateImage(action)
+    const res = await onGenerateImage({ type: tool.name, payload,})
     if (res && res.imageSrc) {
       setResult(res.imageSrc)
       setStatus('Done')
     } else {
       handleReset()
     }
-  }
-
-  const handleReStart = async () => {
-    setResult('')
-    handleStart()
   }
 
   const handleStop = async () => {
@@ -65,11 +48,13 @@ function ImageTransfer({ tool, src, setSrc, status, setStatus, result, setResult
       setResult('')
     }
     setStatus('Ready')
+    setPayload({})
     updateTask({})
+    // setAction
   }
 
   React.useEffect(() => {
-    console.log('tool::', tool)
+    console.log('Tool::', tool)
     handleReset()
   }, [tool])
 
@@ -112,16 +97,16 @@ function ImageTransfer({ tool, src, setSrc, status, setStatus, result, setResult
           {status === 'Ready' &&
             <div className="w-full">
               {tool.name === 'upscale' &&
-                <ScaleBar scale={scale} setScale={setScale} />
+                <ScaleBar setPayload={setPayload} />
               }
               {tool.name === 'swap-face' &&
-                <UploadBar mask={mask} setMask={setMask} />
+                <UploadBar setPayload={setPayload} />
               }
               {tool.name === 'recreate-img' &&
-                <PromptBar prompt={prompt} setPrompt={setPrompt} />
+                <PromptBar setPayload={setPayload} />
               }
               {tool.name === 'inpaint-img' &&
-                <PromptBar prompt={prompt} setPrompt={setPrompt} />
+                <PromptBar setPayload={setPayload} />
               }
             </div>
           }
@@ -148,7 +133,7 @@ function ImageTransfer({ tool, src, setSrc, status, setStatus, result, setResult
 
         {status === 'Done'
           ?
-          <Button variant="default" onClick={handleReStart}>
+          <Button variant="default" onClick={handleStart}>
             重试
           </Button>
           :

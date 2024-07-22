@@ -2,8 +2,6 @@
 
 import React from 'react'
 import Image from 'next/image'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import UploadFile from '@/components/upload-file'
 import ToolCard from '@/components/tool-card'
 import { Tool } from '@/types'
@@ -46,7 +44,6 @@ function PhotoshowLand({ setTool, file, setFile }: PropsData) {
 
       <section className="example mt-8">
         <div className="w-full text-sm text-center text-slate-500">现已支持</div>
-        {/* <div className="w-full text-sm text-center text-slate-500">点击下方按钮快速使用</div> */}
         <ul className="w-full mt-4 grid grid-cols-2 gap-x-4 gap-y-2 sm:gap-x-8 sm:gap-y-4">
           {
             tools.map((it, idx) =>

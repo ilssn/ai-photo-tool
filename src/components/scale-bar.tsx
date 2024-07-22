@@ -2,13 +2,22 @@ import React from 'react'
 import { Button } from './ui/button'
 
 interface PropsData {
-  scale: string
-  setScale: (scale: string) => void
+  setPayload: (data: any) => void
 }
 
 const scales = ['2', '4', '8']
 
-function ScaleBar({ scale, setScale }: PropsData) {
+function ScaleBar({ setPayload }: PropsData) {
+  const [scale, setScale] = React.useState('2')
+
+  const handleChangeScale = (scale: string) => {
+    setScale(scale)
+  }
+
+  React.useEffect(() => {
+    setPayload((preData: any) => { return { ...preData, scale } });
+  }, [scale])
+
   return (
     <div className='w-full flex justify-center space-x-2 text-md'>
       {
@@ -17,7 +26,7 @@ function ScaleBar({ scale, setScale }: PropsData) {
             variant={it === scale ? 'default' : 'outline'}
             size={'sm'}
             key={idx}
-            onClick={() => setScale(it)}
+            onClick={() => handleChangeScale(it)}
           >
             x{it}
           </Button>

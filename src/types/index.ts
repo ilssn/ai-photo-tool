@@ -5,3 +5,11 @@ export interface Tool {
   title: string
   desc: string
 }
+
+export interface Action {
+  type: string
+  payload: any
+}
+
+
+export type Status = 'Wait' | 'Ready' | 'Pending' | 'Done' | 'Finish' | 'Error'
