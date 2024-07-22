@@ -7,11 +7,11 @@ import { MdOutlineDeleteOutline } from "react-icons/md";
 const ALLOWED_FILES = ['image/png', 'image/jpeg', 'image/webp'];
 
 interface UplodaBarProps {
+  payload: any
   setPayload: (data: any) => void
 }
 
-function UploadBar({ setPayload }: UplodaBarProps) {
-  const [mask, setMask] = React.useState<File | null>(null)
+function UploadBar({ payload, setPayload }: UplodaBarProps) {
   const fileRef = React.useRef<HTMLInputElement | null>(null)
 
   // 选中
@@ -21,9 +21,7 @@ function UploadBar({ setPayload }: UplodaBarProps) {
     )[0]
 
     if (file) {
-      if (setMask) {
-        setMask(file)
-      }
+      setPayload((preData: any) => { return { ...preData, mask: file } });
     }
 
     if (fileRef.current) {
@@ -31,14 +29,11 @@ function UploadBar({ setPayload }: UplodaBarProps) {
     }
   }, [])
 
-  React.useEffect(() => {
-    setPayload((preData: any) => { return { ...preData, mask } });
-  }, [mask])
 
   return (
     <div className='w-full flex justify-center'>
       {
-        !mask ?
+        !payload.mask ?
           <Button size={'sm'} onClick={() => fileRef.current?.click()}>
             <RiUpload2Fill />
             上传人脸
@@ -47,9 +42,9 @@ function UploadBar({ setPayload }: UplodaBarProps) {
           <div className="w-full p-2 bg-violet-200 rounded-full flex justify-between items-center overflow-hidden">
             <div className='flex-1 px-1 flex items-center space-x-2'>
               <IoIosLink className='text-lg' />
-              <p className='flex-1 text-slate-500 text-sm overflow-hidden'>{mask.name}</p>
+              <p className='flex-1 text-slate-500 text-sm overflow-hidden'>{payload.mask.name}</p>
             </div>
-            <div className='px-1' onClick={() => setMask(null)}>
+            <div className='px-1' onClick={() => setPayload((preData: any) => { return { ...preData, mask: null } })}>
               <MdOutlineDeleteOutline className='text-xl text-red-500 cursor-pointer' />
             </div>
           </div>

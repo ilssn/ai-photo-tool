@@ -1,5 +1,5 @@
 import React from 'react'
-import Image from 'next/image'
+import NextImage from 'next/image'
 import { twMerge } from 'tailwind-merge'
 import { Button } from '@/components/ui/button'
 import ImageCompare from './image-compare'
@@ -22,7 +22,10 @@ interface PropsData {
 }
 
 function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, result, setResult, }: PropsData) {
-  const [payload, setPayload] = React.useState<any>({})
+  const [maxWidth, setMaxWidth] = React.useState('1200px')
+  const [payload, setPayload] = React.useState<any>({
+    scale: '2'
+  })
 
   const handleStart = async () => {
     setResult('')
@@ -48,7 +51,7 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
       setResult('')
     }
     setStatus('Ready')
-    setPayload({})
+    // setPayload({})
     updTask({})
     // setAction
   }
@@ -57,6 +60,30 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
     console.log('Tool::', tool)
     handleReset()
   }, [tool])
+
+  React.useEffect(() => {
+    const img = new Image()
+    img.src = src
+    img.onload = () => {
+      if (img.width && img.height) {
+        const scale = Number(img.height) / Number(img.width)
+        console.log(scale)
+        if (scale >= 1) {
+          setMaxWidth('700px')
+        }
+        if (scale >= 1.3) {
+          setMaxWidth('600px')
+        }
+        if (scale >= 1.5) {
+          setMaxWidth('500px')
+        }
+      }
+    }
+    img.onerror = () => {
+      console.log('Load image error')
+    }
+    // handleReset()
+  }, [src])
 
   // debug
   // React.useEffect(() => {
@@ -71,11 +98,11 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
       {/* 展示区 */}
       <div className="show w-full grow flex flex-col justify-center items-center space-y-4">
 
-        <div className="w-full rounded-xl overflow-hidden mosaic-bg relative">
-          <Image width={200} height={200} alt="image" src={src} className={
+        <div className="w-full rounded-xl overflow-hidden mosaic-bg relative" style={{maxWidth: maxWidth}}>
+          <NextImage width={200} height={200} alt="image" src={src} className={
             twMerge('w-full h-auto m-auto', result ? 'opacity-0' : '')}
           >
-          </Image>
+          </NextImage>
 
           {status === 'Pending' &&
             <div className={twMerge('scan w-full absolute top-0 transition-all duration-200 pointer-events-none',)}>
@@ -97,26 +124,26 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
           {status === 'Ready' &&
             <div className="w-full">
               {tool.name === 'upscale' &&
-                <ScaleBar setPayload={setPayload} />
+                <ScaleBar payload={payload} setPayload={setPayload} />
               }
               {tool.name === 'super-upscale' &&
                 <div className="w-full flex space-x-4 items-end">
                   <div className="flex">
-                    <ScaleBar setPayload={setPayload} />
+                    <ScaleBar payload={payload} setPayload={setPayload} />
                   </div>
                   <div className="flex-1">
-                    <PromptBar setPayload={setPayload} />
+                    <PromptBar payload={payload} setPayload={setPayload} />
                   </div>
                 </div>
               }
               {tool.name === 'swap-face' &&
-                <UploadBar setPayload={setPayload} />
+                <UploadBar payload={payload} setPayload={setPayload} />
               }
               {tool.name === 'recreate-img' &&
-                <PromptBar setPayload={setPayload} />
+                <PromptBar payload={payload} setPayload={setPayload} />
               }
               {tool.name === 'inpaint-img' &&
-                <PromptBar setPayload={setPayload} />
+                <PromptBar payload={payload} setPayload={setPayload} />
               }
             </div>
           }
