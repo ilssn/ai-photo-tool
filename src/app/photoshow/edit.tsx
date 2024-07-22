@@ -6,12 +6,12 @@ import { Button } from '@/components/ui/button'
 import { ScrollArea } from "@/components/ui/scroll-area"
 import ToolCard from '@/components/tool-card'
 import ImageTransfer from '@/components/image-transfer'
-import { Tool, Action, Status } from '@/types'
+import { Tool, Action, Status, History } from '@/types'
 import Locale from '@/locales'
 
 import { RiDownload2Fill } from "react-icons/ri";
 
-import { generateImage } from './query'
+import { generateImage, getHistorys, updHistorys } from './query'
 
 import SystemManager from '@/utils/System'
 
@@ -49,13 +49,22 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
     try {
       const res = await generateImage(src, action)
       console.log('suc::', res)
+      // save history
+      const historys = getHistorys() as History[]
+      const history: History = {
+        id: Date.now(),
+        tool: tool,
+        src,
+        action,
+        result: res.imageSrc,
+      }
+      updHistorys([...historys, history])
       return res
     } catch (error) {
       console.log('error::', error)
       alert('请求错误，请更换图片重试！')
       return null
     }
-
   }
 
   if (!src) return <>Loading...</>

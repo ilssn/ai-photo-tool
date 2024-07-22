@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { IoMdInformationCircleOutline } from "react-icons/io";
+import { MdHistory } from "react-icons/md";
 
 import {
   Dialog,
@@ -11,24 +11,24 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { InfoContent } from "./info-content";
+import { HistoryContent } from "./history-content";
 
-export function InfoModal() {
+export function HistoryModal() {
   return (
     <Dialog>
       <DialogTrigger>
-      <IoMdInformationCircleOutline className="h-[1.4rem] w-[1.4rem] rotate-0 scale-100" />
+      <MdHistory className="h-[1.4rem] w-[1.4rem] rotate-0 scale-100" />
       </DialogTrigger>
       <DialogContent className="max-w-[600px]">
         <DialogHeader>
           <DialogTitle>
-            关于
+            历史记录
           </DialogTitle>
-          <DialogDescription className="">
-            图片全能工具箱
-          </DialogDescription>
+          {/* <DialogDescription className="">
+            图片生成记录
+          </DialogDescription> */}
         </DialogHeader>
-        <InfoContent />
+        <HistoryContent />
       </DialogContent>
     </Dialog>
   );

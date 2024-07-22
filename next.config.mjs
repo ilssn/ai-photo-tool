@@ -29,6 +29,18 @@ const nextConfig = {
 
     return config
   },
+
+  images: {
+    domains: ['file.302.ai']
+    // remotePatterns: [
+    //   {
+    //     protocol: 'https',
+    //     hostname: 'file.302.ai',
+    //     port: '',
+    //     pathname: '',
+    //   },
+    // ],
+  },
 };
 
 export default nextConfig;

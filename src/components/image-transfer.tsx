@@ -6,7 +6,7 @@ import ImageCompare from './image-compare'
 import ScaleBar from './scale-bar'
 import UploadBar from './upload-bar'
 import PromptBar from './prompt-bar'
-import { updateTask } from '@/app/photoshow/query'
+import { updTask } from '@/app/photoshow/query'
 import { Tool, Action, Status } from '@/types'
 import ImageManager from '@/utils/Image'
 
@@ -37,7 +37,7 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
   }
 
   const handleStop = async () => {
-    updateTask({})
+    updTask({})
     setStatus('Finish')
   }
 
@@ -49,7 +49,7 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
     }
     setStatus('Ready')
     setPayload({})
-    updateTask({})
+    updTask({})
     // setAction
   }
 

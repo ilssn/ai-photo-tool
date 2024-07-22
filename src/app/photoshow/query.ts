@@ -2,8 +2,8 @@
 import SystemManager from "@/utils/System";
 import StorageManager from "@/utils/Storage"
 import ImageManager from "@/utils/Image";
-import { Action } from "@/types";
-import { AUTH_TOKEN, TASK_KEY } from "@/constants"
+import { Action, History } from "@/types";
+import { AUTH_TOKEN, TASK_KEY, HISTORY_KEY } from "@/constants"
 
 interface Result {
   imageSrc: string
@@ -23,9 +23,22 @@ export const getTask = () => {
 };
 
 // Task: upd
-export const updateTask = (value: any) => {
+export const updTask = (value: any) => {
   StorageManager.setItem(TASK_KEY, value);
 };
+
+
+// Historys: get
+export const getHistorys = () => {
+  const data = StorageManager.getItem(HISTORY_KEY) || [];
+  return data;
+};
+
+// Historys: upd
+export const updHistorys = (value: History[]) => {
+  StorageManager.setItem(HISTORY_KEY, value);
+};
+
 
 // Task: fetch
 export const fetchTask = async (id: string) => {
@@ -241,7 +254,7 @@ export async function removeBackground(file: File): Promise<any> {
       }
 
       // 等待任务结果
-      updateTask(result)
+      updTask(result)
       result = await fetchTask(result.id)
       resolve(result)
 
@@ -273,7 +286,7 @@ export async function colorizeImage(url: string): Promise<any> {
       }
 
       result = await res.json()
-      updateTask(result)
+      updTask(result)
       if (result.output) {
         resolve(result)
         return
@@ -361,7 +374,7 @@ export async function upscaleImage(file: File, scale: Number): Promise<any> {
 
       result = await res.json()
       // save task
-      updateTask(result)
+      updTask(result)
       if (result.output) {
         resolve(result)
         return
@@ -397,7 +410,7 @@ export async function swapFace(target: File, mask: File): Promise<any> {
       }
 
       result = await res.json()
-      updateTask(result)
+      updTask(result)
       if (result.output) {
         resolve(result)
         return
@@ -436,7 +449,7 @@ export async function recreatImage(file: File, prompt: string): Promise<any> {
       }
 
       const data = await res.json()
-      // updateTask(result)
+      // updTask(result)
       // if (result.output) {
       //   resolve(result)
       //   return
@@ -483,7 +496,7 @@ export async function inpaintImage(file: File, prompt: string): Promise<any> {
       }
 
       const data = await res.json()
-      // updateTask(result)
+      // updTask(result)
       // if (result.output) {
       //   resolve(result)
       //   return

@@ -5,6 +5,7 @@ import { Button } from "./ui/button";
 // import { useConfigStore } from "@/stores";
 import { useRouter } from "next/navigation";
 import { InfoModal } from "./info-modal";
+import { HistoryModal } from "./history-modal";
 
 
 export function Navbar() {
@@ -16,6 +17,7 @@ export function Navbar() {
       <div className="flex items-center gap-2">
       </div>
       <div className="flex items-center gap-4 p-2">
+        <HistoryModal />
         <InfoModal />
       </div>
     </header>

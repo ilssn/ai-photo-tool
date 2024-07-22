@@ -1,3 +1,5 @@
+export type Status = 'Wait' | 'Ready' | 'Pending' | 'Done' | 'Finish' | 'Error'
+
 export interface Tool {
   id: number
   name: string
@@ -11,5 +13,10 @@ export interface Action {
   payload: any
 }
 
-
-export type Status = 'Wait' | 'Ready' | 'Pending' | 'Done' | 'Finish' | 'Error'
+export interface History {
+  id: number
+  tool: string
+  src: string
+  action: any
+  result: string
+}
