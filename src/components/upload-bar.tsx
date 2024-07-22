@@ -36,7 +36,7 @@ function UploadBar({ payload, setPayload }: UplodaBarProps) {
         !payload.mask ?
           <Button size={'sm'} onClick={() => fileRef.current?.click()}>
             <RiUpload2Fill />
-            上传人脸
+            上传人脸图片
           </Button>
           :
           <div className="w-full p-2 bg-violet-200 rounded-full flex justify-between items-center overflow-hidden">
