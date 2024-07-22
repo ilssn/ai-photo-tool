@@ -137,13 +137,9 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
                 <ScaleBar payload={payload} setPayload={setPayload} />
               }
               {tool.name === 'super-upscale' &&
-                <div className="w-full flex space-x-4 items-end">
-                  <div className="flex">
-                    <ScaleBar payload={payload} setPayload={setPayload} />
-                  </div>
-                  <div className="flex-1">
-                    <PromptBar payload={payload} setPayload={setPayload} />
-                  </div>
+                <div className="w-full flex space-x-4 flex-col space-y-2">
+                  <ScaleBar payload={payload} setPayload={setPayload} />
+                  <PromptBar payload={payload} setPayload={setPayload} />
                 </div>
               }
               {tool.name === 'swap-face' &&
