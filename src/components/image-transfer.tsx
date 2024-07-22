@@ -6,6 +6,7 @@ import ImageCompare from './image-compare'
 import ScaleBar from './scale-bar'
 import UploadBar from './upload-bar'
 import PromptBar from './prompt-bar'
+import LightBar from './light-bar'
 import AlertBar from './alert-bar'
 import { updTask } from '@/app/photoshow/query'
 import { Tool, Status } from '@/types'
@@ -158,7 +159,14 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
                 <PromptBar payload={payload} setPayload={setPayload} />
               }
               {tool.name === 'replace-bg' &&
-                <PromptBar payload={payload} setPayload={setPayload} />
+                <div className="w-full flex space-x-4 flex-col space-y-2">
+                  <LightBar payload={payload} setPayload={setPayload} />
+                  <PromptBar
+                    payload={payload}
+                    setPayload={setPayload}
+                    placeHolder="请输入背景图描述"
+                  />
+                </div>
               }
             </div>
           }

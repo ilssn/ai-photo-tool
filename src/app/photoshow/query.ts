@@ -239,7 +239,7 @@ export async function generateImage(src: string, action: Action): Promise<Result
       if (action.type === 'upscale') {
         const scale = Number(action.payload.scale)
         const file = await ImageManager.imageToFile(src) as File
-        const res = await upscaleImage(file, scale)
+        res = await upscaleImage(file, scale)
         // result.imageSrc = res.output
       }
       if (action.type === 'super-upscale') {
@@ -249,7 +249,7 @@ export async function generateImage(src: string, action: Action): Promise<Result
         if (SystemManager.containsChinese(prompt)) {
           prompt = await aiTranslate(prompt)
         }
-        const res = await superUpscaleImage(file, scale, prompt)
+        res = await superUpscaleImage(file, scale, prompt)
         // result.imageSrc = res.output
       }
       if (action.type === 'swap-face') {

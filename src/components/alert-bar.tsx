@@ -44,6 +44,7 @@ function AlertBar({ errInfo }: PropsData) {
 
     } else {
       setErrType('请求错误!')
+      // debug
       showContent = '数据异常，请稍后重试！'
 
     }

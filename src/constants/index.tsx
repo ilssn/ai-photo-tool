@@ -13,4 +13,5 @@ export const PHOTO_DEFAULT_PAYLOAD = {
   scale: '2',
   prompt: '',
   mask: null,
+  light: 'None',
 }
