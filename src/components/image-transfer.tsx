@@ -81,6 +81,7 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
   }, [tool])
 
   React.useEffect(() => {
+    setMaxWidth('1200px')
     const img = new Image()
     img.src = src
     img.onload = () => {
