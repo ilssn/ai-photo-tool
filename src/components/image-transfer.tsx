@@ -4,7 +4,6 @@ import { twMerge } from 'tailwind-merge'
 import { Button } from '@/components/ui/button'
 import ImageCompare from './image-compare'
 import ImageCropper from './image-cropper'
-import { ImageEditor } from './ImageEditor/ImageEditor'
 import ScaleBar from './scale-bar'
 import UploadBar from './upload-bar'
 import PromptBar from './prompt-bar'
@@ -155,7 +154,6 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
 
               <div className={twMerge("absolute top-0 left-0 w-full h-full", result ? 'opacity-0' : '')}>
                 <ImageCropper src={src} setSrc={setSrc} setPayload={setPayload} />
-                {/* <ImageEditor /> */}
               </div>
 
               {status === 'Pending' &&
