@@ -49,7 +49,7 @@ export const fetchTask = async (id: string) => {
     const maxAttempts = 30;
 
     const fetchApi = (id: string) => {
-      fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/task/${id}/fetch
+      fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/302/task/${id}/fetch
       `, {
         headers: {
           "Authorization": `Bearer ${token}`,
