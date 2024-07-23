@@ -4,6 +4,7 @@ import { twMerge } from 'tailwind-merge'
 import { Button } from '@/components/ui/button'
 import ImageCompare from './image-compare'
 import ImageCropper from './image-cropper'
+// import ImageMask from './Image-mask'
 import ScaleBar from './scale-bar'
 import UploadBar from './upload-bar'
 import PromptBar from './prompt-bar'
@@ -13,6 +14,12 @@ import { updTask } from '@/app/photoshow/query'
 import { Tool, Status } from '@/types'
 import { PHOTO_DEFAULT_PAYLOAD } from '@/constants'
 import ImageManager from '@/utils/Image'
+
+// use dynamic import to fixed the canvas require error on next14
+import dynamic from 'next/dynamic'
+const ImageMask = dynamic(() => import('./Image-mask'), {
+  ssr: false,
+})
 
 interface PropsData {
   tool: Tool
@@ -50,8 +57,13 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
   }
 
   const handleRestart = async () => {
-    if(['crop-img'].includes(tool.name)) {
+    if (['crop-img'].includes(tool.name)) {
       setSrc(originSrc)
+      setResult('')
+      setStatus('Ready')
+      return
+    }
+    if (['remove-obj', 'inpaint-img'].includes(tool.name)) {
       setResult('')
       setStatus('Ready')
       return
@@ -119,9 +131,14 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
           <AlertBar errInfo={errorInfo} />
         }
         {/* 图片容器 */}
-        <div className="w-full rounded-xl overflow-hidden " style={{ maxWidth: maxWidth }}>
+        <div
+          className={twMerge("w-full rounded-xl overflow-hidden",
+            ['inpaint-img', 'remove-obj'].includes(tool.name) ? 'py-10' : ''
+          )}
+          style={{ maxWidth: maxWidth }}
+        >
           {/* 基础通用图片容器 */}
-          {!['crop-img'].includes(tool.name) &&
+          {!['crop-img', 'remove-obj'].includes(tool.name) &&
             <div className="w-full mosaic-bg relative">
               <NextImage width={200} height={200} alt="image" src={src}
                 className={twMerge('w-full h-auto m-auto', result ? 'opacity-0' : '')}
@@ -144,14 +161,14 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
               }
             </div>
           }
-          {/* 高级定制图片容器 */}
+
+          {/* 高级定制图片容器1, 尺寸改变 */}
           {['crop-img'].includes(tool.name) &&
-            <div className="w-full mosaic-bg relative">
+            <div className="w-full mosaic-bg rounded-xl relative">
               <NextImage width={200} height={200} alt="image" src={src}
-                className={twMerge('w-full h-auto m-auto', result ? 'opacity-0' : '')}
+                className={twMerge('w-full h-auto m-auto opacity-10 ', result ? 'opacity-0' : '')}
               >
               </NextImage>
-
 
               <div className={twMerge("absolute top-0 left-0 w-full h-full", result ? 'opacity-0' : '')}>
                 <ImageCropper src={src} setSrc={setSrc} setPayload={setPayload} />
@@ -165,7 +182,7 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
               {result &&
                 <div className='w-full absolute top-0'>
                   <img width={200} height={200} alt="image" src={result} className={
-                    twMerge('w-full h-auto m-auto')}
+                    twMerge('w-full h-auto m-auto, rounded-xl')}
                   >
                   </img>
                 </div>
@@ -174,10 +191,41 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
             </div>
           }
 
+          {/* 高级定制图片容器2: 涂抹操作 */}
+          {['remove-obj'].includes(tool.name) &&
+            <div className="w-full mosaic-bg relative">
+              <NextImage width={200} height={200} alt="image" src={src}
+                className={twMerge('w-full h-auto m-auto opacity-10 ', result ? 'opacity-0' : '')}
+              >
+              </NextImage>
+
+              <div className={twMerge("absolute top-0 left-0 w-full h-full", result ? 'opacity-0' : '')}>
+                <ImageMask src={src} setSrc={setSrc} setPayload={setPayload} />
+              </div>
+
+              {status === 'Pending' &&
+                <div className={twMerge('scan w-full absolute top-0 transition-all duration-200 pointer-events-none',)}>
+                </div>
+              }
+
+              {result &&
+                <div className='w-full absolute top-0'>
+                  <ImageCompare
+                    beforeSrc={src}
+                    afterSrc={result}
+                    initPosition={30}
+                  />
+                </div>
+              }
+
+            </div>
+          }
+
+
         </div>
 
         {/* 状态参数 */}
-        <div className="w-full justify-center items-center space-y-4">
+        <div className="w-full justify-center items-center">
           {status === 'Pending' &&
             <div className='text-center text-sm text-violet-500'>
               图片生成中，请耐心等待1-5分钟~
@@ -233,7 +281,7 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
         {status === 'Done' || status === 'Error'
           ?
           <Button variant="default" onClick={handleRestart}>
-            {['crop-img'].includes(tool.name) ? '重做' : '重试'}
+            {['crop-img', 'remove-obj', 'inpaint-img'].includes(tool.name) ? '重做' : '重试'}
           </Button>
           :
           <Button variant="default" disabled={status !== 'Ready'} onClick={handleStart}>

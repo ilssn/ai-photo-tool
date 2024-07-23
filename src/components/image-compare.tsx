@@ -39,7 +39,7 @@ const ImageCompare: React.FC<Props> = ({
   }, [afterSrc])
 
   return (
-    <div className="flex w-full flex-col items-center justify-center">
+    <div className="flex w-full flex-col items-center justify-center rounded-xl overflow-hidden">
       <ReactCompareSlider
         className="compare w-full"
         position={position}

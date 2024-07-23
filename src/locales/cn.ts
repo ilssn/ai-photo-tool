@@ -71,13 +71,13 @@ const cn = {
           title: '去除背景',
           desc: '精确提取图片中主体',
         },
-        // {
-        //   id: 2,
-        //   name: 'remove-obj',
-        //   icon: 'remove-obj',
-        //   title: '物体消除',
-        //   desc: '擦掉您想要移除的区域',
-        // },
+        {
+          id: 2,
+          name: 'remove-obj',
+          icon: 'remove-obj',
+          title: '物体消除',
+          desc: '擦掉您想要移除的区域',
+        },
         {
           id: 3,
           name: 'replace-bg',

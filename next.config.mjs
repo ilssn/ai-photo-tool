@@ -26,6 +26,8 @@ const nextConfig = {
 
     // Modify the file loader rule to ignore *.svg, since we have it handled now.
     fileLoaderRule.exclude = /\.svg$/i
+    
+    config.externals = [...config.externals, { canvas: 'canvas' }]; // required to make Konva & react-konva work
 
     return config
   },

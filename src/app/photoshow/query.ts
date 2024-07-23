@@ -224,6 +224,12 @@ export async function generateImage(src: string, action: Action): Promise<Result
         res = await removeBackground(file)
         // result.imageSrc = res.output
       }
+      if (action.type === 'remove-obj') {
+        const file = await ImageManager.imageToFile(src) as File
+        const mask = action.payload.mask
+        res = await removeObject(file, mask)
+        // result.imageSrc = res.output
+      }
       if (action.type === 'colorize') {
         const file = await ImageManager.imageToFile(src) as File
         const url = await uploadImage(file)
@@ -252,9 +258,9 @@ export async function generateImage(src: string, action: Action): Promise<Result
         // result.imageSrc = res.output
       }
       if (action.type === 'swap-face') {
-        const targetFile = await ImageManager.imageToFile(src) as File
-        const maskFile = action.payload.mask
-        res = await swapFace(targetFile, maskFile)
+        const file = await ImageManager.imageToFile(src) as File
+        const mask = action.payload.mask
+        res = await swapFace(file, mask)
         // result.imageSrc = res.output
       }
       if (action.type === 'recreate-img') {
@@ -370,6 +376,47 @@ export async function removeBackground(file: File): Promise<any> {
       formData.append('image', file);
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/sd/v2beta/stable-image/edit/remove-background`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          // "Content-Type": "multipart/form-data",
+          // 'Accept': 'image/*',
+          'Accept': 'application/json',
+          "Authorization": `Bearer ${token}`,
+        },
+      })
+      if (!res.ok) {
+        throw await res.json()
+      }
+
+      const data = await res.json()
+
+      if (data.image) {
+        const base64 = 'data:image/png;base64,' + data.image
+        const file = await ImageManager.imageToFile(base64)
+        const url = await uploadImage(file as File)
+        resolve({ output: url })
+      } else {
+        reject('Recreate image faild!')
+      }
+
+    } catch (error) {
+      reject(error)
+    }
+  })
+
+}
+
+// 去除背景：sd
+export async function removeObject(file: File, mask: File): Promise<any> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const token = getToken()
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('mask', mask);
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/sd/v2beta/stable-image/edit/erase`, {
         method: 'POST',
         body: formData,
         headers: {
