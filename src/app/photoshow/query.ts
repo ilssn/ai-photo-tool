@@ -297,7 +297,7 @@ export async function generateImage(src: string, action: Action): Promise<Result
 
       if (action.type === 'crop-img') {
         const canvas = action.payload.canvas
-        res = await cropImage(canvas)
+        res = await cropImage(src, canvas)
       }
 
 
@@ -792,14 +792,18 @@ export async function lightImage(file: File, prompt: string, light: string,): Pr
 }
 
 // 裁剪图片
-export async function cropImage(canvas: any): Promise<any> {
+export async function cropImage(src: string, canvas: any): Promise<any> {
   return new Promise(async (resolve, reject) => {
-    const local = canvas.toDataURL()
+    if (!canvas) {
+      resolve({ output: src })
+      return
+    }
+    const local = canvas.toDataURL({ pixelRatio: 4 })
     const file = await ImageManager.imageToFile(local) as File
     const online = await uploadImage(file)
-   const result = {
-    output: online
-   }
-   resolve(result)
+    const result = {
+      output: online
+    }
+    resolve(result)
   })
 }

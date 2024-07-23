@@ -164,10 +164,10 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
 
               {result &&
                 <div className='w-full absolute top-0'>
-                  <NextImage width={200} height={200} alt="image" src={result} className={
+                  <img width={200} height={200} alt="image" src={result} className={
                     twMerge('w-full h-auto m-auto')}
                   >
-                  </NextImage>
+                  </img>
                 </div>
               }
 
