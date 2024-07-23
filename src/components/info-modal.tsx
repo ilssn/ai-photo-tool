@@ -25,7 +25,7 @@ export function InfoModal() {
             关于
           </DialogTitle>
           <DialogDescription className="">
-            图片全能工具箱
+            AI图片工具箱
           </DialogDescription>
         </DialogHeader>
         <InfoContent />

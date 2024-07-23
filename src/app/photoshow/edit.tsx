@@ -76,7 +76,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
       <div className="left w-[310px] h-full p-4 bg-white shadow-2xl flex flex-col">
         <div className="w-full flex items-center space-x-2 py-2">
           <Image width={40} height={40} alt="logo" src="/logo.png"></Image>
-          <p className='font-medium text-xl md:text-2xl'>AI图片全能工具箱</p>
+          <p className='font-medium text-xl md:text-2xl'>AI图片工具箱</p>
         </div>
         <div className="grow relative mt-2">
           <div className="absolute top-0 left-0 w-full h-full">
@@ -99,7 +99,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
 
         <div className="w-full flex justify-between items-center">
           <div className="info text-md text-primary">
-            <span className='font-medium'>图片全能工具箱 </span>
+            <span className='font-medium'>AI图片工具箱 </span>
             <span className='italic'>{`> ${tool.title}`}</span>
           </div>
           <Button disabled={!result} variant="default" size={"sm"} onClick={() => SystemManager.downloadImage(result)}>

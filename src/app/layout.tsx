@@ -8,7 +8,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "AI Photoshow - 302.AI",
+  title: "AI图片工具箱 - 302.AI",
   description: "The Photo Generation Tool Powered By 302.AI",
 };
 

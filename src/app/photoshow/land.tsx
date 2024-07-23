@@ -29,7 +29,7 @@ function PhotoshowLand({ setTool, file, setFile }: PropsData) {
       <section className="title flex justify-center py-8 mt-8">
         <div className='flex items-center space-x-2'>
           <Image src="/logo.png" alt="logo" width={50} height={50}></Image>
-          <h2 className='font-medium text-2xl md:text-4xl'>AI图片全能工具箱</h2>
+          <h2 className='font-medium text-2xl md:text-4xl'>AI图片工具箱</h2>
         </div>
       </section>
 
