@@ -192,7 +192,37 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
           }
 
           {/* 高级定制图片容器2: 涂抹操作 */}
-          {['remove-obj', 'inpaint-img'].includes(tool.name) &&
+          {['remove-obj'].includes(tool.name) &&
+            <div className="w-full mosaic-bg relative">
+              <NextImage width={200} height={200} alt="image" src={src}
+                className={twMerge('w-full h-auto m-auto opacity-10 ', result ? 'opacity-0' : '')}
+              >
+              </NextImage>
+
+              <div className={twMerge("absolute top-0 left-0 w-full h-full", result ? 'opacity-0' : '')}>
+                <ImageMask src={src} setSrc={setSrc} setPayload={setPayload} />
+              </div>
+
+              {status === 'Pending' &&
+                <div className={twMerge('scan w-full absolute top-0 transition-all duration-200 pointer-events-none',)}>
+                </div>
+              }
+
+              {result &&
+                <div className='w-full absolute top-0'>
+                  <ImageCompare
+                    beforeSrc={src}
+                    afterSrc={result}
+                    initPosition={30}
+                  />
+                </div>
+              }
+
+            </div>
+          }
+
+             {/* 高级定制图片容器3: 修改操作 */}
+             {['inpaint-img'].includes(tool.name) &&
             <div className="w-full mosaic-bg relative">
               <NextImage width={200} height={200} alt="image" src={src}
                 className={twMerge('w-full h-auto m-auto opacity-10 ', result ? 'opacity-0' : '')}
