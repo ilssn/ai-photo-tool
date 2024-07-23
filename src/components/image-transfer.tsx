@@ -72,6 +72,7 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
     handleStart()
   }
 
+
   const handleStop = async () => {
     updTask({})
     setStatus('Finish')
@@ -199,9 +200,12 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
               >
               </NextImage>
 
-              <div className={twMerge("absolute top-0 left-0 w-full h-full", result ? 'opacity-0' : '')}>
-                <ImageMask src={src} setSrc={setSrc} setPayload={setPayload} />
-              </div>
+              {!result && 
+                <div className={twMerge("absolute top-0 left-0 w-full h-full", result ? 'opacity-0' : '')}>
+                  <ImageMask src={src} setSrc={setSrc} setPayload={setPayload} />
+                </div>
+
+              }
 
               {status === 'Pending' &&
                 <div className={twMerge('scan w-full absolute top-0 transition-all duration-200 pointer-events-none',)}>
@@ -221,8 +225,8 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
             </div>
           }
 
-             {/* 高级定制图片容器3: 修改操作 */}
-             {['inpaint-img'].includes(tool.name) &&
+          {/* 高级定制图片容器3: 修改操作 */}
+          {['inpaint-img'].includes(tool.name) &&
             <div className="w-full mosaic-bg relative">
               <NextImage width={200} height={200} alt="image" src={src}
                 className={twMerge('w-full h-auto m-auto opacity-10 ', result ? 'opacity-0' : '')}
@@ -307,6 +311,10 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
         <Button variant="outline" className='border-primary text-primary' onClick={handleStop}>
           退出
         </Button>
+
+        {tool.name === 'remove-obj' && result &&
+          <Button variant="default" onClick={handleReset}>继续消除</Button>
+        }
 
         {status === 'Done' || status === 'Error'
           ?
