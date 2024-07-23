@@ -127,13 +127,13 @@ const en: LocaleType = {
         //   title: '图片拓展',
         //   desc: '将图片的边界进行拓展',
         // },
-        // {
-        //   id: 10,
-        //   name: 'inpaint-img',
-        //   icon: 'inpaint-img',
-        //   title: '图片修改',
-        //   desc: '将图片的内容进行AI修改',
-        // },
+        {
+          id: 10,
+          name: 'inpaint-img',
+          icon: 'inpaint-img',
+          title: '图片修改',
+          desc: '将图片的内容进行AI修改',
+        },
         {
           id: 11,
           name: 'recreate-img',

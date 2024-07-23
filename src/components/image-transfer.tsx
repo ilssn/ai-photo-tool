@@ -133,12 +133,12 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
         {/* 图片容器 */}
         <div
           className={twMerge("w-full rounded-xl overflow-hidden",
-            ['inpaint-img', 'remove-obj'].includes(tool.name) ? 'py-10' : ''
+            ['inpaint-img', 'remove-obj'].includes(tool.name) ? 'pb-10' : ''
           )}
           style={{ maxWidth: maxWidth }}
         >
           {/* 基础通用图片容器 */}
-          {!['crop-img', 'remove-obj'].includes(tool.name) &&
+          {!['crop-img', 'remove-obj', 'inpaint-img'].includes(tool.name) &&
             <div className="w-full mosaic-bg relative">
               <NextImage width={200} height={200} alt="image" src={src}
                 className={twMerge('w-full h-auto m-auto', result ? 'opacity-0' : '')}
@@ -192,7 +192,7 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
           }
 
           {/* 高级定制图片容器2: 涂抹操作 */}
-          {['remove-obj'].includes(tool.name) &&
+          {['remove-obj', 'inpaint-img'].includes(tool.name) &&
             <div className="w-full mosaic-bg relative">
               <NextImage width={200} height={200} alt="image" src={src}
                 className={twMerge('w-full h-auto m-auto opacity-10 ', result ? 'opacity-0' : '')}

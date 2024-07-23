@@ -274,11 +274,12 @@ export async function generateImage(src: string, action: Action): Promise<Result
       }
       if (action.type === 'inpaint-img') {
         const file = await ImageManager.imageToFile(src) as File
+        const mask = action.payload.mask
         let prompt = action.payload.prompt
         if (SystemManager.containsChinese(prompt)) {
           prompt = await aiTranslate(prompt)
         }
-        res = await inpaintImage(file, prompt)
+        res = await inpaintImage(file, mask, prompt)
         // result.imageSrc = res.output
       }
       if (action.type === 'sketch-img') {
@@ -708,12 +709,13 @@ export async function recreatImage(file: File, prompt: string): Promise<any> {
 }
 
 // 图片修改
-export async function inpaintImage(file: File, prompt: string): Promise<any> {
+export async function inpaintImage(file: File, mask: File, prompt: string): Promise<any> {
   return new Promise(async (resolve, reject) => {
     try {
       const token = getToken()
       const formData = new FormData();
       formData.append('image', file);
+      formData.append('mask', mask);
       formData.append('prompt', prompt);
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/sd/v2beta/stable-image/edit/inpaint`, {
