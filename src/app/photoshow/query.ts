@@ -296,6 +296,11 @@ export async function generateImage(src: string, action: Action): Promise<Result
         // result.imageSrc = res.output
       }
 
+      if (action.type === 'crop-img') {
+        const canvas = action.payload.canvas
+        res = await cropImage(canvas)
+      }
+
 
       // if array
       if (res.output.startsWith('[')) {
@@ -315,7 +320,6 @@ export async function generateImage(src: string, action: Action): Promise<Result
     }
   })
 }
-
 
 // 去除背景:302
 export async function xremoveBackground(file: File): Promise<any> {
@@ -466,7 +470,6 @@ export async function vectorizeImage(file: File): Promise<any> {
       // Step 4: Create a File from the Blob
       const svgFile = new File([svgBlob], 'result.svg', { type: "image/svg+xml" });
       // Now you have an SVG file object that you can use
-      console.log(svgFile);
       const url = await uploadImage(svgFile)
       resolve({ output: url })
     } catch (error) {
@@ -786,5 +789,18 @@ export async function lightImage(file: File, prompt: string, light: string,): Pr
     } catch (error) {
       reject(error)
     }
+  })
+}
+
+// 裁剪图片
+export async function cropImage(canvas: any): Promise<any> {
+  return new Promise(async (resolve, reject) => {
+    const local = canvas.toDataURL()
+    const file = await ImageManager.imageToFile(local) as File
+    const online = await uploadImage(file)
+   const result = {
+    output: online
+   }
+   resolve(result)
   })
 }

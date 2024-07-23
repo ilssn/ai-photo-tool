@@ -148,6 +148,13 @@ const cn = {
           title: '草稿生图',
           desc: '将一张手稿生成一个精美的图片',
         },
+        {
+          id: 13,
+          name: 'crop-img',
+          icon: 'crop-img',
+          title: '裁剪图片',
+          desc: '对图片进行精确裁剪',
+        },
       ]
     }
   }

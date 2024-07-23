@@ -24,9 +24,9 @@ export function HistoryModal() {
           <DialogTitle>
             历史记录
           </DialogTitle>
-          {/* <DialogDescription className="">
+          <DialogDescription className="hidden">
             图片生成记录
-          </DialogDescription> */}
+          </DialogDescription>
         </DialogHeader>
         <HistoryContent />
       </DialogContent>

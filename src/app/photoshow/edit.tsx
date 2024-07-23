@@ -49,8 +49,11 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
     return new Promise(async (resolve, reject) => {
       try {
         const res = await generateImage(src, action)
+        console.log('act::', action)
         console.log('suc::', res)
         // save history
+        let safeAction = action
+        safeAction.payload.canvas = null // remove canvas
         const historys = getHistorys() as History[]
         const history: History = {
           id: Date.now(),
@@ -100,7 +103,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
 
         <div className="w-full flex justify-between items-center">
           <div className="info text-md text-primary">
-            <span className='font-medium'>AI全能工具箱 </span>
+            <span className='font-medium'>图片全能工具箱 </span>
             <span className='italic'>{`> ${tool.title}`}</span>
           </div>
           <Button disabled={!result} variant="default" size={"sm"} onClick={() => SystemManager.downloadImage(result)}>

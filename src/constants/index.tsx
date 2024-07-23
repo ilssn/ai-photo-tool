@@ -14,4 +14,5 @@ export const PHOTO_DEFAULT_PAYLOAD = {
   prompt: '',
   mask: null,
   light: 'None',
+  canvas: null
 }
