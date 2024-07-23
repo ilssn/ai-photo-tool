@@ -47,6 +47,8 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
     return new Promise(async (resolve, reject) => {
       try {
         const res = await generateImage(src, action)
+        // remove canvas
+        action.payload.canvas = null
         // save history
         const historys = getHistorys() as History[]
         const history: History = {

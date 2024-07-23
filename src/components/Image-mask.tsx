@@ -120,7 +120,7 @@ const ImageMask: React.FC<PropsData> = ({ src, setSrc, setPayload }) => {
         type: 'image/png',
       })
       // debug
-      const maskUrl = maskCanvas.toDataURL()
+      // const maskUrl = maskCanvas.toDataURL()
       // downloadImage(maskUrl, 'testddd.png')
       return maskFile
     }
