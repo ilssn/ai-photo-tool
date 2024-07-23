@@ -21,6 +21,8 @@ import UncropIcon from "../icons/uncrop.svg";
 import InpaintIcon from "../icons/inpaint-img.svg";
 import RecreateImgIcon from "../icons/recreate-img.svg";
 import SketchImgIcon from "../icons/sketch-img.svg";
+import CropImgIcon from "../icons/crop-img.svg";
+import FilterImgIcon from "../icons/filter-img.svg";
 
 
 interface PropsData {
@@ -56,6 +58,10 @@ function MachIcon({ icon }: { icon: string }) {
       return <RecreateImgIcon />
     case 'sketch-img':
       return <SketchImgIcon />
+    case 'crop-img':
+      return <CropImgIcon />
+    case 'filter-img':
+      return <FilterImgIcon />
     default:
       return <RiImageEditLine className='w-8 h-8' />
   }

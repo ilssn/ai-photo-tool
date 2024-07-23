@@ -4,6 +4,7 @@ import { twMerge } from 'tailwind-merge'
 import { Button } from '@/components/ui/button'
 import ImageCompare from './image-compare'
 import ImageCropper from './image-cropper'
+import { ImageEditor } from './ImageEditor/ImageEditor'
 import ScaleBar from './scale-bar'
 import UploadBar from './upload-bar'
 import PromptBar from './prompt-bar'
@@ -77,7 +78,6 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
   }
 
   React.useEffect(() => {
-    console.log('Tool::', tool)
     handleReset()
   }, [tool])
 
@@ -87,7 +87,6 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
     img.onload = () => {
       if (img.width && img.height) {
         const scale = Number(img.height) / Number(img.width)
-        console.log(scale)
         if (scale > 1) {
           setMaxWidth('700px')
         }
@@ -107,10 +106,6 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
     }
   }, [src])
 
-  // debug
-  // React.useEffect(() => {
-  //   console.log('mask::', mask)
-  // }, [mask])
 
   return (
     <div id="image-transfer" className="w-full h-full space-y-4 flex flex-col">
@@ -160,6 +155,7 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
 
               <div className={twMerge("absolute top-0 left-0 w-full h-full", result ? 'opacity-0' : '')}>
                 <ImageCropper src={src} setSrc={setSrc} setPayload={setPayload} />
+                {/* <ImageEditor /> */}
               </div>
 
               {status === 'Pending' &&

@@ -155,6 +155,13 @@ const cn = {
           title: '裁剪图片',
           desc: '对图片进行精确裁剪',
         },
+        // {
+        //   id: 14,
+        //   name: 'filter-img',
+        //   icon: 'filter-img',
+        //   title: '图片调色',
+        //   desc: '对图片进行色值调整增加滤镜',
+        // },
       ]
     }
   }

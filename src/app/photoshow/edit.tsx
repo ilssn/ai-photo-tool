@@ -31,14 +31,12 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
 
   React.useEffect(() => {
     if (file) {
-      console.log('file::', file)
       const url = URL.createObjectURL(file)
       setSrc(url)
     }
   }, [file])
 
   React.useEffect(() => {
-    console.log('task::status::', status)
     if (status === 'Finish') {
       setFile(null)
     }
@@ -49,8 +47,6 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
     return new Promise(async (resolve, reject) => {
       try {
         const res = await generateImage(src, action)
-        console.log('act::', action)
-        console.log('suc::', res)
         // save history
         let safeAction = action
         safeAction.payload.canvas = null // remove canvas

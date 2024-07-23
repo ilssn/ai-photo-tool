@@ -215,7 +215,6 @@ function matchImageSize(inputWidth: number, inputHeight: number) {
 
 // 生成图片
 export async function generateImage(src: string, action: Action): Promise<Result> {
-  console.log('action::', action)
   return new Promise(async (resolve, reject) => {
     let res = null
     let result = { imageSrc: '' }
