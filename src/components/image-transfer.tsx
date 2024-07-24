@@ -9,6 +9,7 @@ import UploadBar from './upload-bar'
 import PromptBar from './prompt-bar'
 import LightBar from './light-bar'
 import AlertBar from './alert-bar'
+import { ConfirmModal } from './confirm-modal'
 import { updTask } from '@/app/photoshow/query'
 import { Tool, Status } from '@/types'
 import { PHOTO_DEFAULT_PAYLOAD } from '@/constants'
@@ -345,9 +346,10 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
 
       {/* 操作区 */}
       <div className="action flex justify-between space-x-4">
-        <Button variant="outline" className='border-primary text-primary' onClick={handleStop}>
+        {/* <Button variant="outline" className='border-primary text-primary' onClick={handleStop}>
           退出
-        </Button>
+        </Button> */}
+        <ConfirmModal confirm={handleStop} />
 
         {tool.name === 'remove-obj' && result &&
           <Button variant="default" onClick={handleReset}>继续消除</Button>
