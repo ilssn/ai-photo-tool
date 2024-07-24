@@ -18,5 +18,6 @@ export interface History {
   tool: Tool,
   src: string
   action: any
+  base64: string,
   result: string
 }

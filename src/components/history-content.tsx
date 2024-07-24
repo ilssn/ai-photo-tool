@@ -6,13 +6,14 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { getHistorys, updHistorys } from "@/app/photoshow/query";
 import { Button } from "./ui/button";
 import SystemManager from "@/utils/System";
+import { History } from "@/types";
 
 import { MdOutlineCleaningServices } from "react-icons/md";
 
 import { RiDownload2Fill } from "react-icons/ri";
 
 export function HistoryContent() {
-  const historys = getHistorys().reverse()
+  const historys = getHistorys().reverse().filter((it: History) => it.base64)
   const [showList, setShowList] = React.useState(historys)
 
   if (!historys.length) return "暂无数据！";
@@ -45,14 +46,15 @@ export function HistoryContent() {
                   <div className="w-full flex space-x-2">
                     <div className="bg-white rounded-sm overflow-hidden w-[80px]">
                       {/* <Image width={80} height={50} style={{ width: '100%', height: 'auto' }} alt={"result image"} src={it.result} /> */}
-                      <img src={it.result} style={{width: '100%', height: 'auto'}} alt="" />
+                      {/* <img src={it.result} style={{width: '100%', height: 'auto'}} alt="" /> */}
+                      <img src={it.base64} style={{ width: '100%', height: 'auto' }} alt="" />
                     </div>
                     <div className="flex-1 flex flex-col justify-start space-y-1 ">
                       <div className="font-medium text-primary text-base">{it.tool.title}</div>
                       <div className="text-sm text-slate-500">{SystemManager.formatTimestamp(it.id)}</div>
                     </div>
                     <div className="flex items-start">
-                      <Button size={"sm"} onClick={() => SystemManager.downloadImage(it.result)}>
+                      <Button size={"sm"} onClick={() => SystemManager.downloadImage(it.base64)}>
                         <RiDownload2Fill />
                         下载
                       </Button>

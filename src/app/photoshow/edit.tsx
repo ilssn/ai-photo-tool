@@ -14,6 +14,7 @@ import { RiDownload2Fill } from "react-icons/ri";
 import { generateImage, getHistorys, updHistorys } from './query'
 
 import SystemManager from '@/utils/System'
+import ImageManager from '@/utils/Image'
 
 const tools = Locale.Photo.Tool.list
 
@@ -47,6 +48,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
     return new Promise(async (resolve, reject) => {
       try {
         const res = await generateImage(src, action)
+        const local = await ImageManager.imageToBase64(res.imageSrc) as string
         // remove canvas
         action.payload.canvas = null
         // save history
@@ -57,6 +59,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
           src,
           action,
           result: res.imageSrc,
+          base64: local,
         }
         updHistorys([...historys, history])
         resolve(res)

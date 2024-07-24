@@ -21,6 +21,7 @@ export default class ImageManager {
     }
   }
 
+
   // 读取文件为图片
   static fielToImage = async (file: File) => {
     return new Promise((resolve, reject) => {
@@ -47,6 +48,28 @@ export default class ImageManager {
         reject('file to base64 error')
       }
     })
+  }
+
+  // 下载图片为本地Base64
+  static imageToBase64 = async (url: string) => {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) {
+        throw new Error(`Get origin image error: ${res.statusText}`);
+      }
+      const blob = await res.blob();
+      // 创建一个File对象
+      let fileName = 'file.jpg'
+      if (url.includes('.svg')) {
+        fileName = 'file.svg'
+      }
+      const file = new File([blob], fileName, { type: blob.type });
+      const base64 = URL.createObjectURL(file);
+      return base64;
+    } catch (error) {
+      // console.error('Error transferring image:', error);
+      return null
+    }
   }
 
   // 转换图片格式 
