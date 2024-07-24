@@ -184,6 +184,7 @@ const ImageMask: React.FC<PropsData> = ({ src, setSrc, setPayload }) => {
     setHistory([[]])
     setHistoryIndex(0)
     setTool('pen')
+    setPayload((preData: any) => { return { ...preData, mask: null } });
   }
 
   const brush = (value: any) => {

@@ -36,6 +36,7 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
   const [errorInfo, setErrorInfo] = React.useState<any>(null)
   const [payload, setPayload] = React.useState<any>(PHOTO_DEFAULT_PAYLOAD)
   const [originSrc, setOriginSrc] = React.useState('')
+  const [isReady, setIsReady] = React.useState(true)
 
   const handleStart = async () => {
     try {
@@ -118,6 +119,40 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
     }
   }, [src])
 
+  React.useEffect(() => {
+    setIsReady(true)
+    if (tool.name === 'remove-obj') {
+      if(!payload.mask) {
+        setIsReady(false)
+      }
+    }
+    if (tool.name === 'replace-bg') {
+      if(!payload.prompt) {
+        setIsReady(false)
+      }
+    }
+    if (tool.name === 'swap-face') {
+      if(!payload.mask) {
+        setIsReady(false)
+      }
+    }
+    if (tool.name === 'inpaint-img') {
+      if(!payload.prompt) {
+        setIsReady(false)
+      }
+    }
+    if (tool.name === 'recreate-img') {
+      if(!payload.prompt) {
+        setIsReady(false)
+      }
+    }
+    if (tool.name === 'sketch-img') {
+      if(!payload.prompt) {
+        setIsReady(false)
+      }
+    }
+
+  }, [tool, payload])
 
   return (
     <div id="image-transfer" className="w-full h-full space-y-4 flex flex-col">
@@ -321,7 +356,7 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
             {['crop-img', 'remove-obj', 'inpaint-img'].includes(tool.name) ? '重做' : '重试'}
           </Button>
           :
-          <Button variant="default" disabled={status !== 'Ready'} onClick={handleStart}>
+          <Button variant="default" disabled={status !== 'Ready' || !isReady} onClick={handleStart}>
             开始
           </Button>
         }
