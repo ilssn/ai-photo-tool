@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { ScrollArea } from "@/components/ui/scroll-area"
 import ToolCard from '@/components/tool-card'
 import ImageTransfer from '@/components/image-transfer'
+import UploadButton from '@/components/upload-button'
 import { HistoryModal } from "@/components/history-modal";
 import { Tool, Status, History } from '@/types'
 import Locale from '@/locales'
@@ -84,7 +85,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
           <Image width={40} height={40} alt="logo" src="/logo.png"></Image>
           <p className='font-medium text-xl md:text-2xl'>AI图片工具箱</p>
         </div>
-        <div className="grow relative mt-2">
+        <div className="grow relative">
           <div className="absolute top-0 left-0 w-full h-full">
             <ScrollArea className="w-full h-full">
               <ul className="w-full space-y-4 ">
@@ -98,6 +99,9 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
               </ul>
             </ScrollArea>
           </div>
+        </div>
+        <div className="w-full">
+          <UploadButton setFile={setFile} setResult={setResult}/>
         </div>
       </div>
 
