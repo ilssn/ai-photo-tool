@@ -81,11 +81,13 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
     <div id="photosho-edit" className='max-w-screen-xl h-full mx-auto flex border shadow-lg overflow-hidden rounded-xl relative'>
 
       <div className="left w-[310px] h-full p-4 bg-white shadow-2xl flex flex-col">
-        <div className="w-full flex items-center space-x-2 py-2">
-          <Image width={40} height={40} alt="logo" src="/logo.png"></Image>
-          <p className='font-medium text-xl md:text-2xl'>AI图片工具箱</p>
+
+        <div className="w-full flex items-center justify-center space-x-2 py-2">
+            <Image width={32} height={32} alt="logo" src="/logo.png"></Image>
+            <p className='font-medium text-xl md:text-2xl'>AI图片工具箱</p>
         </div>
-        <div className="grow relative">
+
+        <div className="grow relative mt-2">
           <div className="absolute top-0 left-0 w-full h-full">
             <ScrollArea className="w-full h-full">
               <ul className="w-full space-y-4 ">
@@ -101,7 +103,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
           </div>
         </div>
         <div className="w-full">
-          <UploadButton setFile={setFile} setResult={setResult}/>
+          <UploadButton setFile={setFile} setResult={setResult} />
         </div>
       </div>
 
