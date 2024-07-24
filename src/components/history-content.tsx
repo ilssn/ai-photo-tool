@@ -19,9 +19,10 @@ interface PropsData {
   setTool: (tool: Tool) => void
   setFile: (file: File | null) => void
   setResult?: (src: string) => void
+  triggerRef: any
 }
 
-export function HistoryContent({ setTool, setFile, setResult }: PropsData) {
+export function HistoryContent({ setTool, setFile, setResult, triggerRef }: PropsData) {
   const historys = getHistorys().reverse().filter((it: History) => it.result)
   const [showList, setShowList] = React.useState(historys)
 
@@ -41,6 +42,9 @@ export function HistoryContent({ setTool, setFile, setResult }: PropsData) {
       setFile(file)
       setTimeout(() => {
         setTool(it.tool)
+        if (triggerRef?.current) {
+          triggerRef?.current.click()
+        }
       }, 30)
     }, 50)
   }

@@ -20,9 +20,10 @@ interface PropsData {
 }
 
 export function HistoryModal({ setTool, setFile, setResult }: PropsData) {
+  const triggerRef = React.useRef(null)
   return (
     <Dialog>
-      <DialogTrigger>
+      <DialogTrigger ref={triggerRef}>
         <MdHistory className="h-[1.6rem] w-[1.6rem] rotate-0 scale-100 hover:text-primary hover:scale-110 " />
       </DialogTrigger>
       <DialogContent className="max-w-[600px]">
@@ -34,7 +35,7 @@ export function HistoryModal({ setTool, setFile, setResult }: PropsData) {
             图片生成记录
           </DialogDescription>
         </DialogHeader>
-        <HistoryContent setTool={setTool} setFile={setFile} setResult={setResult} />
+        <HistoryContent triggerRef={triggerRef} setTool={setTool} setFile={setFile} setResult={setResult} />
       </DialogContent>
     </Dialog>
   );
