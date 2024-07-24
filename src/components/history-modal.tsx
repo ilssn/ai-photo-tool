@@ -23,7 +23,7 @@ export function HistoryModal({ setTool, setFile, setResult }: PropsData) {
   return (
     <Dialog>
       <DialogTrigger>
-        <MdHistory className="h-[1.6rem] w-[1.6rem] rotate-0 scale-100 text-primary hover:scale-110 " />
+        <MdHistory className="h-[1.6rem] w-[1.6rem] rotate-0 scale-100 hover:text-primary hover:scale-110 " />
       </DialogTrigger>
       <DialogContent className="max-w-[600px]">
         <DialogHeader>
