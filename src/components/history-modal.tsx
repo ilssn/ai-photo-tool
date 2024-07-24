@@ -12,12 +12,13 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { HistoryContent } from "./history-content";
+import { Button } from "./ui/button";
 
 export function HistoryModal() {
   return (
     <Dialog>
       <DialogTrigger>
-      <MdHistory className="h-[1.4rem] w-[1.4rem] rotate-0 scale-100" />
+        <MdHistory className="h-[1.6rem] w-[1.6rem] rotate-0 scale-100 text-primary hover:scale-110 " />
       </DialogTrigger>
       <DialogContent className="max-w-[600px]">
         <DialogHeader>

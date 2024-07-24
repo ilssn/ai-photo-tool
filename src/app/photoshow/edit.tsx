@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { ScrollArea } from "@/components/ui/scroll-area"
 import ToolCard from '@/components/tool-card'
 import ImageTransfer from '@/components/image-transfer'
+import { HistoryModal } from "@/components/history-modal";
 import { Tool, Status, History } from '@/types'
 import Locale from '@/locales'
 
@@ -74,7 +75,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
 
   if (!src) return <>Loading...</>
   return (
-    <div id="photosho-edit" className='max-w-screen-xl h-full mx-auto flex border shadow-lg overflow-hidden rounded-xl'>
+    <div id="photosho-edit" className='max-w-screen-xl h-full mx-auto flex border shadow-lg overflow-hidden rounded-xl relative'>
 
       <div className="left w-[310px] h-full p-4 bg-white shadow-2xl flex flex-col">
         <div className="w-full flex items-center space-x-2 py-2">
@@ -105,10 +106,15 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
             <span className='font-medium'>AI图片工具箱 </span>
             <span className='italic'>{`> ${tool.title}`}</span>
           </div>
-          <Button disabled={!result} variant="default" size={"sm"} onClick={() => SystemManager.downloadImage(result)}>
-            <RiDownload2Fill />
-            <span>下载</span>
-          </Button>
+          <div className="flex space-x-4 items-center">
+            <Button disabled={!result} variant="default" size={"sm"} onClick={() => SystemManager.downloadImage(result)}>
+              <RiDownload2Fill />
+              <span>下载</span>
+            </Button>
+            <div className="flex items-center">
+              <HistoryModal />
+            </div>
+          </div>
         </div>
 
         <div className="w-full grow flex items-center">
