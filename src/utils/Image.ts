@@ -53,19 +53,12 @@ export default class ImageManager {
   // 下载图片为本地Base64
   static imageToBase64 = async (url: string) => {
     try {
-      const res = await fetch(url);
-      if (!res.ok) {
-        throw new Error(`Get origin image error: ${res.statusText}`);
+      if (url.includes('base64')){
+        return url
       }
-      const blob = await res.blob();
-      // 创建一个File对象
-      let fileName = 'file.jpg'
-      if (url.includes('.svg')) {
-        fileName = 'file.svg'
-      }
-      const file = new File([blob], fileName, { type: blob.type });
-      const base64 = URL.createObjectURL(file);
-      return base64;
+      const file = await this.imageToFile(url)
+      const base64 = await this.fileToBase64(file)
+      return base64
     } catch (error) {
       // console.error('Error transferring image:', error);
       return null

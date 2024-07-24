@@ -45,13 +45,14 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
   }, [status])
 
   // 生成图片
-  const handlerOngenerateImage = async (action: any) => {
+  const handleOngenerateImage = async (action: any) => {
     return new Promise(async (resolve, reject) => {
       try {
         const res = await generateImage(src, action)
-        const local = await ImageManager.imageToBase64(res.imageSrc) as string
         // remove canvas
         action.payload.canvas = null
+        // remove mask
+        action.payload.mask = null
         // save history
         const historys = getHistorys() as History[]
         const history: History = {
@@ -60,7 +61,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
           src,
           action,
           result: res.imageSrc,
-          base64: local,
+          base64: '',
         }
         updHistorys([...historys, history])
         resolve(res)
@@ -72,6 +73,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
     })
 
   }
+
 
   if (!src) return <>Loading...</>
   return (
@@ -112,7 +114,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
               <span>下载</span>
             </Button>
             <div className="flex items-center">
-              <HistoryModal />
+              <HistoryModal setTool={setTool} setFile={setFile} setResult={setResult} />
             </div>
           </div>
         </div>
@@ -122,7 +124,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
             src &&
             <ImageTransfer
               tool={tool}
-              onGenerateImage={handlerOngenerateImage}
+              onGenerateImage={handleOngenerateImage}
               src={src}
               setSrc={setSrc}
               status={status}

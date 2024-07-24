@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { MdHistory } from "react-icons/md";
-
 import {
   Dialog,
   DialogContent,
@@ -12,9 +11,15 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { HistoryContent } from "./history-content";
-import { Button } from "./ui/button";
+import { Tool } from '@/types'
 
-export function HistoryModal() {
+interface PropsData {
+  setTool: (tool: Tool) => void
+  setFile: (file: File | null) => void
+  setResult?: (src: string) => void
+}
+
+export function HistoryModal({ setTool, setFile, setResult }: PropsData) {
   return (
     <Dialog>
       <DialogTrigger>
@@ -29,7 +34,7 @@ export function HistoryModal() {
             图片生成记录
           </DialogDescription>
         </DialogHeader>
-        <HistoryContent />
+        <HistoryContent setTool={setTool} setFile={setFile} setResult={setResult} />
       </DialogContent>
     </Dialog>
   );

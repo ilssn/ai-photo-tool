@@ -6,14 +6,23 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { getHistorys, updHistorys } from "@/app/photoshow/query";
 import { Button } from "./ui/button";
 import SystemManager from "@/utils/System";
-import { History } from "@/types";
 
 import { MdOutlineCleaningServices } from "react-icons/md";
 
 import { RiDownload2Fill } from "react-icons/ri";
+import { PiMagicWandLight } from "react-icons/pi";
 
-export function HistoryContent() {
-  const historys = getHistorys().reverse().filter((it: History) => it.base64)
+import { Tool, History } from '@/types'
+import ImageManager from "@/utils/Image";
+
+interface PropsData {
+  setTool: (tool: Tool) => void
+  setFile: (file: File | null) => void
+  setResult?: (src: string) => void
+}
+
+export function HistoryContent({ setTool, setFile, setResult }: PropsData) {
+  const historys = getHistorys().reverse().filter((it: History) => it.result)
   const [showList, setShowList] = React.useState(historys)
 
   if (!historys.length) return "暂无数据！";
@@ -21,6 +30,19 @@ export function HistoryContent() {
   const handleCleanUp = () => {
     updHistorys([])
     setShowList([])
+  }
+
+  const handleEdit = async (it: History) => {
+    const file = await ImageManager.imageToFile(it.result)
+    if (setResult) {
+      setResult('')
+    }
+    setTimeout(() => {
+      setFile(file)
+      setTimeout(() => {
+        setTool(it.tool)
+      }, 30)
+    }, 50)
   }
 
   return (
@@ -47,14 +69,19 @@ export function HistoryContent() {
                     <div className="bg-white rounded-sm overflow-hidden w-[80px]">
                       {/* <Image width={80} height={50} style={{ width: '100%', height: 'auto' }} alt={"result image"} src={it.result} /> */}
                       {/* <img src={it.result} style={{width: '100%', height: 'auto'}} alt="" /> */}
-                      <img src={it.base64} style={{ width: '100%', height: 'auto' }} alt="" />
+                      <img src={it.result} style={{ width: '100%', height: 'auto' }} alt="" />
                     </div>
                     <div className="flex-1 flex flex-col justify-start space-y-1 ">
                       <div className="font-medium text-primary text-base">{it.tool.title}</div>
                       <div className="text-sm text-slate-500">{SystemManager.formatTimestamp(it.id)}</div>
                     </div>
-                    <div className="flex items-start">
-                      <Button size={"sm"} onClick={() => SystemManager.downloadImage(it.base64)}>
+                    <div className="flex justify-between space-x-4 ">
+                      <Button size={"sm"} onClick={() => handleEdit(it)}>
+                        <PiMagicWandLight />
+                        编辑
+                      </Button>
+
+                      <Button size={"sm"} onClick={() => SystemManager.downloadImage(it.result)}>
                         <RiDownload2Fill />
                         下载
                       </Button>

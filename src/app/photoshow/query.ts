@@ -315,6 +315,12 @@ export async function generateImage(src: string, action: Action): Promise<Result
         result.imageSrc = res.output
       }
 
+      // online
+      if (!result.imageSrc.startsWith('http')) {
+        const newFile = await ImageManager.imageToFile(result.imageSrc) as File
+        result.imageSrc = await uploadImage(newFile)
+      }
+
       // 返回结果
       if (result.imageSrc) {
         resolve(result)
