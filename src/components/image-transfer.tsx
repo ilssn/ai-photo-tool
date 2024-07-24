@@ -140,6 +140,9 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
       if(!payload.prompt) {
         setIsReady(false)
       }
+      if(!payload.mask) {
+        setIsReady(false)
+      }
     }
     if (tool.name === 'recreate-img') {
       if(!payload.prompt) {
