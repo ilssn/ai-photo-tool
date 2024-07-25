@@ -10,7 +10,7 @@ import {
 import { AdjustablePreviewBackground } from "./components/AdjustablePreviewBackground";
 import { Navigation } from "./components/Navigation";
 import { Slider } from "./components/Slider";
-import { AdjustableCropperBackground } from "./components/AdjustableCropperBackground";
+import AdjustableCropperBackground from "./components/AdjustableCropperBackground";
 import { Button } from "./components/Button";
 import { ResetIcon } from "./icons/ResetIcon";
 import "react-advanced-cropper/dist/style.css";
