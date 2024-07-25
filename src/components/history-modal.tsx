@@ -16,10 +16,9 @@ import { Tool } from '@/types'
 interface PropsData {
   setTool: (tool: Tool) => void
   setFile: (file: File | null) => void
-  setResult?: (src: string) => void
 }
 
-export function HistoryModal({ setTool, setFile, setResult }: PropsData) {
+export function HistoryModal({ setTool, setFile }: PropsData) {
   const triggerRef = React.useRef(null)
   return (
     <Dialog>
@@ -35,7 +34,7 @@ export function HistoryModal({ setTool, setFile, setResult }: PropsData) {
             图片生成记录
           </DialogDescription>
         </DialogHeader>
-        <HistoryContent triggerRef={triggerRef} setTool={setTool} setFile={setFile} setResult={setResult} />
+        <HistoryContent triggerRef={triggerRef} setTool={setTool} setFile={setFile} />
       </DialogContent>
     </Dialog>
   );

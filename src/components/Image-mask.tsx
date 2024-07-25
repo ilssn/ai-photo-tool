@@ -216,6 +216,11 @@ const ImageMask: React.FC<PropsData> = ({ src, setSrc, setPayload }) => {
     img.onload = () => setImage(img)
   }, [])
 
+  // reset
+  useEffect(() => {
+    clear()
+  }, [src])
+
   return (
     <div className="image-mask relative">
 

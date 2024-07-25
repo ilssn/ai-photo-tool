@@ -18,11 +18,10 @@ import ImageManager from "@/utils/Image";
 interface PropsData {
   setTool: (tool: Tool) => void
   setFile: (file: File | null) => void
-  setResult?: (src: string) => void
   triggerRef: any
 }
 
-export function HistoryContent({ setTool, setFile, setResult, triggerRef }: PropsData) {
+export function HistoryContent({ setTool, setFile, triggerRef }: PropsData) {
   const historys = getHistorys().reverse().filter((it: History) => it.result)
   const [showList, setShowList] = React.useState(historys)
 
@@ -35,9 +34,6 @@ export function HistoryContent({ setTool, setFile, setResult, triggerRef }: Prop
 
   const handleEdit = async (it: History) => {
     const file = await ImageManager.imageToFile(it.result)
-    if (setResult) {
-      setResult('')
-    }
     setTimeout(() => {
       setFile(file)
       setTimeout(() => {

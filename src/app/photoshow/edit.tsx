@@ -83,8 +83,8 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
       <div className="left w-[310px] h-full p-4 bg-white shadow-2xl flex flex-col">
 
         <div className="w-full flex items-center justify-center space-x-2 py-2">
-            <Image width={32} height={32} alt="logo" src="/logo.png"></Image>
-            <p className='font-medium text-xl md:text-2xl'>AI图片工具箱</p>
+          <Image width={32} height={32} alt="logo" src="/logo.png"></Image>
+          <p className='font-medium text-xl md:text-2xl'>AI图片工具箱</p>
         </div>
 
         <div className="grow relative mt-2">
@@ -120,7 +120,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
               <span>下载</span>
             </Button>
             <div className="flex items-center">
-              <HistoryModal setTool={setTool} setFile={setFile} setResult={setResult} />
+              <HistoryModal setTool={setTool} setFile={setFile} />
             </div>
           </div>
         </div>
@@ -129,6 +129,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
           {
             src &&
             <ImageTransfer
+              file={file}
               tool={tool}
               onGenerateImage={handleOngenerateImage}
               src={src}

@@ -22,6 +22,7 @@ const ImageMask = dynamic(() => import('./Image-mask'), {
 })
 
 interface PropsData {
+  file: File | null
   tool: Tool
   onGenerateImage: (action: any) => Promise<any>
   src: string
@@ -32,24 +33,26 @@ interface PropsData {
   setResult: (result: string) => void
 }
 
-function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, result, setResult, }: PropsData) {
+function ImageTransfer({ file, tool, onGenerateImage, src, setSrc, status, setStatus, result, setResult, }: PropsData) {
   const [maxWidth, setMaxWidth] = React.useState('1200px')
   const [errorInfo, setErrorInfo] = React.useState<any>(null)
   const [payload, setPayload] = React.useState<any>(PHOTO_DEFAULT_PAYLOAD)
   const [originSrc, setOriginSrc] = React.useState('')
   const [isReady, setIsReady] = React.useState(true)
 
+  // 开始任务
   const handleStart = async () => {
     try {
       setStatus('Pending')
       const res = await onGenerateImage({ type: tool.name, payload, })
-      // 基础图片容器设置结果
-      setResult(res.imageSrc)
       // 高阶图片容器缓存原图，因为图片尺寸有变化
       if (['crop-img'].includes(tool.name)) {
         setOriginSrc(src)
         setSrc(res.imageSrc)
       }
+      // 设置结果
+      setResult(res.imageSrc)
+      // 设置状态
       setStatus('Done')
     } catch (error) {
       setErrorInfo(error)
@@ -57,6 +60,7 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
     }
   }
 
+  // 重试任务
   const handleRestart = async () => {
     if (['crop-img'].includes(tool.name)) {
       setSrc(originSrc)
@@ -73,13 +77,8 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
     handleStart()
   }
 
-
-  const handleStop = async () => {
-    updTask({})
-    setStatus('Finish')
-  }
-
-  const handleReset = async () => {
+  // 继续任务
+  const handleContinue = async () => {
     if (result) {
       const localSrc = await ImageManager.localizeImage(result) as string
       setSrc(localSrc)
@@ -90,10 +89,33 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
     updTask({})
   }
 
+  // 重置状态
+  const handleReset = async () => {
+    setResult('')
+    setStatus('Ready')
+    setPayload(PHOTO_DEFAULT_PAYLOAD)
+    updTask({})
+  }
+
+  // 退出编辑
+  const handleStop = async () => {
+    updTask({})
+    setStatus('Finish')
+  }
+
+  // 文件变化, 重置状态
   React.useEffect(() => {
-    handleReset()
+    if (file) {
+      handleReset()
+    }
+  }, [file])
+
+  // 工具变化, 继续任务
+  React.useEffect(() => {
+    handleContinue()
   }, [tool])
 
+  // 原图变化，重设容器尺寸
   React.useEffect(() => {
     setMaxWidth('1200px')
     const img = new Image()
@@ -120,38 +142,39 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
     }
   }, [src])
 
+  // 参数变化，校验数据
   React.useEffect(() => {
     setIsReady(true)
     if (tool.name === 'remove-obj') {
-      if(!payload.mask) {
+      if (!payload.mask) {
         setIsReady(false)
       }
     }
     if (tool.name === 'replace-bg') {
-      if(!payload.prompt) {
+      if (!payload.prompt) {
         setIsReady(false)
       }
     }
     if (tool.name === 'swap-face') {
-      if(!payload.mask) {
+      if (!payload.mask) {
         setIsReady(false)
       }
     }
     if (tool.name === 'inpaint-img') {
-      if(!payload.prompt) {
+      if (!payload.prompt) {
         setIsReady(false)
       }
-      if(!payload.mask) {
+      if (!payload.mask) {
         setIsReady(false)
       }
     }
     if (tool.name === 'recreate-img') {
-      if(!payload.prompt) {
+      if (!payload.prompt) {
         setIsReady(false)
       }
     }
     if (tool.name === 'sketch-img') {
-      if(!payload.prompt) {
+      if (!payload.prompt) {
         setIsReady(false)
       }
     }
@@ -238,11 +261,10 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
               >
               </NextImage>
 
-              {!result && 
+              {!result &&
                 <div className={twMerge("absolute top-0 left-0 w-full h-full", result ? 'opacity-0' : '')}>
                   <ImageMask src={src} setSrc={setSrc} setPayload={setPayload} />
                 </div>
-
               }
 
               {status === 'Pending' &&
@@ -271,9 +293,11 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
               >
               </NextImage>
 
-              <div className={twMerge("absolute top-0 left-0 w-full h-full", result ? 'opacity-0' : '')}>
-                <ImageMask src={src} setSrc={setSrc} setPayload={setPayload} />
-              </div>
+              {!result &&
+                <div className={twMerge("absolute top-0 left-0 w-full h-full", result ? 'opacity-0' : '')}>
+                  <ImageMask src={src} setSrc={setSrc} setPayload={setPayload} />
+                </div>
+              }
 
               {status === 'Pending' &&
                 <div className={twMerge('scan w-full absolute top-0 transition-all duration-200 pointer-events-none',)}>
@@ -352,10 +376,10 @@ function ImageTransfer({ tool, onGenerateImage, src, setSrc, status, setStatus, 
         <ConfirmModal confirm={handleStop} />
 
         {tool.name === 'remove-obj' && result &&
-          <Button variant="default" onClick={handleReset}>继续消除</Button>
+          <Button variant="default" onClick={handleContinue}>继续消除</Button>
         }
 
-        {status === 'Done' || status === 'Error'
+        {result || status === 'Error'
           ?
           <Button variant="default" onClick={handleRestart}>
             {['crop-img', 'remove-obj', 'inpaint-img'].includes(tool.name) ? '重做' : '重试'}
