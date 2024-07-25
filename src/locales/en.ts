@@ -152,7 +152,7 @@ const en: LocaleType = {
           id: 13,
           name: 'crop-img',
           icon: 'crop-img',
-          title: '裁剪图片',
+          title: '图片裁剪',
           desc: '对图片进行精确裁剪',
         },
         {
@@ -160,7 +160,7 @@ const en: LocaleType = {
           name: 'filter-img',
           icon: 'filter-img',
           title: '图片调色',
-          desc: '对图片进行色值调整增加滤镜',
+          desc: '对图片进行色值调整',
         },
       ]
     }
