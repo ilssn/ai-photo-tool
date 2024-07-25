@@ -12,9 +12,9 @@ const ImageCropper = ({ src, setSrc, setPayload }: PropsData) => {
     const cropperRef = React.useRef<any>(null);
 
     React.useEffect(() => {
-      if (cropperRef.current) {
-        cropperRef.current?.cropper.reset().clear().replace(src);
-      }
+        if (cropperRef.current) {
+            cropperRef.current?.cropper.reset().clear().replace(src);
+        }
     }, [src]);
 
     const onChange = (cropper: CropperRef) => {
@@ -25,9 +25,9 @@ const ImageCropper = ({ src, setSrc, setPayload }: PropsData) => {
 
     return (
         <Cropper
+            className='cropper !text-primary rounded-xl'
             src={src}
             onChange={onChange}
-            className={'cropper'}
         />
     )
 };
