@@ -306,6 +306,11 @@ export async function generateImage(src: string, action: Action): Promise<Result
         const canvas = action.payload.canvas
         res = await cropImage(src, canvas)
       }
+      if (action.type === 'filter-img') {
+        const canvas = action.payload.canvas
+        res = await filterImage(src, canvas)
+      }
+
 
 
       // if array
@@ -853,7 +858,24 @@ export async function cropImage(src: string, canvas: any): Promise<any> {
       resolve({ output: src })
       return
     }
-    const local = canvas.toDataURL({ pixelRatio: 4 })
+    const local = canvas.toDataURL()
+    const file = await ImageManager.imageToFile(local) as File
+    const online = await uploadImage(file)
+    const result = {
+      output: online
+    }
+    resolve(result)
+  })
+}
+
+// 裁剪图片
+export async function filterImage(src: string, canvas: any): Promise<any> {
+  return new Promise(async (resolve, reject) => {
+    if (!canvas) {
+      resolve({ output: src })
+      return
+    }
+    const local = canvas.toDataURL()
     const file = await ImageManager.imageToFile(local) as File
     const online = await uploadImage(file)
     const result = {

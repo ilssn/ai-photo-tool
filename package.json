@@ -24,6 +24,7 @@
     "clsx": "^2.1.1",
     "context-filter-polyfill": "^0.3.13",
     "konva": "^9.3.14",
+    "lodash": "^4.17.21",
     "next": "14.2.5",
     "react": "^18",
     "react-compare-slider": "^3.1.0",
@@ -32,6 +33,7 @@
     "react-konva": "^18.2.10",
     "react-mobile-cropper": "^0.10.0",
     "react-query": "^3.39.3",
+    "sass": "^1.77.8",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
     "webpack": "^5.93.0",
@@ -39,6 +41,7 @@
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",
+    "@types/lodash": "^4.17.7",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
