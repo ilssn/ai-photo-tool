@@ -120,13 +120,13 @@ const cn = {
           title: 'AI换脸',
           desc: '更换图片人物的脸',
         },
-        // {
-        //   id: 9,
-        //   name: 'uncrop',
-        //   icon: 'uncrop',
-        //   title: '图片拓展',
-        //   desc: '将图片的边界进行拓展',
-        // },
+        {
+          id: 9,
+          name: 'uncrop',
+          icon: 'uncrop',
+          title: '图片拓展',
+          desc: '将图片的边界进行拓展',
+        },
         {
           id: 10,
           name: 'inpaint-img',

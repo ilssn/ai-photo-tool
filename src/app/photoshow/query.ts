@@ -306,6 +306,12 @@ export async function generateImage(src: string, action: Action): Promise<Result
         const canvas = action.payload.canvas
         res = await cropImage(src, canvas)
       }
+      if (action.type === 'uncrop') {
+        const file = await ImageManager.imageToFile(src) as File
+        // const canvas = action.payload.canvas
+        const position = action.payload.position
+        res = await uncropImage(file, position)
+      }
       if (action.type === 'filter-img') {
         const canvas = action.payload.canvas
         res = await filterImage(src, canvas)
@@ -865,6 +871,49 @@ export async function cropImage(src: string, canvas: any): Promise<any> {
       output: online
     }
     resolve(result)
+  })
+}
+
+// 拓展图片
+export async function uncropImage(file: File, position: any): Promise<any> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const token = getToken()
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append("left", position.left);
+      formData.append("right", position.right);
+      formData.append("up", position.up);
+      formData.append("bottom", position.down);
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/sd/v2beta/stable-image/edit/outpaint`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          // "Content-Type": "multipart/form-data",
+          // 'Accept': 'image/*',
+          'Accept': 'application/json',
+          "Authorization": `Bearer ${token}`,
+        },
+      })
+      if (!res.ok) {
+        throw await res.json()
+      }
+
+      const data = await res.json()
+
+      if (data.image) {
+        const base64 = 'data:image/png;base64,' + data.image
+        const newFile = await ImageManager.imageToFile(base64)
+        const url = await uploadImage(newFile as File)
+        resolve({ output: url })
+      } else {
+        reject('Recreate image faild!')
+      }
+
+    } catch (error) {
+      reject(error)
+    }
   })
 }
 

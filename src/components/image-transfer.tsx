@@ -15,6 +15,7 @@ import { Tool, Status } from '@/types'
 import { PHOTO_DEFAULT_PAYLOAD } from '@/constants'
 import ImageManager from '@/utils/Image'
 import { ImageEditor } from './image-editor'
+import ImageUncropper from './Image-uncropper'
 
 // use dynamic import to fixed the canvas require error on next14
 import dynamic from 'next/dynamic'
@@ -47,7 +48,7 @@ function ImageTransfer({ file, tool, onGenerateImage, src, setSrc, status, setSt
       setStatus('Pending')
       const res = await onGenerateImage({ type: tool.name, payload, })
       // 高阶图片容器缓存原图，因为图片尺寸有变化
-      if (['crop-img', 'filter-img'].includes(tool.name)) {
+      if (['crop-img', 'uncrop', 'filter-img'].includes(tool.name)) {
         setOriginSrc(src)
         setSrc(res.imageSrc)
       }
@@ -63,7 +64,7 @@ function ImageTransfer({ file, tool, onGenerateImage, src, setSrc, status, setSt
 
   // 重试任务
   const handleRestart = async () => {
-    if (['crop-img', 'filter-img'].includes(tool.name)) {
+    if (['crop-img', 'uncrop', 'filter-img'].includes(tool.name)) {
       setSrc(originSrc)
       setResult('')
       setStatus('Ready')
@@ -196,12 +197,12 @@ function ImageTransfer({ file, tool, onGenerateImage, src, setSrc, status, setSt
         {/* 图片容器 */}
         <div
           className={twMerge("w-full rounded-xl overflow-hidden",
-            ['inpaint-img', 'remove-obj'].includes(tool.name) ? 'pb-10' : ''
+            ['inpaint-img', 'remove-obj', 'uncrop'].includes(tool.name) ? 'pb-12' : ''
           )}
           style={{ maxWidth: maxWidth }}
         >
           {/* 基础通用图片容器 */}
-          {!['crop-img', 'filter-img', 'remove-obj', 'inpaint-img'].includes(tool.name) &&
+          {!['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img'].includes(tool.name) &&
             <div className="w-full mosaic-bg relative">
               <NextImage width={200} height={200} alt="image" src={src}
                 className={twMerge('w-full h-auto m-auto', result ? 'opacity-0' : '')}
@@ -225,7 +226,7 @@ function ImageTransfer({ file, tool, onGenerateImage, src, setSrc, status, setSt
             </div>
           }
 
-          {/* 高级定制图片容器1, 尺寸改变 */}
+          {/* 高级定制图片容器1a, 尺寸改变 */}
           {['crop-img'].includes(tool.name) &&
             <div className="w-full mosaic-bg rounded-xl relative">
               <NextImage width={200} height={200} alt="image" src={src}
@@ -235,6 +236,36 @@ function ImageTransfer({ file, tool, onGenerateImage, src, setSrc, status, setSt
 
               <div className={twMerge("absolute top-0 left-0 w-full h-full", result ? 'opacity-0' : '')}>
                 <ImageCropper src={src} setSrc={setSrc} setPayload={setPayload} />
+              </div>
+
+              {status === 'Pending' &&
+                <div className={twMerge('scan w-full absolute top-0 transition-all duration-200 pointer-events-none',)}>
+                </div>
+              }
+
+              {result &&
+                <div className='w-full absolute top-0'>
+                  <img width={200} height={200} alt="image" src={result} className={
+                    twMerge('w-full h-auto m-auto, rounded-xl')}
+                  >
+                  </img>
+                </div>
+              }
+
+            </div>
+          }
+
+
+          {/* 高级定制图片容器1b, 尺寸改变 */}
+          {['uncrop'].includes(tool.name) &&
+            <div className="w-full mosaic-bg rounded-xl relative">
+              <NextImage width={200} height={200} alt="image" src={src}
+                className={twMerge('w-full h-auto m-auto opacity-0 ', result ? 'opacity-0' : '')}
+              >
+              </NextImage>
+
+              <div className={twMerge("absolute top-0 left-0 w-full h-full", result ? 'opacity-0' : '')}>
+                <ImageUncropper src={src} setSrc={setSrc} setPayload={setPayload} />
               </div>
 
               {status === 'Pending' &&
@@ -413,7 +444,7 @@ function ImageTransfer({ file, tool, onGenerateImage, src, setSrc, status, setSt
         {result || status === 'Error'
           ?
           <Button variant="default" onClick={handleRestart}>
-            {['crop-img', 'filter-img', 'remove-obj', 'inpaint-img'].includes(tool.name) ? '重做' : '重试'}
+            {['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img'].includes(tool.name) ? '重做' : '重试'}
           </Button>
           :
           <Button variant="default" disabled={status !== 'Ready' || !isReady} onClick={handleStart}>
