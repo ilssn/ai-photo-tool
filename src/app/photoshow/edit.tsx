@@ -10,6 +10,7 @@ import UploadButton from '@/components/upload-button'
 import { HistoryModal } from "@/components/history-modal";
 import { Tool, Status, History } from '@/types'
 import Locale from '@/locales'
+import { twMerge } from 'tailwind-merge'
 
 import { RiDownload2Fill } from "react-icons/ri";
 
@@ -93,7 +94,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
               <ul className="w-full space-y-4 ">
                 {
                   tools.map((it, idx) => (
-                    <li key={idx} onClick={() => setTool(it)}>
+                    <li key={idx} onClick={() => setTool(it)} className={status === 'Pending' ? 'pointer-events-none opacity-60 ' : ''}>
                       <ToolCard active={it.id === tool.id} icon={it.icon} title={it.title} desc={it.desc}></ToolCard>
                     </li>
                   ))
@@ -102,7 +103,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
             </ScrollArea>
           </div>
         </div>
-        <div className="w-full">
+        <div className={twMerge('w-full', status === 'Pending' ? 'pointer-events-none opacity-60' : '')}>
           <UploadButton setFile={setFile} setResult={setResult} />
         </div>
       </div>
