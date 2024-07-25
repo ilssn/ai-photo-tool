@@ -126,10 +126,10 @@ const ImageUncropper: React.FC<PropsData> = ({ src, setSrc, setPayload }) => {
     setPayload((preData: any) => { return { ...preData, position } });
   }
 
-  const onReset = () => {
-    setSrc(undefined)
-    setFile(undefined)
-  }
+  // const onReset = () => {
+  //   setSrc(undefined)
+  //   setFile(undefined)
+  // }
 
   const getPosition = (pixel: any) => {
     let left = pixel.left
