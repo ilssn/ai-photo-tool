@@ -75,10 +75,10 @@ export function SideSheet({ status, tools, tool, setTool, file, setFile }: Props
                 ))
               }
             </ul>
-            <div className="w-fu h-20"></div>
+            <div className="w-fu h-24"></div>
           </ScrollArea>
 
-          <div className="absolute left-0 bottom-2 h-20 p-4 w-full bg-background/95">
+          <div className="absolute left-0 bottom-2 h-24 p-4 w-full bg-background/95">
             <div className={twMerge('w-full', status === 'Pending' ? 'pointer-events-none opacity-60' : '')}>
               <UploadButton setFile={setFile} />
             </div>
