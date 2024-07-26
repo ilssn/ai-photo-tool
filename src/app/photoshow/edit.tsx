@@ -8,6 +8,7 @@ import ToolCard from '@/components/tool-card'
 import ImageTransfer from '@/components/image-transfer'
 import UploadButton from '@/components/upload-button'
 import { HistoryModal } from "@/components/history-modal";
+import { SideSheet } from '@/components/side-sheet'
 import { Tool, Status, History } from '@/types'
 import Locale from '@/locales'
 import { twMerge } from 'tailwind-merge'
@@ -79,50 +80,65 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
 
   if (!src) return <>Loading...</>
   return (
-    <div id="photosho-edit" className='max-w-screen-xl h-full mx-auto flex border shadow-lg overflow-hidden rounded-xl relative'>
+    <div id="photosho-edit" className='max-w-screen-xl h-full mx-auto flex md:border md:shadow-lg overflow-hidden md:rounded-xl relative'>
 
-      <div className="left w-[310px] h-full p-4 bg-white shadow-2xl flex flex-col">
-
-        <div className="w-full flex items-center justify-center space-x-2 py-2">
-          <Image width={32} height={32} alt="logo" src="/logo.png"></Image>
-          <p className='font-medium text-xl md:text-2xl'>AI图片工具箱</p>
-        </div>
-
-        <div className="grow relative mt-2">
-          <div className="absolute top-0 left-0 w-full h-full">
-            <ScrollArea className="w-full h-full">
-              <ul className="w-full space-y-4 ">
-                {
-                  tools.map((it, idx) => (
-                    <li key={idx} onClick={() => setTool(it)} className={status === 'Pending' ? 'pointer-events-none opacity-60 ' : ''}>
-                      <ToolCard active={it.id === tool.id} icon={it.icon} title={it.title} desc={it.desc}></ToolCard>
-                    </li>
-                  ))
-                }
-              </ul>
-            </ScrollArea>
-          </div>
-        </div>
-        <div className={twMerge('w-full', status === 'Pending' ? 'pointer-events-none opacity-60' : '')}>
-          <UploadButton setFile={setFile} setResult={setResult} />
+      <div className="md:hidden fixed top-5 left-5">
+        <div className="flex items-center">
+          <SideSheet />
         </div>
       </div>
 
-      <div className="right flex-1 h-full px-12 py-4 flex flex-col space-y-4">
+      <div className="hidden md:block left w-[310px] h-full ">
+        <div className="w-full h-full p-4 bg-white shadow-2xl flex flex-col">
+          <div className="w-full flex items-center justify-center space-x-2 py-2">
+            <Image width={32} height={32} alt="logo" src="/logo.png"></Image>
+            <p className='font-medium text-xl md:text-2xl'>AI图片工具箱</p>
+          </div>
+
+          <div className="grow relative mt-2">
+            <div className="absolute top-0 left-0 w-full h-full">
+              <ScrollArea className="w-full h-full">
+                <ul className="w-full space-y-4 ">
+                  {
+                    tools.map((it, idx) => (
+                      <li key={idx} onClick={() => setTool(it)} className={status === 'Pending' ? 'pointer-events-none opacity-60 ' : ''}>
+                        <ToolCard active={it.id === tool.id} icon={it.icon} title={it.title} desc={it.desc}></ToolCard>
+                      </li>
+                    ))
+                  }
+                </ul>
+              </ScrollArea>
+            </div>
+          </div>
+
+          <div className={twMerge('w-full', status === 'Pending' ? 'pointer-events-none opacity-60' : '')}>
+            <UploadButton setFile={setFile} setResult={setResult} />
+          </div>
+        </div>
+      </div>
+
+      <div className="right flex-1 h-full md:px-12 md:py-4 flex flex-col space-y-4">
 
         <div className="w-full flex justify-between items-center">
-          <div className="info text-md text-primary">
-            <span className='font-medium'>AI图片工具箱 </span>
-            <span className='italic'>{`> ${tool.title}`}</span>
+          <div className="block md:hidden info text-md text-primary">
+            <span className='font-medium'>{tool.title}</span>
+          </div>
+          <div className="hidden md:block info text-md text-primary">
+            <span className='font-medium'>{'AI图片工具箱 > '}</span>
+            <span className='italic'>{tool.title}</span>
           </div>
           <div className="flex space-x-4 items-center">
             <Button disabled={!result} variant="default" size={"sm"} onClick={() => SystemManager.downloadImage(result)}>
               <RiDownload2Fill />
               <span>下载</span>
             </Button>
-            <div className="flex items-center">
-              <HistoryModal setTool={setTool} setFile={setFile} />
+
+            <div className="fixed top-5 right-12 z-[999] md:static">
+              <div className="flex items-center">
+                <HistoryModal setTool={setTool} setFile={setFile} />
+              </div>
             </div>
+
           </div>
         </div>
 

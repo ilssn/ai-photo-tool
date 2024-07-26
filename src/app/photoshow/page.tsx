@@ -16,7 +16,7 @@ export default function PhotoshowPage() {
   const [file, setFile] = React.useState<File | null>(null)
 
   return (
-    <div id="photoshow-page" className="w-full p-4 sm:p-8">
+    <div id="photoshow-page" className="w-full p-4 md:p-8">
 
       {
         !token && <PhotoshowLogin />

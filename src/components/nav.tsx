@@ -6,6 +6,7 @@ import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 import { InfoModal } from "./info-modal";
 import { HistoryModal } from "./history-modal";
+import Image from "next/image";
 
 
 export function Navbar() {
@@ -13,11 +14,17 @@ export function Navbar() {
   // const { token } = useConfigStore();
 
   return (
-    <header className="w-full flex fixed p-1 z-50 px-2 bg-background/95 justify-between items-center ">
-      <div className="flex items-center gap-2">
-      </div>
+    <header className="w-full flex fixed p-2 h-16 px-2 bg-background/95 justify-between items-center ">
       <div className="flex items-center gap-4 p-2">
-        {/* <HistoryModal /> */}
+        {/* <div className="md:hidden flex items-center">
+          <InfoModal />
+        </div> */}
+      </div>
+      {/* <div className="md:hidden flex items-center justify-center space-x-2 py-2">
+        <Image width={32} height={32} alt="logo" src="/logo.png"></Image>
+        <p className='font-medium text-xl md:text-2xl'>AI图片工具箱</p>
+      </div> */}
+      <div className="flex items-center gap-4 p-2">
         <InfoModal />
       </div>
     </header>

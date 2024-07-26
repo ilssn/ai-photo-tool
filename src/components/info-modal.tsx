@@ -19,7 +19,7 @@ export function InfoModal() {
       <DialogTrigger>
       <IoMdInformationCircleOutline className="h-[1.4rem] w-[1.4rem] rotate-0 scale-100 hover:text-primary hover:scale-110" />
       </DialogTrigger>
-      <DialogContent className="max-w-[600px]">
+      <DialogContent className="max-w-[600px] ">
         <DialogHeader>
           <DialogTitle>
             关于
