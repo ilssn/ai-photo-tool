@@ -119,11 +119,11 @@ function ImageTransfer({ file, tool, onGenerateImage, src, setSrc, status, setSt
 
   // 原图变化，重设容器尺寸
   React.useEffect(() => {
-    setMaxWidth('10px')
     const img = new Image()
     img.src = src
     img.onload = () => {
       if (img.width && img.height) {
+        setMaxWidth('10px')
         const scale = Number(img.height) / Number(img.width)
         if (scale > 1.8) {
           setMaxWidth('300px')
@@ -201,10 +201,11 @@ function ImageTransfer({ file, tool, onGenerateImage, src, setSrc, status, setSt
         }
         {/* 图片容器 */}
         <div
-          className={twMerge("w-full rounded-xl overflow-hidden transition-all duration-200",
+          // className={twMerge("w-full rounded-xl overflow-hidden transition-all duration-200",
+            className={twMerge("w-full rounded-xl overflow-hidden ",
             ['inpaint-img', 'remove-obj', 'uncrop'].includes(tool.name) ? 'pb-12' : ''
           )}
-          style={{ maxWidth: maxWidth, maxHeight: 'auto' }}
+          style={{ maxWidth: maxWidth }}
         >
           {/* 基础通用图片容器 */}
           {!['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img'].includes(tool.name) &&

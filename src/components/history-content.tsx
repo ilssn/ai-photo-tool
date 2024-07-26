@@ -34,15 +34,15 @@ export function HistoryContent({ setTool, setFile, triggerRef }: PropsData) {
 
   const handleEdit = async (it: History) => {
     const file = await ImageManager.imageToFile(it.result)
+    if (triggerRef?.current) {
+      triggerRef?.current.click()
+    }
     setTimeout(() => {
-      setFile(file)
+      setTool(it.tool)
       setTimeout(() => {
-        setTool(it.tool)
-        if (triggerRef?.current) {
-          triggerRef?.current.click()
-        }
-      }, 30)
-    }, 50)
+        setFile(file)
+      }, 100)
+    }, 30)
   }
 
   return (
