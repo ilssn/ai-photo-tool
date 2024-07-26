@@ -119,11 +119,15 @@ function ImageTransfer({ file, tool, onGenerateImage, src, setSrc, status, setSt
 
   // 原图变化，重设容器尺寸
   React.useEffect(() => {
+    setMaxWidth('300px')
     const img = new Image()
     img.src = src
     img.onload = () => {
       if (img.width && img.height) {
         const scale = Number(img.height) / Number(img.width)
+        if (scale > 1.8) {
+          setMaxWidth('300px')
+        }
         if (scale > 1.6) {
           setMaxWidth('400px')
         }
