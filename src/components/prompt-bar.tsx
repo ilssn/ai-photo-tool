@@ -14,7 +14,7 @@ function PromptBar({ payload, setPayload, placeHolder }: PromptBarProps) {
   }
 
   return (
-    <div className='w-full flex justify-center'>
+    <div className='w-full flex justify-center px-1 md:px-0'>
       <Input
         value={payload.prompt}
         type="text"

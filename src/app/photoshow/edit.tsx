@@ -122,7 +122,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
 
         <div className="w-full flex justify-between items-center">
           <div className="block md:hidden info text-md text-primary">
-            <div className="w-full flex space-x-2 items-end justify-start border-b-2 border-slate-200 ">
+            <div className="w-full flex space-x-2 items-center justify-start border-b-2 border-slate-200 ">
               <span className='py-1'>
                 <ToolIcon icon={tool.icon} />
               </span>

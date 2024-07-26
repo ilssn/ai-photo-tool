@@ -47,7 +47,7 @@ export function SideSheet({ status, tools, tool, setTool, file, setFile }: Props
   return (
     <Sheet>
       <SheetTrigger asChild ref={triggerRef}>
-        <div className="flex p-1 items-center cursor-pointer rounded-md hover:scale-110">
+        <div className="flex py-1 items-center cursor-pointer rounded-md hover:scale-110">
           {/* <Image width={32} height={32} alt="logo" src="/logo.png"></Image> */}
           <RiMenuUnfoldFill className="w-8 h-8 text-primary" />
         </div>

@@ -8,23 +8,23 @@ interface PropsData {
 
 const lights = [
   {
-    name: '自动打光',
+    name: '自动',
     value: 'None',
   },
   {
-    name: '左侧灯光',
+    name: '左侧',
     value: 'Left Light',
   },
   {
-    name: '右侧灯光',
+    name: '右侧',
     value: 'Right Light',
   },
   {
-    name: '顶部灯光',
+    name: '顶部',
     value: 'Top Light',
   },
   {
-    name: '底部灯光',
+    name: '底部',
     value: 'Botom Light',
   },
 ]

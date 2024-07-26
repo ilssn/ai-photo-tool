@@ -402,7 +402,7 @@ function ImageTransfer({ file, tool, onGenerateImage, src, setSrc, status, setSt
                 <ScaleBar payload={payload} setPayload={setPayload} />
               }
               {tool.name === 'super-upscale' &&
-                <div className="w-full flex space-x-4 flex-col space-y-2">
+                <div className="w-full flex flex-col space-y-2">
                   <ScaleBar payload={payload} setPayload={setPayload} />
                   <PromptBar payload={payload} setPayload={setPayload} />
                 </div>
@@ -420,7 +420,7 @@ function ImageTransfer({ file, tool, onGenerateImage, src, setSrc, status, setSt
                 <PromptBar payload={payload} setPayload={setPayload} />
               }
               {tool.name === 'replace-bg' &&
-                <div className="w-full flex space-x-4 flex-col space-y-2">
+                <div className="w-full flex flex-col space-y-2">
                   <LightBar payload={payload} setPayload={setPayload} />
                   <PromptBar
                     payload={payload}
