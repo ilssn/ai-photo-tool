@@ -70,11 +70,11 @@ export function HistoryContent({ setTool, setFile, triggerRef }: PropsData) {
                       <Image width={80} height={50} style={{ width: '100%', height: 'auto' }} alt={"result image"} src={it.result} />
                       {/* <img src={it.result} style={{ width: '100%', height: 'auto' }} alt="" /> */}
                     </div>
-                    <div className="flex-1 flex flex-col justify-start space-y-1 ">
+                    <div className="flex-1 flex flex-col justify-between space-y-1 ">
                       <div className="font-medium text-primary text-base">{it.tool.title}</div>
                       <div className="text-sm text-slate-500">{SystemManager.formatTimestamp(it.id)}</div>
                     </div>
-                    <div className="flex justify-between space-x-4 ">
+                    <div className="flex flex-col justify-between space-y-2 ">
                       <Button size={"sm"} onClick={() => handleEdit(it)}>
                         <PiMagicWandLight />
                         编辑

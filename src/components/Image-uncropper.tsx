@@ -214,10 +214,10 @@ const ImageUncropper: React.FC<PropsData> = ({ src, setSrc, setPayload }) => {
             onChange={onChange}
             imageRestriction={ImageRestriction.none}
             defaultVisibleArea={{
-              left: -300,
-              top: -300,
-              width: image.width + 600,
-              height: image.height + 600,
+              left: -200,
+              top: -200,
+              width: image.width + 400,
+              height: image.height + 400,
             }}
             defaultCoordinates={{
               left: 0,
