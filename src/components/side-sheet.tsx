@@ -75,7 +75,7 @@ export function SideSheet({ status, tools, tool, setTool, file, setFile }: Props
                 ))
               }
             </ul>
-            <div className="w-fu h-20 bg-slate-400"></div>
+            <div className="w-fu h-20"></div>
           </ScrollArea>
 
           <div className="absolute left-0 bottom-2 h-20 p-4 w-full bg-background/95">
