@@ -108,16 +108,16 @@ export class Slider extends PureComponent<Props> {
       <div className={cn("image-editor-slider", className)} ref={this.line}>
         <div className="image-editor-slider__line">
           <div
-            className="image-editor-slider__fill"
+            className="image-editor-slider__fill !bg-primary"
             style={{
               width: fillWidth,
               left: fillLeft
             }}
           />
-          <div className="image-editor-slider__dot" />
+          <div className="image-editor-slider__dot !bg-primary" />
           <div
             className={cn(
-              "image-editor-slider__value",
+              "image-editor-slider__value !text-[12px] !font-normal !text-primary",
               handleInsideDot && "image-editor-slider__value--hidden"
             )}
             style={{
@@ -128,7 +128,7 @@ export class Slider extends PureComponent<Props> {
           </div>
           <div
             className={cn(
-              "image-editor-slider__handler",
+              "image-editor-slider__handler !bg-primary",
               this.state.focus && "image-editor-slider__handler--focus",
               handleInsideDot && "image-editor-slider__handler--hidden"
             )}

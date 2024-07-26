@@ -8,7 +8,7 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 export const Button: FC<Props> = ({ className, active, children, ...props }) => {
 	return (
-		<button className={cn('image-editor-button', active && 'image-editor-button--active', className)} {...props}>
+		<button className={cn('image-editor-button', active && 'image-editor-button--active !text-primary', className)} {...props}>
 			{children}
 		</button>
 	);

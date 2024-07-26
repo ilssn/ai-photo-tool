@@ -114,12 +114,14 @@ export const ImageEditor: React.FC<PropsData> = ({ src, setSrc, setPayload }) =>
 
   return (
     <div
-      className="image-editor w-full relative p-10 pb-20 bg-black"
+      className=" w-full relative !bg-red"
       onMouseUp={() => handleActionDone()}
       onTouchEnd={() => handleActionDone()}
     >
 
       <Cropper
+        className="!bg-white !border-none"
+        style={{background: 'white', border: 'none'}}
         src={src}
         ref={cropperRef}
         stencilProps={{
@@ -147,24 +149,27 @@ export const ImageEditor: React.FC<PropsData> = ({ src, setSrc, setPayload }) =>
         }}
       />
 
-      {mode && (
-        <div className="w-full absolute left-0 bottom-24 flex justify-center">
-          <Slider
-            // className="image-editor__slider"
-            value={adjustments[mode]}
-            onChange={onChangeValue}
-          />
-        </div>
-      )}
+      <div className="action absolute left-0 bottom-0 w-full bg-black/80 p-4 pb-2">
+        {mode && (
+          <div className="w-full flex justify-center">
+            <Slider
+              value={adjustments[mode]}
+              onChange={onChangeValue}
+            />
+          </div>
+        )}
 
-      <Navigation
-        className="absolute left-0 bottom-0 w-full"
-        mode={mode}
-        onChange={setMode}
-        onUpload={onUpload}
-        onDownload={onDownload}
-        onReset={onReset}
-      />
+        <Navigation
+          className="w-full"
+          mode={mode}
+          onChange={setMode}
+          onUpload={onUpload}
+          onDownload={onDownload}
+          onReset={onReset}
+        />
+      </div>
+
+
 
     </div>
   );

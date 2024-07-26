@@ -1,6 +1,6 @@
 .image-editor-button {
-	width: 46px;
-	height: 46px;
+	width: 36px;
+	height: 36px;
 	border-radius: 50%;
 	background: transparent;
 	fill: #88888b;
@@ -14,7 +14,7 @@
 	color: currentColor;
 	padding: 0;
 	&--active {
-		background: rgba(white, 0.03);
+		// background: rgba(white, 0.03);
 		fill: currentColor;
 	}
 	&:hover, &:focus {

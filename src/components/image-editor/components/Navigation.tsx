@@ -54,7 +54,7 @@ export const Navigation: FC<Props> = ({
 
   return (
     // <div className={cn("image-editor-navigation flex justify-center", className)}>
-    <div className={cn("bg-black flex justify-center p-2", className)}>
+    <div className={cn("flex justify-center", className)}>
       {/* <Button
         className={"image-editor-navigation__button"}
         onClick={onUploadButtonClick}
@@ -68,7 +68,7 @@ export const Navigation: FC<Props> = ({
           className="image-editor-navigation__upload-input"
         />
       </Button> */}
-      <div className="image-editor-navigation__buttons">
+      <div className="image-editor-navigation__buttons !text-white">
         {/* <Button
           className={"image-editor-navigation__button"}
           active={mode === "crop"}
@@ -80,6 +80,7 @@ export const Navigation: FC<Props> = ({
           className={"image-editor-navigation__button"}
           active={mode === "saturation"}
           onClick={setMode("saturation")}
+          title="鲜艳度"
         >
           <SaturationIcon />
         </Button>
@@ -87,6 +88,7 @@ export const Navigation: FC<Props> = ({
           className={"image-editor-navigation__button"}
           active={mode === "brightness"}
           onClick={setMode("brightness")}
+          title="亮度"
         >
           <BrightnessIcon />
         </Button>
@@ -94,6 +96,7 @@ export const Navigation: FC<Props> = ({
           className={"image-editor-navigation__button"}
           active={mode === "contrast"}
           onClick={setMode("contrast")}
+          title="对比度"
         >
           <ContrastIcon />
         </Button>
@@ -101,6 +104,7 @@ export const Navigation: FC<Props> = ({
           className={"image-editor-navigation__button"}
           active={mode === "hue"}
           onClick={setMode("hue")}
+          title="色调"
         >
           <HueIcon />
         </Button>
@@ -114,6 +118,7 @@ export const Navigation: FC<Props> = ({
       <Button
         className={"image-editor-navigation__button"}
         onClick={onReset}
+        title="重置"
       >
         <ResetIcon />
       </Button>
