@@ -204,7 +204,7 @@ function ImageTransfer({ file, tool, onGenerateImage, src, setSrc, status, setSt
           className={twMerge("w-full rounded-xl overflow-hidden transition-all duration-200",
             ['inpaint-img', 'remove-obj', 'uncrop'].includes(tool.name) ? 'pb-12' : ''
           )}
-          style={{ maxWidth: maxWidth }}
+          style={{ maxWidth: maxWidth, maxHeight: 'auto' }}
         >
           {/* 基础通用图片容器 */}
           {!['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img'].includes(tool.name) &&
