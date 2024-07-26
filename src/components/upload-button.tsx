@@ -6,10 +6,10 @@ const ALLOWED_FILES = ['image/png', 'image/jpeg', 'image/webp'];
 
 interface UplodaButtonProps {
   setFile: (file: File | null) => void
-  setResult?: (result: string) => void
+  // setResult?: (result: string) => void
 }
 
-function UploadButton({ setFile, setResult }: UplodaButtonProps) {
+function UploadButton({ setFile }: UplodaButtonProps) {
   const fileRef = React.useRef<HTMLInputElement | null>(null)
 
   // 选中
@@ -19,7 +19,7 @@ function UploadButton({ setFile, setResult }: UplodaButtonProps) {
     )[0]
 
     if (file) {
-      setResult && setResult('')
+      // setResult && setResult('')
       setTimeout(() => {
         setFile(file)
       }, 30)

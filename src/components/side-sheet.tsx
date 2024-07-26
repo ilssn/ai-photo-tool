@@ -1,3 +1,4 @@
+import React from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -11,47 +12,79 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import ToolCard from '@/components/tool-card'
+import UploadButton from '@/components/upload-button'
 import { RiMenuUnfoldFill } from "react-icons/ri";
 import Image from "next/image";
+import { Tool, Status } from "@/types";
+import { twMerge } from 'tailwind-merge'
+
+interface PropsData {
+  status: Status
+  tools: Tool[]
+  tool: Tool
+  setTool: (tool: Tool) => void
+  file: File | null
+  setFile: (file: File | null) => void
+}
 
 
-export function SideSheet() {
+export function SideSheet({ status, tools, tool, setTool, file, setFile }: PropsData) {
+  const triggerRef = React.useRef<any>(null)
+
+  const handleSelectTool = async (it: Tool) => {
+    setTimeout(() => {
+      setTimeout(() => {
+        setTool(it)
+        if (triggerRef?.current) {
+          triggerRef?.current.click()
+        }
+      }, 30)
+    }, 50)
+  }
+
   return (
     <Sheet>
-      <SheetTrigger asChild>
+      <SheetTrigger asChild ref={triggerRef}>
         <div className="flex p-1 items-center cursor-pointer rounded-md hover:scale-110">
           {/* <Image width={32} height={32} alt="logo" src="/logo.png"></Image> */}
           <RiMenuUnfoldFill className="w-8 h-8 text-primary" />
         </div>
         {/* <Button variant="outline">Open</Button> */}
       </SheetTrigger>
-      <SheetContent side={"left"} className="z-[999]">
+      <SheetContent side={"left"} className="z-[999] px-0">
         <SheetHeader>
-          <SheetTitle>Edit profile</SheetTitle>
-          <SheetDescription>
-            Make changes to your profile here. Click save when you're done.
-          </SheetDescription>
+          <SheetTitle>
+            <div className="w-full flex items-center justify-center space-x-2 py-2">
+              <Image width={32} height={32} alt="logo" src="/logo.png"></Image>
+              <p className='font-medium text-xl md:text-2xl'>AI图片工具箱</p>
+            </div>
+          </SheetTitle>
+          <SheetDescription className="hidden"></SheetDescription>
         </SheetHeader>
-        <div className="w-full">ddd</div>
-        {/* <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
-            <Input id="name" value="Pedro Duarte" className="col-span-3" />
+        <div className="w-full h-full relative">
+
+          <ScrollArea className="w-full h-full relative">
+            <ul className="w-full space-y-4 p-4">
+              {
+                tools.map((it, idx) => (
+                  <li key={idx} onClick={() => handleSelectTool(it)} className={status === 'Pending' ? 'pointer-events-none opacity-60 ' : ''}>
+                    <ToolCard active={it.id === tool.id} icon={it.icon} title={it.title} desc={it.desc}></ToolCard>
+                  </li>
+                ))
+              }
+            </ul>
+            <div className="w-fu h-20 bg-slate-400"></div>
+          </ScrollArea>
+
+          <div className="absolute left-0 bottom-2 h-20 p-4 w-full bg-background/95">
+            <div className={twMerge('w-full', status === 'Pending' ? 'pointer-events-none opacity-60' : '')}>
+              <UploadButton setFile={setFile} />
+            </div>
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Username
-            </Label>
-            <Input id="username" value="@peduarte" className="col-span-3" />
-          </div>
-        </div> */}
-        {/* <SheetFooter>
-          <SheetClose asChild>
-            <Button type="submit">Save changes</Button>
-          </SheetClose>
-        </SheetFooter> */}
+        </div>
+
       </SheetContent>
     </Sheet>
   )
