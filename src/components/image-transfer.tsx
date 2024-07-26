@@ -119,7 +119,7 @@ function ImageTransfer({ file, tool, onGenerateImage, src, setSrc, status, setSt
 
   // 原图变化，重设容器尺寸
   React.useEffect(() => {
-    setMaxWidth('300px')
+    setMaxWidth('10px')
     const img = new Image()
     img.src = src
     img.onload = () => {
@@ -201,7 +201,7 @@ function ImageTransfer({ file, tool, onGenerateImage, src, setSrc, status, setSt
         }
         {/* 图片容器 */}
         <div
-          className={twMerge("w-full rounded-xl overflow-hidden",
+          className={twMerge("w-full rounded-xl overflow-hidden transition-all duration-200",
             ['inpaint-img', 'remove-obj', 'uncrop'].includes(tool.name) ? 'pb-12' : ''
           )}
           style={{ maxWidth: maxWidth }}
