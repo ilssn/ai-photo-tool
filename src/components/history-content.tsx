@@ -74,7 +74,7 @@ export function HistoryContent({ setTool, setFile, triggerRef }: PropsData) {
                       <div className="font-medium text-primary text-base">{it.tool.title}</div>
                       <div className="text-sm text-slate-500">{SystemManager.formatTimestamp(it.id)}</div>
                     </div>
-                    <div className="flex flex-col justify-between space-y-2 ">
+                    <div className="flex flex-col space-y-2 ">
                       <Button size={"sm"} onClick={() => handleEdit(it)}>
                         <PiMagicWandLight />
                         编辑
