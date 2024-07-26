@@ -453,7 +453,7 @@ function ImageTransfer({ file, tool, onGenerateImage, src, setSrc, status, setSt
           </Button>
           :
           <Button variant="default" disabled={status !== 'Ready' || !isReady} onClick={handleStart}>
-            开始
+            {['crop-img', 'filter-img',].includes(tool.name) ? '保存' : '开始'}
           </Button>
         }
       </div>
