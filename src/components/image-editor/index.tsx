@@ -120,8 +120,8 @@ export const ImageEditor: React.FC<PropsData> = ({ src, setSrc, setPayload }) =>
     >
 
       <Cropper
-        className="!bg-white !border-none"
-        style={{background: 'white', border: 'none'}}
+        className=""
+        style={{background: 'none', border: 'none'}}
         src={src}
         ref={cropperRef}
         stencilProps={{
