@@ -12,14 +12,16 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { RiMenuUnfoldFill } from "react-icons/ri";
+import Image from "next/image";
 
 
 export function SideSheet() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <div className=" cursor-pointer p-2 rounded-md text-white bg-primary/70 hover:bg-primary hover:text-white">
-          <RiMenuUnfoldFill className="w-4 h-4" />
+        <div className="flex p-1 items-center cursor-pointer rounded-md hover:scale-110">
+          {/* <Image width={32} height={32} alt="logo" src="/logo.png"></Image> */}
+          <RiMenuUnfoldFill className="w-8 h-8 text-primary" />
         </div>
         {/* <Button variant="outline">Open</Button> */}
       </SheetTrigger>

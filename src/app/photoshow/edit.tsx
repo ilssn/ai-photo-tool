@@ -9,6 +9,7 @@ import ImageTransfer from '@/components/image-transfer'
 import UploadButton from '@/components/upload-button'
 import { HistoryModal } from "@/components/history-modal";
 import { SideSheet } from '@/components/side-sheet'
+import { ToolIcon } from '@/components/my-icon'
 import { Tool, Status, History } from '@/types'
 import Locale from '@/locales'
 import { twMerge } from 'tailwind-merge'
@@ -82,7 +83,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
   return (
     <div id="photosho-edit" className='max-w-screen-xl h-full mx-auto flex md:border md:shadow-lg overflow-hidden md:rounded-xl relative'>
 
-      <div className="md:hidden fixed top-5 left-5">
+      <div className="md:hidden fixed top-2 left-4">
         <div className="flex items-center">
           <SideSheet />
         </div>
@@ -121,7 +122,12 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
 
         <div className="w-full flex justify-between items-center">
           <div className="block md:hidden info text-md text-primary">
-            <span className='font-medium'>{tool.title}</span>
+            <div className="w-full flex space-x-2 items-end justify-start px-2 border-b-2 border-slate-200 ">
+              <span className='py-1'>
+                <ToolIcon icon={tool.icon} />
+              </span>
+              <span className='font-medium '>{tool.title}</span>
+            </div>
           </div>
           <div className="hidden md:block info text-md text-primary">
             <span className='font-medium'>{'AI图片工具箱 > '}</span>
@@ -133,7 +139,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
               <span>下载</span>
             </Button>
 
-            <div className="fixed top-5 right-12 z-[999] md:static">
+            <div className="fixed top-3 right-12 z-[999] md:static">
               <div className="flex items-center">
                 <HistoryModal setTool={setTool} setFile={setFile} />
               </div>

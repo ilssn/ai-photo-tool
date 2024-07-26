@@ -14,13 +14,13 @@ export function Navbar() {
   // const { token } = useConfigStore();
 
   return (
-    <header className="w-full flex fixed p-2 h-16 px-2 bg-background/95 justify-between items-center ">
+    <header className="w-full flex fixed bg-background/95 justify-between items-center px-2 py-1 shadow-sm md:shadow-none md:py-1">
       <div className="flex items-center gap-4 p-2">
         {/* <div className="md:hidden flex items-center">
           <InfoModal />
         </div> */}
       </div>
-      {/* <div className="md:hidden flex items-center justify-center space-x-2 py-2">
+      {/* <div className="md:hidden flex items-center justify-center space-x-2">
         <Image width={32} height={32} alt="logo" src="/logo.png"></Image>
         <p className='font-medium text-xl md:text-2xl'>AI图片工具箱</p>
       </div> */}

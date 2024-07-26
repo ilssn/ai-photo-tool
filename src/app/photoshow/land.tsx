@@ -59,7 +59,7 @@ function PhotoshowLand({ setTool, file, setFile }: PropsData) {
         </ul>
       </section>
 
-      <div className='fixed top-5 right-12 z-[999]'>
+      <div className='fixed top-3 right-12 z-[999]'>
         <HistoryModal setTool={setTool} setFile={setFile} />
 
       </div>
