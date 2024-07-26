@@ -49,6 +49,7 @@ function PhotoshowLand({ setTool, file, setFile }: PropsData) {
           {
             tools.map((it, idx) =>
               <li
+                className='h-16 sm:h-auto'
                 key={idx} onClick={() => handleSeletTool(it)}>
                 <ToolCard icon={it.icon} title={it.title} desc={it.desc} />
               </li>
