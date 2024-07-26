@@ -438,7 +438,7 @@ function ImageTransfer({ file, tool, onGenerateImage, src, setSrc, status, setSt
 
       {/* 操作区 */}
       <div className="w-full h-12 md:hidden"></div>
-      <div className="action flex justify-between space-x-4 fixed left-0 bottom-12 w-full px-4 pt-2 md:static md:p-0">
+      <div className="action flex justify-between space-x-4 fixed left-0 bottom-12 w-full px-4 pt-2 bg-background/95 md:static md:p-0">
         {/* <Button variant="outline" className='border-primary text-primary' onClick={handleStop}>
           退出
         </Button> */}
