@@ -167,6 +167,11 @@ function ImageTransfer({ file, tool, onGenerateImage, src, setSrc, status, setSt
         setIsReady(false)
       }
     }
+    if (tool.name === 'uncrop') {
+      if (!payload.mask) {
+        setIsReady(false)
+      }
+    }
     if (tool.name === 'inpaint-img') {
       if (!payload.prompt) {
         setIsReady(false)
