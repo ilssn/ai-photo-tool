@@ -307,10 +307,14 @@ export async function generateImage(src: string, action: Action): Promise<Result
         res = await cropImage(src, canvas)
       }
       if (action.type === 'uncrop') {
-        const file = await ImageManager.imageToFile(src) as File
+        // const file = await ImageManager.imageToFile(src) as File
         // const canvas = action.payload.canvas
         const position = action.payload.position
-        const mask = action.payload.mask
+        const  mask = action.payload.mask
+        // const maskBlob = await ImageManager.compressImage(mask, {maxSizeMB: 5})
+        // const maskFile = new File([maskBlob], 'mask.png', {
+        //   type: 'image/png',
+        // })
         res = await uncropImage(mask, position)
       }
       if (action.type === 'filter-img') {

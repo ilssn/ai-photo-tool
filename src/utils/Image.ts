@@ -1,4 +1,107 @@
+// import { saveAs } from 'file-saver';
+interface CompressOptions {
+  maxSizeMB: number; // 最大图片大小，单位为MB
+  mimeType?: string; // 输出图片的MIME类型，例如 'image/jpeg'
+  quality?: number; // 压缩质量，0到1之间的小数
+}
+
 export default class ImageManager {
+  // 压缩数据
+  static compressImageBlob = (blob: Blob, maxSizeMB: number, mimeType: string, quality: number): Promise<Blob> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+
+          if (!ctx) {
+            return reject(new Error('Failed to get 2D context'));
+          }
+
+          const ratio = img.width / img.height;
+          let width = img.width;
+          let height = img.height;
+
+          while ((width * height * 4) / (1024 * 1024) > maxSizeMB) {
+            width /= 1.1;
+            height /= 1.1;
+            canvas.width = width;
+            canvas.height = height;
+            ctx.drawImage(img, 0, 0, width, height);
+          }
+
+          canvas.toBlob((compressedBlob) => {
+            if (compressedBlob) {
+              resolve(compressedBlob);
+            } else {
+              reject(new Error('Failed to compress image'));
+            }
+          }, mimeType, quality);
+        };
+
+        img.onerror = reject;
+        img.src = String(reader.result);
+      };
+
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
+
+  // 压缩图片
+  static compressImage = (file: File, options: CompressOptions): Promise<Blob> => {
+    const { maxSizeMB, mimeType = 'image/jpeg', quality = 0.8 } = options;
+
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const reader = new FileReader();
+
+      reader.onload = (event) => {
+        img.src = (event.target?.result as string) || '';
+      };
+
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
+        if (!ctx) {
+          return reject(new Error('Failed to get 2D context'));
+        }
+
+        const ratio = img.width / img.height;
+        let width = img.width;
+        let height = img.height;
+
+        // 调整图片尺寸，以确保符合最大大小
+        while ((width * height * 4) / (1024 * 1024) > maxSizeMB) {
+          width /= 1.1;
+          height /= 1.1;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+
+        canvas.toBlob((blob) => {
+          if (blob) {
+            // 再次调整质量，确保符合最大大小
+            if (blob.size > maxSizeMB * 1024 * 1024) {
+              return this.compressImageBlob(blob, maxSizeMB, mimeType, quality).then(resolve, reject);
+            }
+            resolve(blob);
+          } else {
+            reject(new Error('Failed to compress image'));
+          }
+        }, mimeType, quality);
+      };
+
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
 
   // 下载图片为文件
   static imageToFile = async (url: string) => {
@@ -53,7 +156,7 @@ export default class ImageManager {
   // 下载图片为本地Base64
   static imageToBase64 = async (url: string) => {
     try {
-      if (url.includes('base64')){
+      if (url.includes('base64')) {
         return url
       }
       const file = await this.imageToFile(url)

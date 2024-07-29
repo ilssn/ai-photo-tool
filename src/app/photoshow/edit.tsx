@@ -36,10 +36,18 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
   const [result, setResult] = useState('')
 
   React.useEffect(() => {
-    if (file) {
-      const url = URL.createObjectURL(file)
-      setSrc(url)
+    const setMinSrc = async () => {
+      if (file) {
+        const blob = await ImageManager.compressImage(file, { maxSizeMB: 5 })
+        const minFile = new File([blob], 'mini.png', {
+          type: 'image/png',
+        })
+        const url = URL.createObjectURL(minFile)
+        setSrc(url)
+      }
+
     }
+    setMinSrc()
   }, [file])
 
   React.useEffect(() => {
@@ -92,28 +100,28 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
       <div className="hidden md:block left w-[310px] h-full shadow-2xl">
 
         <div className="sider-bar w-full h-full p-4 bg-white flex flex-col">
-            <div className="w-full flex items-center justify-center space-x-2 py-2">
-              <Image width={32} height={32} alt="logo" src="/logo.png"></Image>
-              <p className='font-medium text-xl md:text-2xl'>AI图片工具箱</p>
+          <div className="w-full flex items-center justify-center space-x-2 py-2">
+            <Image width={32} height={32} alt="logo" src="/logo.png"></Image>
+            <p className='font-medium text-xl md:text-2xl'>AI图片工具箱</p>
+          </div>
+          <div className="grow relative mt-2">
+            <div className="absolute top-0 left-0 w-full h-full">
+              <ScrollArea className="w-full h-full">
+                <ul className="w-full space-y-4 ">
+                  {
+                    tools.map((it, idx) => (
+                      <li key={idx} onClick={() => setTool(it)} className={status === 'Pending' ? 'pointer-events-none opacity-60 ' : ''}>
+                        <ToolCard active={it.id === tool.id} icon={it.icon} title={it.title} desc={it.desc}></ToolCard>
+                      </li>
+                    ))
+                  }
+                </ul>
+              </ScrollArea>
             </div>
-            <div className="grow relative mt-2">
-              <div className="absolute top-0 left-0 w-full h-full">
-                <ScrollArea className="w-full h-full">
-                  <ul className="w-full space-y-4 ">
-                    {
-                      tools.map((it, idx) => (
-                        <li key={idx} onClick={() => setTool(it)} className={status === 'Pending' ? 'pointer-events-none opacity-60 ' : ''}>
-                          <ToolCard active={it.id === tool.id} icon={it.icon} title={it.title} desc={it.desc}></ToolCard>
-                        </li>
-                      ))
-                    }
-                  </ul>
-                </ScrollArea>
-              </div>
-            </div>
-            <div className={twMerge('w-full', status === 'Pending' ? 'pointer-events-none opacity-60' : '')}>
-              <UploadButton setFile={setFile} />
-            </div>
+          </div>
+          <div className={twMerge('w-full', status === 'Pending' ? 'pointer-events-none opacity-60' : '')}>
+            <UploadButton setFile={setFile} />
+          </div>
         </div>
 
       </div>
