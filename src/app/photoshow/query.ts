@@ -310,7 +310,8 @@ export async function generateImage(src: string, action: Action): Promise<Result
         const file = await ImageManager.imageToFile(src) as File
         // const canvas = action.payload.canvas
         const position = action.payload.position
-        res = await uncropImage(file, position)
+        const mask = action.payload.mask
+        res = await uncropImage(mask, position)
       }
       if (action.type === 'filter-img') {
         const canvas = action.payload.canvas
@@ -881,10 +882,12 @@ export async function uncropImage(file: File, position: any): Promise<any> {
       const token = getToken()
       const formData = new FormData();
       formData.append('image', file);
-      formData.append("left", position.left);
-      formData.append("right", position.right);
-      formData.append("up", position.up);
-      formData.append("bottom", position.down);
+      formData.append("left", position.left + '');
+      formData.append("right", position.right + '');
+      formData.append("up", position.up + '');
+      formData.append("bottom", position.down + '');
+      formData.append("down", position.down + '');
+
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/sd/v2beta/stable-image/edit/outpaint`, {
         method: 'POST',

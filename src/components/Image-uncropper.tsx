@@ -10,6 +10,16 @@ import 'react-advanced-cropper/dist/style.css'
 // import 'react-advanced-cropper/dist/themes/corners.css'
 import { Input } from "@/components/ui/input"
 
+export function canvasToBlob(
+  canvas: HTMLCanvasElement,
+  type = 'image/png' as 'image/jpeg' | 'image/png',
+  quality?: number
+): Promise<Blob | null> {
+  return new Promise((res) => {
+    canvas.toBlob((blob) => res(blob), type, quality)
+  })
+}
+
 
 
 export function downloadImage(uri: string, name: string) {
@@ -92,7 +102,7 @@ const ImageUncropper: React.FC<PropsData> = ({ src, setSrc, setPayload }) => {
     }
   }
 
-  const onResetWidth = (e: any) => {
+  const onResetWidth = async (e: any) => {
     const currentWidth = e.target.value
     if (currentWidth !== '' && !/^[0-9]+$/.test(currentWidth)) {
       return
@@ -106,10 +116,11 @@ const ImageUncropper: React.FC<PropsData> = ({ src, setSrc, setPayload }) => {
       cropperRef.current.setCoordinates(newPixel)
     }
     const position = getPosition(newPixel)
-    setPayload((preData: any) => { return { ...preData, position } });
+    const mask = await getMaskFile()
+    setPayload((preData: any) => { return { ...preData, position, mask } });
   }
 
-  const onResetHeight = (e: any) => {
+  const onResetHeight = async (e: any) => {
     const currentHeight = e.target.value
     if (currentHeight !== '' && !/^[0-9]+$/.test(currentHeight)) {
       return
@@ -123,7 +134,8 @@ const ImageUncropper: React.FC<PropsData> = ({ src, setSrc, setPayload }) => {
       cropperRef.current.setCoordinates(newPixel)
     }
     const position = getPosition(newPixel)
-    setPayload((preData: any) => { return { ...preData, position } });
+    const mask = await getMaskFile()
+    setPayload((preData: any) => { return { ...preData, position, mask } });
   }
 
   // const onReset = () => {
@@ -138,14 +150,70 @@ const ImageUncropper: React.FC<PropsData> = ({ src, setSrc, setPayload }) => {
     let down = image.height - pixel.height - up
 
     const position = {
-      left: left < 0 ? String(left * -1 || 0) : '0',
-      right: right < 0 ? String(right * -1 || 0) : '0',
-      up: up < 0 ? String(up * -1 || 0) : '0',
-      down: down < 0 ? String(down * -1 || 0) : '0',
+      left: left < 0 ? (left * -1) : 0,
+      right: right < 0 ? (right * -1) : 0,
+      up: up < 0 ? (up * -1) : 0,
+      down: down < 0 ? (down * -1) : 0,
     }
 
     return position
     // setProcessing(true)
+  }
+
+  const loadImage = (url: string) => {
+    const img = new Image()
+    img.src = url
+  }
+
+  const resetSize = async (pixel: any, originCanvas: any) => {
+    return new Promise((resolve) => {
+      const position = getPosition(pixel)
+      const { left, right, up, down } = position;
+
+      const originUrl = originCanvas.toDataURL('image/png')
+      const originImage = new Image()
+
+      originImage.onload = () => {
+        const newCanvas = document.createElement('canvas')
+        const newContext = newCanvas.getContext('2d')
+        if (newContext && originImage) {
+          newCanvas.width = Number(originImage.width) - left - right
+          newCanvas.height = Number(originImage.height) - up - down
+
+          newContext.drawImage(
+            originCanvas,
+            left, // 开始裁切的 x 坐标
+            up, // 开始裁切的 y 坐标
+            newCanvas.width, // 裁切的宽度
+            newCanvas.height, // 裁切的高度
+
+            0, // 在目标 canvas 开始绘制的 x 坐标
+            0, // 在目标 canvas 开始绘制的 y 坐标
+            newCanvas.width, // 在目标 canvas 上绘制的宽度
+            newCanvas.height // 在目标 canvas 上绘制的高度
+          )
+          // loadImage(newCanvas.toDataURL('image/png'))
+          resolve(newCanvas)
+        }
+      }
+      originImage.src = originUrl
+    })
+  }
+
+  const getMaskFile = async () => {
+    const current = cropperRef.current as HTMLCanvasElement | null
+    if (current) {
+      const maskCanvas = (await resetSize(pixel, cropperRef.current?.getCanvas())) as HTMLCanvasElement
+      const maskBlob = await canvasToBlob(maskCanvas)
+      if (!maskBlob) return null
+      const maskFile = new File([maskBlob], 'mask.png', {
+        type: 'image/png',
+      })
+      // debug
+      // const maskUrl = maskCanvas.toDataURL()
+      // downloadImage(maskUrl, 'testddd.png')
+      return maskFile
+    }
   }
 
   const onDownload = () => {
@@ -164,11 +232,12 @@ const ImageUncropper: React.FC<PropsData> = ({ src, setSrc, setPayload }) => {
     downloadImage(src, 'test.png')
   }
 
-  const handleActionDone = () => {
+  const handleActionDone = async () => {
     if (cropperRef.current) {
       // setPayload((preData: any) => { return { ...preData, canvas: cropperRef.current!.getCanvas() } });
       const position = getPosition(pixel)
-      setPayload((preData: any) => { return { ...preData, position } });
+      const mask = await getMaskFile()
+      setPayload((preData: any) => { return { ...preData, position, mask } });
     }
   }
 
