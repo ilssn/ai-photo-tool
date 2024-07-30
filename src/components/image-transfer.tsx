@@ -46,21 +46,25 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
   const [videoSrc, setVideoSrc] = React.useState('')
   const [media, setMedia] = React.useState('image')
   const [isReady, setIsReady] = React.useState(true)
+  // const [actionType, setAtionType] = React.us
 
   // 生成视频
   const handleCreateVideo = async () => {
     try {
-      console.log('cccc::video')
       if (!result) return
-      console.log('ddd:::video::')
+      setVideoSrc('')
+      setMedia('video')
       setSrc(result)
       setStatus('Pending')
       const res = await onGenerateVideo({ type: tool.name, payload, })
+      // 设置媒体
+      setMedia('video')
       // 设置结果
       setVideoSrc(res.video)
       // 设置状态
       setStatus('Done')
     } catch (error) {
+      setMedia('image')
       setErrorInfo(error)
       setStatus('Error')
     }
@@ -69,6 +73,9 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
   // 开始任务
   const handleStart = async () => {
     try {
+      // 设置媒体
+      setMedia('image')
+      // 设置状态
       setStatus('Pending')
       const res = await onGenerateImage({ type: tool.name, payload, })
       // 缓存原图
@@ -77,6 +84,8 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
       if (['crop-img', 'uncrop', 'filter-img'].includes(tool.name)) {
         setSrc(res.imageSrc)
       }
+      // 重置视频
+      setVideoSrc('')
       // 设置结果
       setResult(res.imageSrc)
       // 设置状态
@@ -89,6 +98,11 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
 
   // 重试任务
   const handleRestart = async () => {
+    // 设置媒体
+    setMedia('image')
+    // 重置视频
+    setVideoSrc('')
+    //
     setSrc(originSrc)
     setResult('')
     if (['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img'].includes(tool.name)) {
@@ -100,6 +114,9 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
 
   // 继续任务
   const handleContinue = async () => {
+    // 设置媒体
+    setMedia('image')
+    //
     if (result) {
       const localSrc = await ImageManager.localizeImage(result) as string
       setSrc(localSrc)
@@ -264,14 +281,15 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
           {['crop-img'].includes(tool.name) &&
             <div className="w-full mosaic-bg rounded-xl relative">
               <NextImage width={200} height={200} alt="image" src={src}
-                className={twMerge('w-full h-auto m-auto opacity-10 ', result ? 'opacity-0' : '')}
+                className={twMerge('w-full h-auto m-auto opacity-0 ', media === 'video' && status === 'Pending' ? 'opacity-100' : '')}
               >
               </NextImage>
 
-              <div className={twMerge("absolute top-0 left-0 w-full h-full", result ? 'opacity-0' : '')}>
-                <ImageCropper src={src} setSrc={setSrc} setPayload={setPayload} />
-              </div>
-
+              {media === 'image' &&
+                <div className={twMerge("absolute top-0 left-0 w-full h-full", result ? 'opacity-0' : '')}>
+                  <ImageCropper src={src} setSrc={setSrc} setPayload={setPayload} />
+                </div>
+              }
 
               {result && media === 'image' &&
                 <div className='w-full absolute top-0'>
@@ -282,8 +300,8 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
                 </div>
               }
 
-              {
-                videoSrc && media === 'video' && <div className='w-full absolute top-0 ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
+              {videoSrc && media === 'video' &&
+                <div className='w-full absolute top-0 ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
                   <VideoPlayer
                     url={videoSrc}
                     width="100%"
@@ -431,7 +449,9 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
         <div className="w-full justify-center items-center">
           {status === 'Pending' &&
             <div className='text-center text-sm text-violet-500'>
-              图片生成中，请耐心等待1-5分钟~
+              <p>
+                {media === 'image' ? '图片生成中，请耐心等待1-5分钟~' : '视频生成中，请耐心等待3-10分钟～'}
+              </p>
             </div>
           }
 
@@ -507,7 +527,7 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
             {['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img'].includes(tool.name) ? '重做' : '重试'}
           </Button>
           :
-          <Button variant="default" disabled={status !== 'Ready' || !isReady} onClick={handleStart}>
+          <Button variant="default" disabled={status !== 'Ready' || !isReady || media === 'video'} onClick={handleStart}>
             {['crop-img', 'filter-img',].includes(tool.name) ? '保存' : '开始'}
           </Button>
         }

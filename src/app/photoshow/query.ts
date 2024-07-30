@@ -1004,11 +1004,11 @@ export async function generateVideo(url: string, prompt: string): Promise<any> {
     try {
       let result: any = {}
       // debug
-      setTimeout(() => {
-        result.video = 'https://file.302.ai/gpt/imgs/20240625/59e773e2fa1748ada0d293cd3d4795ed.mp4'
-        resolve(result)
-        return
-      }, 1000);
+      // setTimeout(() => {
+      //   result.video = 'https://file.302.ai/gpt/imgs/20240625/59e773e2fa1748ada0d293cd3d4795ed.mp4'
+      //   resolve(result)
+      //   return
+      // }, 1000);
       // reject('errorddd')
       const token = getToken()
       const file = await ImageManager.imageToFile(url) as File
