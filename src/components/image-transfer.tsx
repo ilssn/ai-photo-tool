@@ -17,6 +17,7 @@ import ImageManager from '@/utils/Image'
 import { ImageEditor } from './image-editor'
 import ImageUncropper from './Image-uncropper'
 import MediaBar from './media-bar'
+import VideoPlayer from './video-player'
 
 // use dynamic import to fixed the canvas require error on next14
 import dynamic from 'next/dynamic'
@@ -231,7 +232,7 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
           style={{ maxWidth: maxWidth }}
         >
           {/* 展示媒体类型 */}
-          { videoSrc && 
+          {videoSrc &&
             <MediaBar media={media} setMedia={setMedia} />
           }
           {/* 基础通用图片容器 */}
@@ -272,12 +273,22 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
               </div>
 
 
-              {result &&
+              {result && media === 'image' &&
                 <div className='w-full absolute top-0'>
                   <img width={200} height={200} alt="image" src={result} className={
                     twMerge('w-full h-auto m-auto, rounded-xl')}
                   >
                   </img>
+                </div>
+              }
+
+              {
+                videoSrc && media === 'video' && <div className='w-full absolute top-0 ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
+                  <VideoPlayer
+                    url={videoSrc}
+                    width="100%"
+                    height="100%"
+                  />
                 </div>
               }
 
@@ -481,7 +492,7 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
           }
 
           {result && !videoSrc &&
-            <Button variant="default" disabled={status === 'Pending'}  onClick={handleCreateVideo}>生成视频</Button>
+            <Button variant="default" disabled={status === 'Pending'} onClick={handleCreateVideo}>生成视频</Button>
           }
           {result && videoSrc &&
             <Button variant="default" disabled={status === 'Pending'} onClick={handleCreateVideo}>重新生成视频</Button>
