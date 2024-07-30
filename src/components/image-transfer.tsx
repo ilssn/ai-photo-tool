@@ -16,6 +16,7 @@ import { PHOTO_DEFAULT_PAYLOAD } from '@/constants'
 import ImageManager from '@/utils/Image'
 import { ImageEditor } from './image-editor'
 import ImageUncropper from './Image-uncropper'
+import MediaBar from './media-bar'
 
 // use dynamic import to fixed the canvas require error on next14
 import dynamic from 'next/dynamic'
@@ -41,7 +42,28 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
   const [errorInfo, setErrorInfo] = React.useState<any>(null)
   const [payload, setPayload] = React.useState<any>(PHOTO_DEFAULT_PAYLOAD)
   const [originSrc, setOriginSrc] = React.useState('')
+  const [videoSrc, setVideoSrc] = React.useState('')
+  const [media, setMedia] = React.useState('image')
   const [isReady, setIsReady] = React.useState(true)
+
+  // 生成视频
+  const handleCreateVideo = async () => {
+    try {
+      console.log('cccc::video')
+      if (!result) return
+      console.log('ddd:::video::')
+      setSrc(result)
+      setStatus('Pending')
+      const res = await onGenerateVideo({ type: tool.name, payload, })
+      // 设置结果
+      setVideoSrc(res.video)
+      // 设置状态
+      setStatus('Done')
+    } catch (error) {
+      setErrorInfo(error)
+      setStatus('Error')
+    }
+  }
 
   // 开始任务
   const handleStart = async () => {
@@ -203,11 +225,15 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
         {/* 图片容器 */}
         <div
           // className={twMerge("w-full rounded-xl overflow-hidden transition-all duration-200",
-          className={twMerge("w-full rounded-xl overflow-hidden ",
+          className={twMerge("w-full rounded-xl overflow-hidden space-y-2 ",
             ['inpaint-img', 'remove-obj', 'uncrop'].includes(tool.name) ? 'pb-12' : ''
           )}
           style={{ maxWidth: maxWidth }}
         >
+          {/* 展示媒体类型 */}
+          { videoSrc && 
+            <MediaBar media={media} setMedia={setMedia} />
+          }
           {/* 基础通用图片容器 */}
           {!['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img'].includes(tool.name) &&
             <div className="w-full mosaic-bg relative">
@@ -245,10 +271,6 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
                 <ImageCropper src={src} setSrc={setSrc} setPayload={setPayload} />
               </div>
 
-              {status === 'Pending' &&
-                <div className={twMerge('scan w-full absolute top-0 transition-all duration-200 pointer-events-none',)}>
-                </div>
-              }
 
               {result &&
                 <div className='w-full absolute top-0'>
@@ -256,6 +278,11 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
                     twMerge('w-full h-auto m-auto, rounded-xl')}
                   >
                   </img>
+                </div>
+              }
+
+              {status === 'Pending' &&
+                <div className={twMerge('scan w-full absolute top-0 transition-all duration-200 pointer-events-none',)}>
                 </div>
               }
 
@@ -445,12 +472,23 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
         </Button> */}
         <ConfirmModal confirm={handleStop} />
 
-        {tool.name === 'remove-obj' && result &&
-          <Button variant="default" onClick={handleContinue}>继续消除</Button>
-        }
-        {tool.name === 'uncrop' && result &&
-          <Button variant="default" onClick={handleContinue}>继续拓展</Button>
-        }
+        <div className="flex-1 flex items-center justify-center">
+          {tool.name === 'remove-obj' && result &&
+            <Button variant="default" onClick={handleContinue}>继续消除</Button>
+          }
+          {tool.name === 'uncrop' && result &&
+            <Button variant="default" onClick={handleContinue}>继续拓展</Button>
+          }
+
+          {result && !videoSrc &&
+            <Button variant="default" disabled={status === 'Pending'}  onClick={handleCreateVideo}>生成视频</Button>
+          }
+          {result && videoSrc &&
+            <Button variant="default" disabled={status === 'Pending'} onClick={handleCreateVideo}>重新生成视频</Button>
+          }
+
+        </div>
+
 
         {result || status === 'Error'
           ?
