@@ -82,7 +82,7 @@ export function HistoryContent({ setTool, setFile, triggerRef }: PropsData) {
 
                       <Button size={"sm"} onClick={() => SystemManager.downloadImage(it.result)}>
                         <RiDownload2Fill />
-                        下载
+                        下载图片
                       </Button>
                     </div>
 

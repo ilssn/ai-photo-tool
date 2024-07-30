@@ -308,7 +308,7 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
 
 
               {result && media === 'image' &&
-                <div className='w-full absolute top-0'>
+                <div className='w-full absolute top-0 '>
                   <ImageCompare
                     beforeSrc={src}
                     afterSrc={result}
@@ -318,7 +318,7 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
               }
 
               {videoSrc && media === 'video' &&
-                <div className='w-full absolute top-0 ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
+                <div className='w-full absolute top-0 rounded-xl overflow-hidden ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
                   <VideoPlayer
                     url={videoSrc}
                     width="100%"
@@ -339,13 +339,13 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
             <div className="w-full mosaic-bg rounded-xl relative">
               {media === 'image' &&
                 <img width={200} height={200} alt="image" src={src}
-                  className={twMerge('w-full h-auto m-auto opacity-0')}
+                  className={twMerge('w-full h-auto m-auto rounded-xl opacity-0')}
                 >
                 </img>
               }
               {media === 'video' &&
                 <img width={200} height={200} alt="image" src={result}
-                  className={twMerge('w-full h-auto m-auto', status !== 'Pending' ? 'opacity-0' : '')}
+                  className={twMerge('w-full h-auto m-auto rounded-xl', status !== 'Pending' ? 'opacity-0' : '')}
                 >
                 </img>
               }
@@ -367,7 +367,7 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
               }
 
               {videoSrc && media === 'video' &&
-                <div className='w-full absolute top-0 ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
+                <div className='w-full absolute top-0 rounded-xl overflow-hidden ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
                   <VideoPlayer
                     url={videoSrc}
                     width="100%"
@@ -390,13 +390,13 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
             <div className="w-full mosaic-bg rounded-xl relative">
               {media === 'image' &&
                 <img width={200} height={200} alt="image" src={src}
-                  className={twMerge('w-full h-auto m-auto opacity-0')}
+                  className={twMerge('w-full h-auto m-auto rounded-xl opacity-0')}
                 >
                 </img>
               }
               {media === 'video' &&
                 <img width={200} height={200} alt="image" src={result}
-                  className={twMerge('w-full h-auto m-auto', status !== 'Pending' ? 'opacity-0' : '')}
+                  className={twMerge('w-full h-auto m-auto rounded-xl', status !== 'Pending' ? 'opacity-0' : '')}
                 >
                 </img>
               }
@@ -417,7 +417,7 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
               }
 
               {videoSrc && media === 'video' &&
-                <div className='w-full absolute top-0 ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
+                <div className='w-full absolute top-0 rounded-xl overflow-hidden ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
                   <VideoPlayer
                     url={videoSrc}
                     width="100%"
@@ -440,13 +440,13 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
             <div className="w-full mosaic-bg rounded-xl relative">
               {media === 'image' &&
                 <img width={200} height={200} alt="image" src={src}
-                  className={twMerge('w-full h-auto m-auto opacity-0')}
+                  className={twMerge('w-full h-auto m-auto rounded-xl opacity-0')}
                 >
                 </img>
               }
               {media === 'video' &&
                 <img width={200} height={200} alt="image" src={result}
-                  className={twMerge('w-full h-auto m-auto', status !== 'Pending' ? 'opacity-0' : '')}
+                  className={twMerge('w-full h-auto m-auto rounded-xl', status !== 'Pending' ? 'opacity-0' : '')}
                 >
                 </img>
               }
@@ -468,7 +468,7 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
               }
 
               {videoSrc && media === 'video' &&
-                <div className='w-full absolute top-0 ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
+                <div className='w-full absolute top-0 rounded-xl overflow-hidden ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
                   <VideoPlayer
                     url={videoSrc}
                     width="100%"
@@ -490,13 +490,13 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
             <div className="w-full mosaic-bg relative">
               {media === 'image' &&
                 <img width={200} height={200} alt="image" src={src}
-                  className={twMerge('w-full h-auto m-auto opacity-0')}
+                  className={twMerge('w-full h-auto m-auto rounded-xl opacity-0')}
                 >
                 </img>
               }
               {media === 'video' &&
                 <img width={200} height={200} alt="image" src={result}
-                  className={twMerge('w-full h-auto m-auto', status !== 'Pending' ? 'opacity-0' : '')}
+                  className={twMerge('w-full h-auto m-auto rounded-xl', status !== 'Pending' ? 'opacity-0' : '')}
                 >
                 </img>
               }
@@ -518,7 +518,7 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
               }
 
               {videoSrc && media === 'video' &&
-                <div className='w-full absolute top-0 ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
+                <div className='w-full absolute top-0 rounded-xl overflow-hidden ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
                   <VideoPlayer
                     url={videoSrc}
                     width="100%"
@@ -540,13 +540,13 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
             <div className="w-full mosaic-bg relative">
               {media === 'image' &&
                 <img width={200} height={200} alt="image" src={src}
-                  className={twMerge('w-full h-auto m-auto opacity-0')}
+                  className={twMerge('w-full h-auto m-auto rounded-xl opacity-0')}
                 >
                 </img>
               }
               {media === 'video' &&
                 <img width={200} height={200} alt="image" src={result}
-                  className={twMerge('w-full h-auto m-auto', status !== 'Pending' ? 'opacity-0' : '')}
+                  className={twMerge('w-full h-auto m-auto rounded-xl', status !== 'Pending' ? 'opacity-0' : '')}
                 >
                 </img>
               }
@@ -568,7 +568,7 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
               }
 
               {videoSrc && media === 'video' &&
-                <div className='w-full absolute top-0 ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
+                <div className='w-full absolute top-0 rounded-xl overflow-hidden ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
                   <VideoPlayer
                     url={videoSrc}
                     width="100%"
@@ -646,7 +646,7 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
         </Button> */}
         <ConfirmModal confirm={handleStop} />
 
-        <div className="flex-1 flex items-center justify-center">
+        <div className="flex-1 flex items-center justify-center space-x-2">
           {tool.name === 'remove-obj' && result &&
             <Button variant="default" onClick={handleContinue}>继续消除</Button>
           }

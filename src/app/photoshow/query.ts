@@ -117,7 +117,7 @@ export const aiImageToText = (url: string, prompt: string) => {
         ],
         // max_tokens: 400,
         stream: false,
-        model: "gpt-4o-mini",
+        model: "gpt-4o",
         // model: "claude3.5",
       }
 
@@ -997,18 +997,18 @@ export async function filterImage(src: string, canvas: any): Promise<any> {
 }
 
 
-// 生成图片////////////////////
+// 生成视频////////////////////
 // 生成视频
 export async function generateVideo(url: string, prompt: string): Promise<any> {
   return new Promise(async (resolve, reject) => {
     try {
       let result: any = {}
       // debug
-      setTimeout(() => {
-        result.video = 'https://file.302.ai/gpt/imgs/20240625/59e773e2fa1748ada0d293cd3d4795ed.mp4'
-        resolve(result)
-        return
-      }, 2000);
+      // setTimeout(() => {
+      //   result.video = 'https://file.302.ai/gpt/imgs/20240625/59e773e2fa1748ada0d293cd3d4795ed.mp4'
+      //   resolve(result)
+      //   return
+      // }, 2000);
       // reject('errorddd')
       const token = getToken()
       const file = await ImageManager.imageToFile(url) as File
