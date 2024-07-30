@@ -15,9 +15,10 @@ export interface Action {
 
 export interface History {
   id: number
-  tool: Tool,
+  tool: Tool
   src: string
   action: any
-  base64: string,
+  base64: string
   result: string
+  video: string
 }

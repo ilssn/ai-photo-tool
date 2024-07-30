@@ -4,7 +4,8 @@ import StorageManager from "@/utils/Storage"
 import ImageManager from "@/utils/Image";
 import { Action, History } from "@/types";
 import { AUTH_TOKEN, TASK_KEY, HISTORY_KEY } from "@/constants"
-import { AccessibilityIcon } from "@radix-ui/react-icons";
+
+const VIDEO_PROMPT = '请使用英文一句话描述图像的内容，从而生成一个ai视频的提示词，我将使用你的提示词来创作一幅新的AI视频，希望新的视频能够尽可能贴近原始图像的感觉。不要输出多余的内容，只需要输出提示词。'
 
 interface Result {
   imageSrc: string
@@ -39,51 +40,6 @@ export const getHistorys = () => {
 export const updHistorys = (value: History[]) => {
   StorageManager.setItem(HISTORY_KEY, value);
 };
-
-
-// Task: fetch
-export const fetchTask = async (id: string) => {
-  const token = getToken();
-  return new Promise((resolve, reject) => {
-    let counter = 0;
-    const maxAttempts = 30;
-
-    const fetchApi = (id: string) => {
-      fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/302/task/${id}/fetch
-      `, {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        },
-      })
-        .then(response => response.json())
-        .then(data => {
-          if (data.error) {
-            reject(data.error)
-            return
-          }
-          if (data.status === 'succeeded') {
-            resolve(data);
-          } else if (data.status === 'failed') {
-            reject('Task failed')
-          } else {
-            if (counter < maxAttempts) {
-              counter++;
-              const task = getTask()
-              if (task.id) {
-                setTimeout(() => fetchApi(id), 5000); // 每隔5秒轮询一次
-              }
-            } else {
-              reject("Max attempts reached");
-            }
-          }
-        })
-        .catch(error => {
-          reject(error);
-        });
-    };
-    fetchApi(id);
-  });
-}
 
 // 发起GPT翻译
 export const aiTranslate = (str: string) => {
@@ -129,6 +85,61 @@ export const aiTranslate = (str: string) => {
     }
   })
 }
+
+// 发起GPT图生文
+export const aiImageToText = (url: string, prompt: string) => {
+  const fetUrl = `${process.env.NEXT_PUBLIC_302AI_FETCH}/v1/chat/completions`
+  return new Promise<any>(async (resolve, reject) => {
+    try {
+      const token = getToken()
+      const myHeaders = new Headers()
+      myHeaders.append('Accept', 'image/*')
+      myHeaders.append('Authorization', `Bearer ${token}`)
+      myHeaders.append('Content-Type', 'application/json')
+
+      const data = {
+        messages: [
+          {
+            role: "user",
+            content: [
+              {
+                type: "text",
+                text: prompt
+              },
+              {
+                type: "image_url",
+                image_url: {
+                  url: url
+                }
+              }
+            ]
+          }
+        ],
+        // max_tokens: 400,
+        stream: false,
+        model: "gpt-4o-mini",
+        // model: "claude3.5",
+      }
+
+      const requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: JSON.stringify(data),
+      }
+
+      fetch(fetUrl, requestOptions)
+        .then(response => response.json())
+        .then((result) => {
+          resolve(result.choices[0].message.content)
+        })
+        .catch(error => reject(error))
+    }
+    catch (error) {
+      reject(error)
+    }
+  })
+}
+
 
 // 上传图片
 async function uploadImage(file: File) {
@@ -213,7 +224,8 @@ function matchImageSize(inputWidth: number, inputHeight: number) {
   return { width: newWidth, height: newHeight };
 }
 
-// 生成图片
+
+// 生成图片////////////////////
 export async function generateImage(src: string, action: Action): Promise<Result> {
   return new Promise(async (resolve, reject) => {
     let res = null
@@ -310,7 +322,7 @@ export async function generateImage(src: string, action: Action): Promise<Result
         // const file = await ImageManager.imageToFile(src) as File
         // const canvas = action.payload.canvas
         const position = action.payload.position
-        const  mask = action.payload.mask
+        const mask = action.payload.mask
         // const maskBlob = await ImageManager.compressImage(mask, {maxSizeMB: 5})
         // const maskFile = new File([maskBlob], 'mask.png', {
         //   type: 'image/png',
@@ -347,6 +359,50 @@ export async function generateImage(src: string, action: Action): Promise<Result
       reject(error)
     }
   })
+}
+
+// Task: fetch image task
+export const fetchTask = async (id: string) => {
+  const token = getToken();
+  return new Promise((resolve, reject) => {
+    let counter = 0;
+    const maxAttempts = 30;
+
+    const fetchApi = (id: string) => {
+      fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/302/task/${id}/fetch
+      `, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            reject(data.error)
+            return
+          }
+          if (data.status === 'succeeded') {
+            resolve(data);
+          } else if (data.status === 'failed') {
+            reject('Task failed')
+          } else {
+            if (counter < maxAttempts) {
+              counter++;
+              const task = getTask()
+              if (task.id) {
+                setTimeout(() => fetchApi(id), 5000); // 每隔5秒轮询一次
+              }
+            } else {
+              reject("Max attempts reached");
+            }
+          }
+        })
+        .catch(error => {
+          reject(error);
+        });
+    };
+    fetchApi(id);
+  });
 }
 
 // 去除背景:302
@@ -819,7 +875,6 @@ export async function sketchImage(file: File, prompt: string): Promise<any> {
 
 }
 
-
 // 替换背景
 export async function lightImage(file: File, prompt: string, light: string,): Promise<any> {
   return new Promise(async (resolve, reject) => {
@@ -939,4 +994,105 @@ export async function filterImage(src: string, canvas: any): Promise<any> {
     }
     resolve(result)
   })
+}
+
+
+// 生成图片////////////////////
+// 生成视频
+export async function generateVideo(url: string, prompt: string): Promise<any> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let result: any = {}
+      // debug
+      // result.video = 'https://file.302.ai/gpt/imgs/20240625/59e773e2fa1748ada0d293cd3d4795ed.mp4'
+      // resolve(result)
+      // reject('errorddd')
+      const token = getToken()
+      const file = await ImageManager.imageToFile(url) as File
+      const onlieUrl = await uploadImage(file)
+
+      // 场景描述,没有记录则生成
+      let enPrompt = prompt
+      if (!enPrompt) {
+        enPrompt = await aiImageToText(onlieUrl, VIDEO_PROMPT)
+      }
+      if (SystemManager.containsChinese(enPrompt)) {
+        enPrompt = await aiTranslate(enPrompt)
+      }
+
+      const formData = new FormData();
+      formData.append('user_prompt', enPrompt);
+      formData.append('image_url', onlieUrl);
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/luma/submit`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          // "Content-Type": "multipart/form-data",
+          "Authorization": `Bearer ${token}`,
+        },
+      })
+      if (!res.ok) {
+        throw await res.json()
+      }
+
+      result = await res.json()
+      // save task
+      updTask(result)
+      if (result.video) {
+        resolve(result)
+        return
+      }
+      result = await fetchVideoTask(result.id)
+      resolve(result)
+
+    } catch (error) {
+      reject(error)
+    }
+  })
+
+}
+
+// 查询任务
+async function fetchVideoTask(id: string) {
+  const token = getToken()
+  return new Promise((resolve, reject) => {
+    let counter = 0;
+    const maxAttempts = 120;
+
+    const fetchApi = (id: string) => {
+      fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/luma/task/${id}/fetch
+      `, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            reject(data.error)
+            return
+          }
+          if (data.state === 'completed') {
+            resolve(data);
+          } else if (data.state === 'failed') {
+            reject('Task failed')
+          } else {
+            if (counter < maxAttempts) {
+              counter++;
+              const task = getTask()
+              if (task.id) {
+                setTimeout(() => fetchApi(id), 10000); // 每隔10秒轮询一次
+              }
+            } else {
+              reject("Max attempts reached");
+            }
+          }
+        })
+        .catch(error => {
+          reject(error);
+        });
+    };
+    fetchApi(id);
+  });
 }

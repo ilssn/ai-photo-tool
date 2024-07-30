@@ -16,7 +16,7 @@ import { twMerge } from 'tailwind-merge'
 
 import { RiDownload2Fill } from "react-icons/ri";
 
-import { generateImage, getHistorys, updHistorys } from './query'
+import { generateImage, generateVideo, getHistorys, updHistorys } from './query'
 
 import SystemManager from '@/utils/System'
 import ImageManager from '@/utils/Image'
@@ -74,6 +74,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
           action,
           result: res.imageSrc,
           base64: '',
+          video: '',
         }
         updHistorys([...historys, history])
         resolve(res)
@@ -81,9 +82,29 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
         console.log('error::', error)
         reject(error)
       }
-
     })
+  }
 
+  // 生成视频
+  const handleOngenerateVideo = async (action: any) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await generateVideo(result, action)
+        // save history
+        const historys = getHistorys() as History[]
+        // 视频则覆盖上一条
+        let history = historys.pop()
+        if (history) {
+          history = { ...history, id: Date.now(), video: res.video }
+          updHistorys([...historys, history])
+        }
+        // 返回结果
+        resolve(res)
+      } catch (error) {
+        console.log('error::', error)
+        reject(error)
+      }
+    })
   }
 
 
@@ -163,6 +184,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
               file={file}
               tool={tool}
               onGenerateImage={handleOngenerateImage}
+              onGenerateVideo={handleOngenerateVideo}
               src={src}
               setSrc={setSrc}
               status={status}

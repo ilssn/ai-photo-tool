@@ -27,6 +27,7 @@ interface PropsData {
   file: File | null
   tool: Tool
   onGenerateImage: (action: any) => Promise<any>
+  onGenerateVideo: (action: any) => Promise<any>
   src: string
   setSrc: (src: string) => void
   status: string
@@ -35,7 +36,7 @@ interface PropsData {
   setResult: (result: string) => void
 }
 
-function ImageTransfer({ file, tool, onGenerateImage, src, setSrc, status, setStatus, result, setResult, }: PropsData) {
+function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setSrc, status, setStatus, result, setResult, }: PropsData) {
   const [maxWidth, setMaxWidth] = React.useState('1200px')
   const [errorInfo, setErrorInfo] = React.useState<any>(null)
   const [payload, setPayload] = React.useState<any>(PHOTO_DEFAULT_PAYLOAD)
@@ -47,9 +48,10 @@ function ImageTransfer({ file, tool, onGenerateImage, src, setSrc, status, setSt
     try {
       setStatus('Pending')
       const res = await onGenerateImage({ type: tool.name, payload, })
+      // 缓存原图
+      setOriginSrc(src)
       // 高阶图片容器缓存原图，因为图片尺寸有变化
       if (['crop-img', 'uncrop', 'filter-img'].includes(tool.name)) {
-        setOriginSrc(src)
         setSrc(res.imageSrc)
       }
       // 设置结果
@@ -64,19 +66,13 @@ function ImageTransfer({ file, tool, onGenerateImage, src, setSrc, status, setSt
 
   // 重试任务
   const handleRestart = async () => {
-    if (['crop-img', 'uncrop', 'filter-img'].includes(tool.name)) {
-      setSrc(originSrc)
-      setResult('')
-      setStatus('Ready')
-      return
-    }
-    if (['remove-obj', 'inpaint-img'].includes(tool.name)) {
-      setResult('')
-      setStatus('Ready')
-      return
-    }
+    setSrc(originSrc)
     setResult('')
-    handleStart()
+    if (['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img'].includes(tool.name)) {
+      setStatus('Ready')
+    } else {
+      handleStart()
+    }
   }
 
   // 继续任务
