@@ -116,6 +116,8 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
   const handleContinue = async () => {
     // 设置媒体
     setMedia('image')
+    // 清空视频
+    setVideoSrc('')
     //
     if (result) {
       const localSrc = await ImageManager.localizeImage(result) as string
@@ -256,22 +258,33 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
           {!['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img'].includes(tool.name) &&
             <div className="w-full mosaic-bg relative">
               <NextImage width={200} height={200} alt="image" src={src}
-                className={twMerge('w-full h-auto m-auto', result ? 'opacity-0' : '')}
+                className={twMerge('w-full h-auto m-auto', result && status !== 'Pending' ? 'opacity-0' : '')}
               >
               </NextImage>
 
-              {status === 'Pending' &&
-                <div className={twMerge('scan w-full absolute top-0 transition-all duration-200 pointer-events-none',)}>
-                </div>
-              }
 
-              {result &&
+              {result && media === 'image' &&
                 <div className='w-full absolute top-0'>
                   <ImageCompare
                     beforeSrc={src}
                     afterSrc={result}
                     initPosition={30}
                   />
+                </div>
+              }
+
+              {videoSrc && media === 'video' &&
+                <div className='w-full absolute top-0 ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
+                  <VideoPlayer
+                    url={videoSrc}
+                    width="100%"
+                    height="100%"
+                  />
+                </div>
+              }
+
+              {status === 'Pending' &&
+                <div className={twMerge('scan w-full absolute top-0 transition-all duration-200 pointer-events-none',)}>
                 </div>
               }
             </div>
