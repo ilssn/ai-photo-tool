@@ -54,15 +54,18 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
       if (!result) return
       setVideoSrc('')
       setMedia('video')
-      setSrc(result)
-      setStatus('Pending')
-      const res = await onGenerateVideo({ type: tool.name, payload, })
-      // 设置媒体
-      setMedia('video')
-      // 设置结果
-      setVideoSrc(res.video)
-      // 设置状态
-      setStatus('Done')
+      // return
+      setTimeout(async () => {
+        setStatus('Pending')
+        const res = await onGenerateVideo({ type: tool.name, payload, })
+        // 设置媒体
+        setMedia('video')
+        // 设置结果
+        setVideoSrc(res.video)
+        // 设置状态
+        setStatus('Done')
+
+      }, 100)
     } catch (error) {
       setMedia('image')
       setErrorInfo(error)
@@ -102,7 +105,7 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
     setMedia('image')
     // 重置视频
     setVideoSrc('')
-    //
+    // 恢复原图
     setSrc(originSrc)
     setResult('')
     if (['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img'].includes(tool.name)) {
@@ -187,6 +190,39 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
     }
   }, [src])
 
+  // 结果图变化，重设容器尺寸
+  React.useEffect(() => {
+    if (!result) return
+    setMaxWidth('10px')
+    const img = new Image()
+    img.src = result
+    img.onload = () => {
+      if (img.width && img.height) {
+        const scale = Number(img.height) / Number(img.width)
+        if (scale > 1.8) {
+          setMaxWidth('300px')
+        }
+        if (scale > 1.6) {
+          setMaxWidth('400px')
+        }
+        else if (scale > 1.5) {
+          setMaxWidth('500px')
+        }
+        else if (scale > 1.3) {
+          setMaxWidth('600px')
+        }
+        else if (scale > 1) {
+          setMaxWidth('700px')
+        } else {
+          setMaxWidth('1200px')
+        }
+      }
+    }
+    img.onerror = () => {
+      console.log('Load image error')
+    }
+  }, [result])
+
   // 参数变化，校验数据
   React.useEffect(() => {
     setIsReady(true)
@@ -257,10 +293,18 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
           {/* 基础通用图片容器 */}
           {!['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img'].includes(tool.name) &&
             <div className="w-full mosaic-bg relative">
-              <NextImage width={200} height={200} alt="image" src={src}
-                className={twMerge('w-full h-auto m-auto', result && status !== 'Pending' ? 'opacity-0' : '')}
-              >
-              </NextImage>
+              {media === 'image' &&
+                <img width={200} height={200} alt="image" src={src}
+                  className={twMerge('w-full h-auto m-auto', result ? 'opacity-0' : '')}
+                >
+                </img>
+              }
+              {media === 'video' &&
+                <img width={200} height={200} alt="image" src={result}
+                  className={twMerge('w-full h-auto m-auto', status !== 'Pending' ? 'opacity-0' : '')}
+                >
+                </img>
+              }
 
 
               {result && media === 'image' &&
@@ -293,10 +337,19 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
           {/* 高级定制图片容器1a, 尺寸改变 */}
           {['crop-img'].includes(tool.name) &&
             <div className="w-full mosaic-bg rounded-xl relative">
-              <NextImage width={200} height={200} alt="image" src={src}
-                className={twMerge('w-full h-auto m-auto opacity-0 ', media === 'video' && status === 'Pending' ? 'opacity-100' : '')}
-              >
-              </NextImage>
+              {media === 'image' &&
+                <img width={200} height={200} alt="image" src={src}
+                  className={twMerge('w-full h-auto m-auto opacity-0')}
+                >
+                </img>
+              }
+              {media === 'video' &&
+                <img width={200} height={200} alt="image" src={result}
+                  className={twMerge('w-full h-auto m-auto', status !== 'Pending' ? 'opacity-0' : '')}
+                >
+                </img>
+              }
+
 
               {media === 'image' &&
                 <div className={twMerge("absolute top-0 left-0 w-full h-full", result ? 'opacity-0' : '')}>
@@ -335,26 +388,46 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
           {/* 高级定制图片容器1b, 尺寸改变 */}
           {['uncrop'].includes(tool.name) &&
             <div className="w-full mosaic-bg rounded-xl relative">
-              <NextImage width={200} height={200} alt="image" src={src}
-                className={twMerge('w-full h-auto m-auto opacity-0 ', result ? 'opacity-0' : '')}
-              >
-              </NextImage>
+              {media === 'image' &&
+                <img width={200} height={200} alt="image" src={src}
+                  className={twMerge('w-full h-auto m-auto opacity-0')}
+                >
+                </img>
+              }
+              {media === 'video' &&
+                <img width={200} height={200} alt="image" src={result}
+                  className={twMerge('w-full h-auto m-auto', status !== 'Pending' ? 'opacity-0' : '')}
+                >
+                </img>
+              }
 
-              <div className={twMerge("absolute top-0 left-0 w-full h-full", result ? 'opacity-0' : '')}>
-                <ImageUncropper src={src} setSrc={setSrc} setPayload={setPayload} />
-              </div>
-
-              {status === 'Pending' &&
-                <div className={twMerge('scan w-full absolute top-0 transition-all duration-200 pointer-events-none',)}>
+              {media === 'image' &&
+                <div className={twMerge("absolute top-0 left-0 w-full h-full", result ? 'opacity-0' : '')}>
+                  <ImageUncropper src={src} setSrc={setSrc} setPayload={setPayload} />
                 </div>
               }
 
-              {result &&
+              {result && media === 'image' &&
                 <div className='w-full absolute top-0'>
                   <img width={200} height={200} alt="image" src={result} className={
                     twMerge('w-full h-auto m-auto, rounded-xl')}
                   >
                   </img>
+                </div>
+              }
+
+              {videoSrc && media === 'video' &&
+                <div className='w-full absolute top-0 ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
+                  <VideoPlayer
+                    url={videoSrc}
+                    width="100%"
+                    height="100%"
+                  />
+                </div>
+              }
+
+              {status === 'Pending' &&
+                <div className={twMerge('scan w-full absolute top-0 transition-all duration-200 pointer-events-none',)}>
                 </div>
               }
 
@@ -365,26 +438,47 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
           {/* 高级定制图片容器2, 尺寸改变 */}
           {['filter-img'].includes(tool.name) &&
             <div className="w-full mosaic-bg rounded-xl relative">
-              <NextImage width={200} height={200} alt="image" src={src}
-                className={twMerge('w-full h-auto m-auto opacity-10 ', result ? 'opacity-0' : '')}
-              >
-              </NextImage>
+              {media === 'image' &&
+                <img width={200} height={200} alt="image" src={src}
+                  className={twMerge('w-full h-auto m-auto opacity-0')}
+                >
+                </img>
+              }
+              {media === 'video' &&
+                <img width={200} height={200} alt="image" src={result}
+                  className={twMerge('w-full h-auto m-auto', status !== 'Pending' ? 'opacity-0' : '')}
+                >
+                </img>
+              }
 
-              <div className={twMerge("absolute top-0 left-0 w-full h-full", result ? 'opacity-0' : '')}>
-                <ImageEditor src={src} setSrc={setSrc} setPayload={setPayload} />
-              </div>
-
-              {status === 'Pending' &&
-                <div className={twMerge('scan w-full absolute top-0 transition-all duration-200 pointer-events-none',)}>
+              {media === 'image' &&
+                <div className={twMerge("absolute top-0 left-0 w-full h-full", result ? 'opacity-0' : '')}>
+                  <ImageEditor src={src} setSrc={setSrc} setPayload={setPayload} />
                 </div>
               }
 
-              {result &&
+
+              {result && media === 'image' &&
                 <div className='w-full absolute top-0'>
                   <img width={200} height={200} alt="image" src={result} className={
                     twMerge('w-full h-auto m-auto, rounded-xl')}
                   >
                   </img>
+                </div>
+              }
+
+              {videoSrc && media === 'video' &&
+                <div className='w-full absolute top-0 ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
+                  <VideoPlayer
+                    url={videoSrc}
+                    width="100%"
+                    height="100%"
+                  />
+                </div>
+              }
+
+              {status === 'Pending' &&
+                <div className={twMerge('scan w-full absolute top-0 transition-all duration-200 pointer-events-none',)}>
                 </div>
               }
 
@@ -394,29 +488,47 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
           {/* 高级定制图片容器3: 涂抹操作 */}
           {['remove-obj'].includes(tool.name) &&
             <div className="w-full mosaic-bg relative">
-              <NextImage width={200} height={200} alt="image" src={src}
-                className={twMerge('w-full h-auto m-auto opacity-10 ', result ? 'opacity-0' : '')}
-              >
-              </NextImage>
+              {media === 'image' &&
+                <img width={200} height={200} alt="image" src={src}
+                  className={twMerge('w-full h-auto m-auto opacity-0')}
+                >
+                </img>
+              }
+              {media === 'video' &&
+                <img width={200} height={200} alt="image" src={result}
+                  className={twMerge('w-full h-auto m-auto', status !== 'Pending' ? 'opacity-0' : '')}
+                >
+                </img>
+              }
 
-              {!result &&
+              {media === 'image' && !result &&
                 <div className={twMerge("absolute top-0 left-0 w-full h-full", result ? 'opacity-0' : '')}>
                   <ImageMask src={src} setSrc={setSrc} setPayload={setPayload} />
                 </div>
               }
 
-              {status === 'Pending' &&
-                <div className={twMerge('scan w-full absolute top-0 transition-all duration-200 pointer-events-none',)}>
-                </div>
-              }
-
-              {result &&
+              {result && media === 'image' &&
                 <div className='w-full absolute top-0'>
                   <ImageCompare
                     beforeSrc={src}
                     afterSrc={result}
                     initPosition={30}
                   />
+                </div>
+              }
+
+              {videoSrc && media === 'video' &&
+                <div className='w-full absolute top-0 ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
+                  <VideoPlayer
+                    url={videoSrc}
+                    width="100%"
+                    height="100%"
+                  />
+                </div>
+              }
+
+              {status === 'Pending' &&
+                <div className={twMerge('scan w-full absolute top-0 transition-all duration-200 pointer-events-none',)}>
                 </div>
               }
 
@@ -426,29 +538,47 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
           {/* 高级定制图片容器4: 修改操作 */}
           {['inpaint-img'].includes(tool.name) &&
             <div className="w-full mosaic-bg relative">
-              <NextImage width={200} height={200} alt="image" src={src}
-                className={twMerge('w-full h-auto m-auto opacity-10 ', result ? 'opacity-0' : '')}
-              >
-              </NextImage>
+              {media === 'image' &&
+                <img width={200} height={200} alt="image" src={src}
+                  className={twMerge('w-full h-auto m-auto opacity-0')}
+                >
+                </img>
+              }
+              {media === 'video' &&
+                <img width={200} height={200} alt="image" src={result}
+                  className={twMerge('w-full h-auto m-auto', status !== 'Pending' ? 'opacity-0' : '')}
+                >
+                </img>
+              }
 
-              {!result &&
+              {media === 'image' && !result &&
                 <div className={twMerge("absolute top-0 left-0 w-full h-full", result ? 'opacity-0' : '')}>
                   <ImageMask src={src} setSrc={setSrc} setPayload={setPayload} />
                 </div>
               }
 
-              {status === 'Pending' &&
-                <div className={twMerge('scan w-full absolute top-0 transition-all duration-200 pointer-events-none',)}>
-                </div>
-              }
-
-              {result &&
+              {result && media === 'image' &&
                 <div className='w-full absolute top-0'>
                   <ImageCompare
                     beforeSrc={src}
                     afterSrc={result}
                     initPosition={30}
                   />
+                </div>
+              }
+
+              {videoSrc && media === 'video' &&
+                <div className='w-full absolute top-0 ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
+                  <VideoPlayer
+                    url={videoSrc}
+                    width="100%"
+                    height="100%"
+                  />
+                </div>
+              }
+
+              {status === 'Pending' &&
+                <div className={twMerge('scan w-full absolute top-0 transition-all duration-200 pointer-events-none',)}>
                 </div>
               }
 
