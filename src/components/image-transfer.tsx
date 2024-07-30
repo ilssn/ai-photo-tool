@@ -661,14 +661,12 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
             <Button variant="default" onClick={handleContinue}>继续拓展</Button>
           }
 
-          {result && !videoSrc &&
-            // <Button variant="default" disabled={status === 'Pending'} onClick={handleCreateVideo}>生成视频</Button>
+          {/* {result && !videoSrc &&
             <DescriptModal title="生成视频" status={status} payload={payload} setPayload={setPayload} confirm={handleCreateVideo} />
           }
           {result && videoSrc &&
-            // <Button variant="default" disabled={status === 'Pending'} onClick={handleCreateVideo}>重新生成视频</Button>
             <DescriptModal title="重新生成视频" status={status} payload={payload} setPayload={setPayload} confirm={handleCreateVideo} />
-          }
+          } */}
 
         </div>
 
