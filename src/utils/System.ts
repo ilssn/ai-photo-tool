@@ -99,14 +99,15 @@ export default class SystemManager {
 
 
 	// 下载视频
-	static downloadVideo = (url: string, filename: string) => {
+	static downloadVideo = (url: string, name?: string) => {
 		fetch(url)
 			.then(response => response.blob())
 			.then(blob => {
 				// 创建下载链接
+				const currentTime = SystemManager.getNowformatTime()
 				const link = document.createElement('a');
 				link.href = URL.createObjectURL(blob);
-				link.download = filename;
+				link.download = name || `result-${currentTime}.mp4`
 				link.style.display = 'none';
 				document.body.appendChild(link);
 

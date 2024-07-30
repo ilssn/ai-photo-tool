@@ -82,7 +82,11 @@ export function HistoryContent({ setTool, setFile, triggerRef }: PropsData) {
 
                       <Button size={"sm"} onClick={() => SystemManager.downloadImage(it.result)}>
                         <RiDownload2Fill />
-                        下载图片
+                        图片
+                      </Button>
+                      <Button size={"sm"} disabled={!it.video} onClick={() => SystemManager.downloadVideo(it.video)}>
+                        <RiDownload2Fill />
+                        视频
                       </Button>
                     </div>
 
