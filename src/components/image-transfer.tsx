@@ -452,6 +452,9 @@ function ImageTransfer({ file, tool, onGenerateImage, src, setSrc, status, setSt
         {tool.name === 'remove-obj' && result &&
           <Button variant="default" onClick={handleContinue}>继续消除</Button>
         }
+        {tool.name === 'uncrop' && result &&
+          <Button variant="default" onClick={handleContinue}>继续拓展</Button>
+        }
 
         {result || status === 'Error'
           ?
