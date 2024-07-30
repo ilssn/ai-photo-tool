@@ -10,6 +10,7 @@ import PromptBar from './prompt-bar'
 import DescriptBar from './descript-bar'
 import LightBar from './light-bar'
 import AlertBar from './alert-bar'
+import { DescriptModal } from './descript-modal'
 import { ConfirmModal } from './confirm-modal'
 import { updTask } from '@/app/photoshow/query'
 import { Tool, Status } from '@/types'
@@ -632,9 +633,11 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
                   />
                 </div>
               }
-              {result &&
+              {/* {result &&
+              <div className="w-full mt-2">
                 <DescriptBar payload={payload} setPayload={setPayload} />
-              }
+              </div>
+              } */}
             </div>
           }
         </div>
@@ -659,10 +662,12 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
           }
 
           {result && !videoSrc &&
-            <Button variant="default" disabled={status === 'Pending'} onClick={handleCreateVideo}>生成视频</Button>
+            // <Button variant="default" disabled={status === 'Pending'} onClick={handleCreateVideo}>生成视频</Button>
+            <DescriptModal title="生成视频" status={status} payload={payload} setPayload={setPayload} confirm={handleCreateVideo} />
           }
           {result && videoSrc &&
-            <Button variant="default" disabled={status === 'Pending'} onClick={handleCreateVideo}>重新生成视频</Button>
+            // <Button variant="default" disabled={status === 'Pending'} onClick={handleCreateVideo}>重新生成视频</Button>
+            <DescriptModal title="重新生成视频" status={status} payload={payload} setPayload={setPayload} confirm={handleCreateVideo} />
           }
 
         </div>

@@ -54,7 +54,7 @@ export function HistoryContent({ setTool, setFile, triggerRef }: PropsData) {
         <div className="width">
           <Button size={'sm'} onClick={() => handleCleanUp()}>
             <MdOutlineCleaningServices />
-            清空
+            清空记录
           </Button>
         </div>
       </div>
@@ -77,16 +77,16 @@ export function HistoryContent({ setTool, setFile, triggerRef }: PropsData) {
                     <div className="flex flex-col space-y-2 ">
                       <Button size={"sm"} onClick={() => handleEdit(it)}>
                         <PiMagicWandLight />
-                        编辑
+                        继续编辑
                       </Button>
 
                       <Button size={"sm"} onClick={() => SystemManager.downloadImage(it.result)}>
                         <RiDownload2Fill />
-                        图片
+                        下载图片
                       </Button>
                       <Button size={"sm"} disabled={!it.video} onClick={() => SystemManager.downloadVideo(it.video)}>
                         <RiDownload2Fill />
-                        视频
+                        下载视频
                       </Button>
                     </div>
 
