@@ -320,7 +320,7 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
               }
 
               {videoSrc && media === 'video' &&
-                <div className='w-full absolute top-0 rounded-xl overflow-hidden ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
+                <div className='w-full absolute bottom-0 rounded-xl overflow-hidden  ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
                   <VideoPlayer
                     url={videoSrc}
                     width="100%"
@@ -369,7 +369,7 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
               }
 
               {videoSrc && media === 'video' &&
-                <div className='w-full absolute top-0 rounded-xl overflow-hidden ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
+                <div className='w-full absolute bottom-0 rounded-xl overflow-hidden ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
                   <VideoPlayer
                     url={videoSrc}
                     width="100%"
@@ -419,7 +419,7 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
               }
 
               {videoSrc && media === 'video' &&
-                <div className='w-full absolute top-0 rounded-xl overflow-hidden ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
+                <div className='w-full absolute bottom-0 rounded-xl overflow-hidden  ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
                   <VideoPlayer
                     url={videoSrc}
                     width="100%"
@@ -470,7 +470,7 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
               }
 
               {videoSrc && media === 'video' &&
-                <div className='w-full absolute top-0 rounded-xl overflow-hidden ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
+                <div className='w-full absolute bottom-0 rounded-xl overflow-hidden  ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
                   <VideoPlayer
                     url={videoSrc}
                     width="100%"
@@ -520,7 +520,7 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
               }
 
               {videoSrc && media === 'video' &&
-                <div className='w-full absolute top-0 rounded-xl overflow-hidden ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
+                <div className='w-full absolute bottom-0 rounded-xl overflow-hidden  ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
                   <VideoPlayer
                     url={videoSrc}
                     width="100%"
@@ -570,7 +570,7 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
               }
 
               {videoSrc && media === 'video' &&
-                <div className='w-full absolute top-0 rounded-xl overflow-hidden ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
+                <div className='w-full absolute bottom-0 rounded-xl overflow-hidden ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
                   <VideoPlayer
                     url={videoSrc}
                     width="100%"
