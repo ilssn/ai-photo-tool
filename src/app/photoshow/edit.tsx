@@ -89,7 +89,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
   const handleOngenerateVideo = async (action: any) => {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await generateVideo(result, action.payload.prompt)
+        const res = await generateVideo(result, action.payload.descript)
         // save history
         const historys = getHistorys() as History[]
         // 视频则覆盖上一条

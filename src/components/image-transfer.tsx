@@ -7,6 +7,7 @@ import ImageCropper from './image-cropper'
 import ScaleBar from './scale-bar'
 import UploadBar from './upload-bar'
 import PromptBar from './prompt-bar'
+import DescriptBar from './descript-bar'
 import LightBar from './light-bar'
 import AlertBar from './alert-bar'
 import { ConfirmModal } from './confirm-modal'
@@ -630,6 +631,9 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
                     placeHolder="请输入背景图描述"
                   />
                 </div>
+              }
+              {result &&
+                <DescriptBar payload={payload} setPayload={setPayload} />
               }
             </div>
           }

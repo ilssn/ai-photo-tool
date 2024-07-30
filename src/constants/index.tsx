@@ -20,5 +20,6 @@ export const PHOTO_DEFAULT_PAYLOAD = {
     right: 0,
     up: 0,
     down: 0,
-  }
+  },
+  describe: ''
 }
