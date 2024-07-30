@@ -294,7 +294,7 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
           }
           {/* 基础通用图片容器 */}
           {!['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img'].includes(tool.name) &&
-            <div className="w-full mosaic-bg relative">
+            <div className={twMerge("w-full relative rounded-xl", media === 'image' ? 'mosaic-bg' : '')}>
               {media === 'image' &&
                 <img width={200} height={200} alt="image" src={src}
                   className={twMerge('w-full h-auto m-auto', result ? 'opacity-0' : '')}
@@ -338,7 +338,7 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
 
           {/* 高级定制图片容器1a, 尺寸改变 */}
           {['crop-img'].includes(tool.name) &&
-            <div className="w-full mosaic-bg rounded-xl relative">
+            <div className={twMerge("w-full relative rounded-xl", media === 'image' ? 'mosaic-bg' : '')}>
               {media === 'image' &&
                 <img width={200} height={200} alt="image" src={src}
                   className={twMerge('w-full h-auto m-auto rounded-xl opacity-0')}
@@ -389,7 +389,7 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
 
           {/* 高级定制图片容器1b, 尺寸改变 */}
           {['uncrop'].includes(tool.name) &&
-            <div className="w-full mosaic-bg rounded-xl relative">
+            <div className={twMerge("w-full relative rounded-xl", media === 'image' ? 'mosaic-bg' : '')}>
               {media === 'image' &&
                 <img width={200} height={200} alt="image" src={src}
                   className={twMerge('w-full h-auto m-auto rounded-xl opacity-0')}
@@ -439,7 +439,7 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
 
           {/* 高级定制图片容器2, 尺寸改变 */}
           {['filter-img'].includes(tool.name) &&
-            <div className="w-full mosaic-bg rounded-xl relative">
+            <div className={twMerge("w-full relative rounded-xl", media === 'image' ? 'mosaic-bg' : '')}>
               {media === 'image' &&
                 <img width={200} height={200} alt="image" src={src}
                   className={twMerge('w-full h-auto m-auto rounded-xl opacity-0')}
@@ -489,7 +489,7 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
 
           {/* 高级定制图片容器3: 涂抹操作 */}
           {['remove-obj'].includes(tool.name) &&
-            <div className="w-full mosaic-bg relative">
+            <div className={twMerge("w-full relative rounded-xl", media === 'image' ? 'mosaic-bg' : '')}>
               {media === 'image' &&
                 <img width={200} height={200} alt="image" src={src}
                   className={twMerge('w-full h-auto m-auto rounded-xl opacity-0')}
@@ -539,7 +539,7 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
 
           {/* 高级定制图片容器4: 修改操作 */}
           {['inpaint-img'].includes(tool.name) &&
-            <div className="w-full mosaic-bg relative">
+            <div className={twMerge("w-full relative rounded-xl", media === 'image' ? 'mosaic-bg' : '')}>
               {media === 'image' &&
                 <img width={200} height={200} alt="image" src={src}
                   className={twMerge('w-full h-auto m-auto rounded-xl opacity-0')}
