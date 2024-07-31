@@ -66,8 +66,8 @@ export function HistoryContent({ setTool, setFile, triggerRef }: PropsData) {
               return <li key={idx}>
                 <div className="w-full flex flex-col  items-center p-2 bg-slate-200 rounded-md space-y-1">
                   <div className="w-full flex space-x-2">
-                    <div className="bg-white rounded-sm overflow-hidden w-[80px]">
-                      <Image width={80} height={50} style={{ width: '100%', height: 'auto' }} alt={"result image"} src={it.result} />
+                    <div className="rounded-sm overflow-hidden w-[80px]">
+                      <Image width={80} height={50} style={{ width: '100%', height: 'auto' }} alt={"result image"} src={it.result} className="rounded-sm " />
                       {/* <img src={it.result} style={{ width: '100%', height: 'auto' }} alt="" /> */}
                     </div>
                     <div className="flex-1 flex flex-col justify-between space-y-1 ">
@@ -80,15 +80,20 @@ export function HistoryContent({ setTool, setFile, triggerRef }: PropsData) {
                         继续编辑
                       </Button>
 
-                      <Button size={"sm"} onClick={() => SystemManager.downloadImage(it.result)}>
-                        <RiDownload2Fill />
-                        下载图片
-                      </Button>
+                      {it.result && !it.video && 
+                        <Button size={"sm"} onClick={() => SystemManager.downloadImage(it.result)}>
+                          <RiDownload2Fill />
+                          下载图片
+                        </Button>
+                      }
 
-                      {/* <Button size={"sm"} disabled={!it.video} onClick={() => SystemManager.downloadVideo(it.video)}>
-                        <RiDownload2Fill />
-                        下载视频
-                      </Button> */}
+                      {it.video &&
+                        <Button size={"sm"} disabled={!it.video} onClick={() => SystemManager.downloadVideo(it.video)}>
+                          <RiDownload2Fill />
+                          下载视频
+                        </Button>
+                      }
+
                     </div>
 
                   </div>
