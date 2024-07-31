@@ -21,6 +21,7 @@ import { ImageEditor } from './image-editor'
 import ImageUncropper from './Image-uncropper'
 import MediaBar from './media-bar'
 import VideoPlayer from './video-player'
+import MdContent from './md-content'
 
 // use dynamic import to fixed the canvas require error on next14
 import dynamic from 'next/dynamic'
@@ -31,7 +32,8 @@ const ImageMask = dynamic(() => import('./Image-mask'), {
 interface PropsData {
   file: File | null
   tool: Tool
-  onUploadImage: (file: File) => Promise<any>
+  readRef: any
+  // onUploadImage: (file: File) => Promise<any>
   onGenerateImage: (src: string, action: any) => Promise<any>
   onGenerateVideo: (src: string, action: any) => Promise<any>
   onGenerateText: (src: string, action: any) => Promise<any>
@@ -41,15 +43,19 @@ interface PropsData {
   setStatus: (status: Status) => void
   result: string
   setResult: (result: string) => void
+  videoSrc: string
+  setVideoSrc: (vidoe: string) => void
+  textContent: string
+  setTextContent: (text: string) => void
 }
 
-function ImageTransfer({ file, tool, onUploadImage, onGenerateImage, onGenerateVideo, onGenerateText, src, setSrc, status, setStatus, result, setResult, }: PropsData) {
+function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, onGenerateText, src, setSrc, status, setStatus, result, setResult, videoSrc, setVideoSrc, textContent, setTextContent, }: PropsData) {
   const [maxWidth, setMaxWidth] = React.useState('1200px')
   const [errorInfo, setErrorInfo] = React.useState<any>(null)
   const [payload, setPayload] = React.useState<any>(PHOTO_DEFAULT_PAYLOAD)
   const [originSrc, setOriginSrc] = React.useState('')
-  const [videoSrc, setVideoSrc] = React.useState('')
-  const [textContent, setTextContent] = React.useState('')
+  // const [videoSrc, setVideoSrc] = React.useState('')
+  // const [textContent, setTextContent] = React.useState('')
   const [media, setMedia] = React.useState('image')
   const [isReady, setIsReady] = React.useState(true)
   // const [actionType, setAtionType] = React.us
@@ -58,6 +64,8 @@ function ImageTransfer({ file, tool, onUploadImage, onGenerateImage, onGenerateV
   // 生成文字
   const handleReadText = async () => {
     try {
+      // 清除结果
+      setTextContent('')
       // 设置状态
       setStatus('Pending')
       const res = await onGenerateText(src, { type: tool.name, payload, })
@@ -65,7 +73,12 @@ function ImageTransfer({ file, tool, onUploadImage, onGenerateImage, onGenerateV
       setTextContent(res.textContent)
       // 设置状态
       setStatus('Done')
+      // trigger
+      setTimeout(() => {
+        readRef?.current.click()
+      }, 50)
     } catch (error) {
+      console.log('error::', error)
       setErrorInfo(error)
       setStatus('Error')
     }
@@ -183,6 +196,8 @@ function ImageTransfer({ file, tool, onUploadImage, onGenerateImage, onGenerateV
   // 重置状态
   const handleReset = async () => {
     setResult('')
+    setVideoSrc('')
+    setTextContent('')
     setStatus('Ready')
     setPayload(PHOTO_DEFAULT_PAYLOAD)
     updTask({})
@@ -683,11 +698,11 @@ function ImageTransfer({ file, tool, onUploadImage, onGenerateImage, onGenerateV
                 </img>
               }
 
-              {textContent &&
-                <div className='w-full absolute top-0 '>
-                  {/* <div className='text-dialog'>ddddd</div> */}
+              {/* {textContent &&
+                <div className='w-full absolute top-0 bg-white'>
+                  <MdContent content={textContent} />
                 </div>
-              }
+              } */}
 
               {status === 'Pending' &&
                 <div className={twMerge('scan w-full absolute top-0 transition-all duration-200 pointer-events-none',)}>

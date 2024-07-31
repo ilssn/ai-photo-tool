@@ -20,6 +20,7 @@ import { uploadImage, generateImage, generateVideo, generateText, getHistorys, u
 
 import SystemManager from '@/utils/System'
 import ImageManager from '@/utils/Image'
+import { MdModal } from '@/components/md-modal'
 
 const tools = Locale.Photo.Tool.list
 
@@ -34,6 +35,10 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
   const [status, setStatus] = useState<Status>('Ready')
   const [src, setSrc] = useState('')
   const [result, setResult] = useState('')
+  const [videoSrc, setVideoSrc] = React.useState('')
+  const [textContent, setTextContent] = React.useState('')
+
+  const readRef = React.useRef(null)
 
   React.useEffect(() => {
     const setMinSrc = async () => {
@@ -201,10 +206,21 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
             <span className='italic'>{tool.title}</span>
           </div>
           <div className="flex space-x-4 items-center">
-            <Button disabled={!result} variant="default" size={"sm"} onClick={() => SystemManager.downloadImage(result)}>
-              <RiDownload2Fill />
-              <span>下载</span>
-            </Button>
+            {!['read-text', 'create-video'].includes(tool.name) &&
+              <Button disabled={!result} variant="default" size={"sm"} onClick={() => SystemManager.downloadImage(result)}>
+                <RiDownload2Fill />
+                <span>下载</span>
+              </Button>
+            }
+            {['create-video'].includes(tool.name) &&
+              <Button disabled={!videoSrc} variant="default" size={"sm"} onClick={() => SystemManager.downloadVideo(videoSrc)}>
+                <RiDownload2Fill />
+                <span>下载</span>
+              </Button>
+            }
+            {['read-text'].includes(tool.name) &&
+              <MdModal trigger={readRef} content={textContent} confirm={() => SystemManager.copyToClipboard(textContent)} />
+            }
 
             <div className="fixed top-3 right-12 z-[999] md:static">
               <div className="flex items-center">
@@ -221,7 +237,8 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
             <ImageTransfer
               file={file}
               tool={tool}
-              onUploadImage={uploadImage}
+              readRef={readRef}
+              // onUploadImage={uploadImage}
               onGenerateImage={handleOngenerateImage}
               onGenerateVideo={handleOngenerateVideo}
               onGenerateText={handleOngenerateText}
@@ -231,6 +248,10 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
               setStatus={setStatus}
               result={result}
               setResult={setResult}
+              videoSrc={videoSrc}
+              setVideoSrc={setVideoSrc}
+              textContent={textContent}
+              setTextContent={setTextContent}
             />
           }
         </div>

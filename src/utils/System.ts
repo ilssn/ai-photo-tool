@@ -44,6 +44,7 @@ export default class SystemManager {
 
 	// 复制数据到剪切板
 	static copyToClipboard = (text: string) => {
+		console.log('text:::', text)
 		if (!text) {
 			// return messageApi.info("暂无文本可复制!");
 			return;

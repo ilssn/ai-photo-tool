@@ -1408,7 +1408,7 @@ export async function getDoc2xText(file: File): Promise<any> {
       updTask(result.data)
       const text = result.data.text
       if (text) {
-        resolve({ output: text})
+        resolve({ output: text })
         return
       }
       result = await fetchDoc2xTask(result.data.uuid)
@@ -1439,7 +1439,7 @@ async function fetchDoc2xTask(id: string) {
         .then(data => {
           if (data.data.status === 'success') {
             const content = data.data.result.pages[0]?.md || ''
-            resolve({ output: content});
+            resolve({ output: content });
           } else {
             if (counter < maxAttempts) {
               counter++;
