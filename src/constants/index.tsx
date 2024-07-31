@@ -23,5 +23,5 @@ export const PHOTO_DEFAULT_PAYLOAD = {
   },
   descript: '',
   model: 'luma',
-  ratio: null,
+  ratio: 0,
 }

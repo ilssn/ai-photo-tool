@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button } from './ui/button'
+import { twMerge } from 'tailwind-merge'
 
 interface PropsData {
   payload: any
@@ -34,6 +35,10 @@ const ratios = [
     name: '9:16',
     value: 9 / 16,
   },
+  {
+    name: '自定义',
+    value: 0,
+  },
 ]
 
 function RatioBar({ payload, setPayload }: PropsData) {
@@ -47,9 +52,8 @@ function RatioBar({ payload, setPayload }: PropsData) {
   }
 
   React.useEffect(() => {
-    console.log('model:::', payload.model)
-    if (payload.model === 'kling') {
-      setPayload((preData: any) => { return { ...preData, ratio: null } });
+    if (payload.model === 'luma') {
+      setPayload((preData: any) => { return { ...preData, ratio: 0 } });
     } else {
       setPayload((preData: any) => { return { ...preData, ratio: 1/1 } });
     }
@@ -58,10 +62,11 @@ function RatioBar({ payload, setPayload }: PropsData) {
 
   return (
     <div className='w-full flex flex-col space-y-2 justify-center items-center '>
-      <div className="flex space-x-2 text-md">
+      <div className="flex rounded-sm text-md">
         {
           models.map((it, idx) =>
             <Button
+              className={twMerge('border-primary rounded-none', idx === 0 && 'rounded-l-sm', idx === 2 && 'rounded-r-sm', idx == 1 && 'border-x-0')}
               variant={it.value === payload.model ? 'default' : 'outline'}
               size={'sm'}
               key={idx}
@@ -81,6 +86,7 @@ function RatioBar({ payload, setPayload }: PropsData) {
               size={'sm'}
               key={idx}
               onClick={() => handleChangeRatio(it.value)}
+              disabled={idx === 3 && payload.model !== 'luma'}
             >
               {it.name}
             </Button>

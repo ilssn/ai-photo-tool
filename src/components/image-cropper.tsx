@@ -12,39 +12,40 @@ interface PropsData {
 const ImageCropper = ({ src, setSrc, payload, setPayload }: PropsData) => {
     const cropperRef = React.useRef<any>(null);
     const [image, setImage] = React.useState<any>(null)
+    const [imageRatio, setImageRatio] = React.useState(0)
     const [ratio, setRatio] = React.useState<null | Number>(null)
 
+    // :src
     React.useEffect(() => {
         if (cropperRef.current) {
-            cropperRef.current?.cropper.reset().clear().replace(src);
-            //
             cropperRef.current.refresh();
         }
         const img = new Image()
         img.src = src
         img.onload = () => {
             setImage(img)
+            setImageRatio(img.width / img.height)
         }
         img.onerror = () => {
             console.log('Load image error')
         }
     }, [src]);
 
+    // ratio
     React.useEffect(() => {
-        console.log('ratfio:::', payload.ratio)
         if (cropperRef.current) {
-            cropperRef.current.refresh();
-        }
-        if (payload.ratio) {
-            setRatio(payload.ratio)
-        } else {
-            if (image) {
-                setRatio(image.width / image.height)
+            if (payload.ratio) {
+                setRatio(payload.ratio)
+            } else {
+                setRatio(imageRatio)
                 setTimeout(() => {
-                    setRatio(null)
-                }, 100)
-            }
+                    setRatio(0)
+                }, 20)
 
+            }
+            setTimeout(() => {
+                cropperRef.current.zoomImage(0.1); // zoom-in 
+            }, 30)
         }
     }, [payload.ratio])
 
@@ -58,6 +59,7 @@ const ImageCropper = ({ src, setSrc, payload, setPayload }: PropsData) => {
 
     return (
         <Cropper
+            ref={cropperRef}
             className='cropper !text-primary rounded-xl w-full h-full'
             src={src}
             onChange={onChange}
@@ -67,11 +69,9 @@ const ImageCropper = ({ src, setSrc, payload, setPayload }: PropsData) => {
                     maximum: 16 / 1,
                 },
 
-                // aspectRatio: null,
-                // movable: false,
+                movable: false,
                 // resizable: false
             }}
-        // defaultSize={defaultSize}
         />
     )
 };
