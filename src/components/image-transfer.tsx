@@ -625,7 +625,7 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
               }
               {tool.name === 'replace-bg' &&
                 <div className="w-full flex flex-col space-y-2">
-                  <LightBar payload={payload} setPayload={setPayload} />
+                  {/* <LightBar payload={payload} setPayload={setPayload} /> */}
                   <PromptBar
                     payload={payload}
                     setPayload={setPayload}
@@ -659,6 +659,9 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
           }
           {tool.name === 'uncrop' && result &&
             <Button variant="default" onClick={handleContinue}>继续拓展</Button>
+          }
+          {tool.name === 'inpaint-img' && result &&
+            <Button variant="default" onClick={handleContinue}>继续修改</Button>
           }
 
           {/* {result && !videoSrc &&
