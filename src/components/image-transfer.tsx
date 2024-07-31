@@ -9,6 +9,7 @@ import UploadBar from './upload-bar'
 import PromptBar from './prompt-bar'
 import DescriptBar from './descript-bar'
 import LightBar from './light-bar'
+import RatioBar from './ratio-bar'
 import AlertBar from './alert-bar'
 import { DescriptModal } from './descript-modal'
 import { ConfirmModal } from './confirm-modal'
@@ -283,27 +284,27 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
         {/* 图片容器 */}
         <div
           // className={twMerge("w-full rounded-xl overflow-hidden transition-all duration-200",
-          className={twMerge("w-full rounded-xl overflow-hidden space-y-2 ",
+          className={twMerge("flex-1 w-full rounded-xl overflow-hidden space-y-2 flex items-center justify-center",
             ['inpaint-img', 'remove-obj', 'uncrop'].includes(tool.name) ? 'pb-12' : ''
           )}
-          style={{ maxWidth: maxWidth }}
+          style={{ maxWidth: tool.name === 'create-video' ? '1200px' : maxWidth }}
         >
           {/* 展示媒体类型 */}
           {videoSrc &&
             <MediaBar media={media} setMedia={setMedia} />
           }
           {/* 基础通用图片容器 */}
-          {!['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img'].includes(tool.name) &&
+          {!['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img', 'create-video'].includes(tool.name) &&
             <div className={twMerge("w-full relative rounded-xl", media === 'image' ? 'mosaic-bg' : '')}>
               {media === 'image' &&
                 <img width={200} height={200} alt="image" src={src}
-                  className={twMerge('w-full h-auto m-auto', result ? 'opacity-0' : '')}
+                  className={twMerge('w-full h-auto m-auto rounded-xl', result ? 'opacity-0' : '')}
                 >
                 </img>
               }
               {media === 'video' &&
                 <img width={200} height={200} alt="image" src={result}
-                  className={twMerge('w-full h-auto m-auto', status !== 'Pending' ? 'opacity-0' : '')}
+                  className={twMerge('w-full h-auto m-auto rounded-xl', status !== 'Pending' ? 'opacity-0' : '')}
                 >
                 </img>
               }
@@ -355,7 +356,7 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
 
               {media === 'image' &&
                 <div className={twMerge("absolute top-0 left-0 w-full h-full", result ? 'opacity-0' : '')}>
-                  <ImageCropper src={src} setSrc={setSrc} setPayload={setPayload} />
+                  <ImageCropper src={src} setSrc={setSrc} payload={payload} setPayload={setPayload} />
                 </div>
               }
 
@@ -439,7 +440,7 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
 
           {/* 高级定制图片容器2, 尺寸改变 */}
           {['filter-img'].includes(tool.name) &&
-            <div className={twMerge("w-full relative rounded-xl", media === 'image' ? 'mosaic-bg' : '')}>
+            <div className={twMerge("w-full relative rounded-xl overflow-hidden", media === 'image' ? 'mosaic-bg' : '')}>
               {media === 'image' &&
                 <img width={200} height={200} alt="image" src={src}
                   className={twMerge('w-full h-auto m-auto rounded-xl opacity-0')}
@@ -587,6 +588,59 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
             </div>
           }
 
+          {/* 高级定制图片容器5, 生成视频 */}
+          {['create-video'].includes(tool.name) &&
+            <div className={twMerge("w-full h-full relative rounded-xl", media === 'image' ? 'mosaic-bg' : '')}>
+              {/* {media === 'image' &&
+                <img width={200} height={200} alt="image" src={src}
+                  className={twMerge('w-full h-auto m-auto rounded-xl opacity-0')}
+                >
+                </img>
+              }
+              {media === 'video' &&
+                <img width={200} height={200} alt="image" src={result}
+                  className={twMerge('w-full h-auto m-auto rounded-xl', status !== 'Pending' ? 'opacity-0' : '')}
+                >
+                </img>
+              } */}
+
+              
+              {media === 'image' &&
+                <div className={twMerge("absolute top-0 left-0 w-full h-full", result ? 'opacity-0' : '')}>
+                  <ImageCropper src={src} setSrc={setSrc} payload={payload} setPayload={setPayload} />
+                </div>
+              }
+
+              {/* 
+              {result && media === 'image' &&
+                <div className='w-full absolute top-0'>
+                  <img width={200} height={200} alt="image" src={result} className={
+                    twMerge('w-full h-auto m-auto, rounded-xl')}
+                  >
+                  </img>
+                </div>
+              } */}
+
+              {/* <div className="w-full pb-[100%] mosaic-bg">dd</div> */}
+
+              {videoSrc && media === 'video' &&
+                <div className='w-full absolute bottom-0 rounded-xl overflow-hidden ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
+                  <VideoPlayer
+                    url={videoSrc}
+                    width="100%"
+                    height="100%"
+                  />
+                </div>
+              }
+
+              {status === 'Pending' &&
+                <div className={twMerge('scan w-full absolute top-0 transition-all duration-200 pointer-events-none',)}>
+                </div>
+              }
+
+            </div>
+          }
+
 
         </div>
 
@@ -633,11 +687,11 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
                   />
                 </div>
               }
-              {/* {result &&
-              <div className="w-full mt-2">
-                <DescriptBar payload={payload} setPayload={setPayload} />
-              </div>
-              } */}
+              {tool.name === 'create-video' &&
+                <div className="w-full mt-2">
+                  <RatioBar payload={payload} setPayload={setPayload} />
+                </div>
+              }
             </div>
           }
         </div>

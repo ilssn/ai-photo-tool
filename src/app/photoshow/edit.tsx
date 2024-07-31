@@ -136,6 +136,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
                       </li>
                     ))
                   }
+                  <li className='w-full h-0'></li>
                 </ul>
               </ScrollArea>
             </div>

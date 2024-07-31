@@ -162,6 +162,21 @@ const en: LocaleType = {
           title: '图片调色',
           desc: '对图片进行色值调整',
         },
+        {
+          id: 15,
+          name: 'read-text',
+          icon: 'read-text',
+          title: '文字提取',
+          desc: '根据图片生成文字描述',
+        },
+        {
+          id: 16,
+          name: 'create-video',
+          icon: 'create-video',
+          title: '视频生成',
+          desc: '根据图片内容生成视频',
+        },
+
       ]
     }
   }
