@@ -55,7 +55,7 @@ function RatioBar({ payload, setPayload }: PropsData) {
     if (payload.model === 'luma') {
       setPayload((preData: any) => { return { ...preData, ratio: 0 } });
     } else {
-      setPayload((preData: any) => { return { ...preData, ratio: 1/1 } });
+      setPayload((preData: any) => { return { ...preData, ratio: 1/1, label: '1:1' } });
     }
 
   }, [payload.model])
