@@ -10,6 +10,7 @@ const VIDEO_PROMPT = '请使用英文一句话描述图像的内容，从而生�
 interface Result {
   imageSrc: string
   videoSrc: string
+  textContent: string
 }
 
 // Token: get
@@ -230,7 +231,7 @@ function matchImageSize(inputWidth: number, inputHeight: number) {
 export async function generateImage(src: string, action: Action): Promise<Result> {
   return new Promise(async (resolve, reject) => {
     let res = null
-    let result = { imageSrc: '', videoSrc: '' }
+    let result = { imageSrc: '', videoSrc: '', textContent: '' }
     try {
       if (action.type === 'remove-bg') {
         const file = await ImageManager.imageToFile(src) as File
@@ -1002,7 +1003,7 @@ export async function filterImage(src: string, canvas: any): Promise<any> {
 export async function generateVideo(src: string, action: Action): Promise<Result> {
   return new Promise(async (resolve, reject) => {
     let res = null
-    let result = { imageSrc: '', videoSrc: '' }
+    let result = { imageSrc: '', videoSrc: '', textContent: '' }
     try {
 
       // Luma
@@ -1334,6 +1335,116 @@ async function fetchRunwayTask(id: string) {
               counter++;
               const task = getTask()
               if (task.id) {
+                setTimeout(() => fetchApi(id), 10000); // 每隔10秒轮询一次
+              }
+            } else {
+              reject("Max attempts reached");
+            }
+          }
+        })
+        .catch(error => {
+          reject(error);
+        });
+    };
+    fetchApi(id);
+  });
+}
+
+// 生成文字////////////////////
+export async function generateText(src: string, action: Action): Promise<Result> {
+  return new Promise(async (resolve, reject) => {
+    let res = null
+    let result = { imageSrc: '', videoSrc: '', textContent: '' }
+    try {
+
+      // read
+      if (action.type === 'read-text') {
+        // url
+        const file = await ImageManager.imageToFile(src) as File
+        const url = await uploadImage(file)
+        result.imageSrc = url
+        res = await getDoc2xText(file)
+      }
+
+      result.textContent = res.output
+
+      // 返回结果
+      if (result.textContent) {
+        resolve(result)
+      } else {
+        reject('Create image error!')
+      }
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+
+// 文字：Doc2x
+export async function getDoc2xText(file: File): Promise<any> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let result: any = {}
+      const token = getToken()
+
+      const formdata = new FormData();
+      formdata.append("file", file);
+      formdata.append("option", "false");
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/doc2x/api/v1/async/img`, {
+        method: 'POST',
+        body: formdata,
+        headers: {
+          // "Content-Type": "multipart/form-data",
+          "Authorization": `Bearer ${token}`,
+        },
+      })
+      if (!res.ok) {
+        throw await res.json()
+      }
+
+      result = await res.json()
+      // save task
+      updTask(result.data)
+      const text = result.data.text
+      if (text) {
+        resolve({ output: text})
+        return
+      }
+      result = await fetchDoc2xTask(result.data.uuid)
+      resolve(result)
+
+    } catch (error) {
+      reject(error)
+    }
+  })
+
+}
+
+// 查询: Doc2x
+async function fetchDoc2xTask(id: string) {
+  const token = getToken()
+  return new Promise((resolve, reject) => {
+    let counter = 0;
+    const maxAttempts = 120;
+
+    const fetchApi = (id: string) => {
+      fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/doc2x/api/v1/async/status?uuid=${id}
+      `, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.data.status === 'success') {
+            const content = data.data.result.pages[0]?.md || ''
+            resolve({ output: content});
+          } else {
+            if (counter < maxAttempts) {
+              counter++;
+              const task = getTask()
+              if (task.uuid) {
                 setTimeout(() => fetchApi(id), 10000); // 每隔10秒轮询一次
               }
             } else {

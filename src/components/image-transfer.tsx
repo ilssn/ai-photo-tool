@@ -34,6 +34,7 @@ interface PropsData {
   onUploadImage: (file: File) => Promise<any>
   onGenerateImage: (src: string, action: any) => Promise<any>
   onGenerateVideo: (src: string, action: any) => Promise<any>
+  onGenerateText: (src: string, action: any) => Promise<any>
   src: string
   setSrc: (src: string) => void
   status: string
@@ -42,15 +43,33 @@ interface PropsData {
   setResult: (result: string) => void
 }
 
-function ImageTransfer({ file, tool, onUploadImage, onGenerateImage, onGenerateVideo, src, setSrc, status, setStatus, result, setResult, }: PropsData) {
+function ImageTransfer({ file, tool, onUploadImage, onGenerateImage, onGenerateVideo, onGenerateText, src, setSrc, status, setStatus, result, setResult, }: PropsData) {
   const [maxWidth, setMaxWidth] = React.useState('1200px')
   const [errorInfo, setErrorInfo] = React.useState<any>(null)
   const [payload, setPayload] = React.useState<any>(PHOTO_DEFAULT_PAYLOAD)
   const [originSrc, setOriginSrc] = React.useState('')
   const [videoSrc, setVideoSrc] = React.useState('')
+  const [textContent, setTextContent] = React.useState('')
   const [media, setMedia] = React.useState('image')
   const [isReady, setIsReady] = React.useState(true)
   // const [actionType, setAtionType] = React.us
+
+
+  // 生成文字
+  const handleReadText = async () => {
+    try {
+      // 设置状态
+      setStatus('Pending')
+      const res = await onGenerateText(src, { type: tool.name, payload, })
+      // 设置结果
+      setTextContent(res.textContent)
+      // 设置状态
+      setStatus('Done')
+    } catch (error) {
+      setErrorInfo(error)
+      setStatus('Error')
+    }
+  }
 
   // 生成视频
   const handleCreateVideo = async () => {
@@ -325,7 +344,7 @@ function ImageTransfer({ file, tool, onUploadImage, onGenerateImage, onGenerateV
             <MediaBar media={media} setMedia={setMedia} />
           } */}
           {/* 基础通用图片容器 */}
-          {!['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img', 'create-video'].includes(tool.name) &&
+          {!['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img', 'create-video', 'read-text'].includes(tool.name) &&
             <div className={twMerge("w-full relative rounded-xl", media === 'image' ? 'mosaic-bg' : '')}>
               {media === 'image' &&
                 <img width={200} height={200} alt="image" src={src}
@@ -654,6 +673,29 @@ function ImageTransfer({ file, tool, onUploadImage, onGenerateImage, onGenerateV
             </div>
           }
 
+          {/* 高级定制图片容器, 读取文字 */}
+          {['read-text'].includes(tool.name) &&
+            <div className={twMerge("w-full relative rounded-xl", media === 'image' ? 'mosaic-bg' : '')}>
+              {src &&
+                <img width={200} height={200} alt="image" src={src}
+                  className={twMerge('w-full h-auto m-auto rounded-xl')}
+                >
+                </img>
+              }
+
+              {textContent &&
+                <div className='w-full absolute top-0 '>
+                  {/* <div className='text-dialog'>ddddd</div> */}
+                </div>
+              }
+
+              {status === 'Pending' &&
+                <div className={twMerge('scan w-full absolute top-0 transition-all duration-200 pointer-events-none',)}>
+                </div>
+              }
+            </div>
+          }
+
 
         </div>
 
@@ -757,7 +799,7 @@ function ImageTransfer({ file, tool, onUploadImage, onGenerateImage, onGenerateV
         }
 
         {/* 视频 */}
-        {['read-text', 'create-video',].includes(tool.name) &&
+        {['create-video',].includes(tool.name) &&
           <div className="">
             {videoSrc || status === 'Error'
               ?
@@ -766,6 +808,22 @@ function ImageTransfer({ file, tool, onUploadImage, onGenerateImage, onGenerateV
               </Button>
               :
               <Button variant="default" disabled={status !== 'Ready' || !isReady} onClick={handleCreateVideo}>
+                开始
+              </Button>
+            }
+          </div>
+        }
+
+        {/* 文字 */}
+        {['read-text',].includes(tool.name) &&
+          <div className="">
+            {textContent || status === 'Error'
+              ?
+              <Button variant="default" onClick={handleReadText}>
+                重试
+              </Button>
+              :
+              <Button variant="default" disabled={status !== 'Ready' || !isReady} onClick={handleReadText}>
                 开始
               </Button>
             }

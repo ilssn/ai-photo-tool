@@ -16,7 +16,7 @@ import { twMerge } from 'tailwind-merge'
 
 import { RiDownload2Fill } from "react-icons/ri";
 
-import { uploadImage, generateImage, generateVideo, getHistorys, updHistorys } from './query'
+import { uploadImage, generateImage, generateVideo, generateText, getHistorys, updHistorys } from './query'
 
 import SystemManager from '@/utils/System'
 import ImageManager from '@/utils/Image'
@@ -75,6 +75,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
           result: res.imageSrc,
           base64: '',
           video: '',
+          text: '',
         }
         updHistorys([...historys, history])
         resolve(res)
@@ -104,9 +105,37 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
           result: res.imageSrc,
           base64: '',
           video: res.videoSrc,
+          text: '',
         }
         updHistorys([...historys, history])
         // 返回结果
+        resolve(res)
+      } catch (error) {
+        console.log('error::', error)
+        reject(error)
+      }
+    })
+  }
+
+
+  // 生成文字
+  const handleOngenerateText = async (src: string, action: any) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await generateText(src, action)
+        // save history
+        const historys = getHistorys() as History[]
+        const history: History = {
+          id: Date.now(),
+          tool: tool,
+          src,
+          action,
+          result: res.imageSrc,
+          base64: '',
+          video: '',
+          text: res.textContent,
+        }
+        updHistorys([...historys, history])
         resolve(res)
       } catch (error) {
         console.log('error::', error)
@@ -195,6 +224,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
               onUploadImage={uploadImage}
               onGenerateImage={handleOngenerateImage}
               onGenerateVideo={handleOngenerateVideo}
+              onGenerateText={handleOngenerateText}
               src={src}
               setSrc={setSrc}
               status={status}

@@ -21,4 +21,5 @@ export interface History {
   base64: string
   result: string
   video: string
+  text: string
 }
