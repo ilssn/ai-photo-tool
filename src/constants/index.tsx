@@ -24,4 +24,5 @@ export const PHOTO_DEFAULT_PAYLOAD = {
   descript: '',
   model: 'luma',
   ratio: 0,
+  label: '1:1',
 }

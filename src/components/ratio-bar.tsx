@@ -47,8 +47,8 @@ function RatioBar({ payload, setPayload }: PropsData) {
     setPayload((preData: any) => { return { ...preData, model } });
   }
 
-  const handleChangeRatio = (ratio: number) => {
-    setPayload((preData: any) => { return { ...preData, ratio } });
+  const handleChangeRatio = (ratio: number, name: string) => {
+    setPayload((preData: any) => { return { ...preData, ratio, label: name } });
   }
 
   React.useEffect(() => {
@@ -85,7 +85,7 @@ function RatioBar({ payload, setPayload }: PropsData) {
               variant={it.value === payload.ratio ? 'default' : 'outline'}
               size={'sm'}
               key={idx}
-              onClick={() => handleChangeRatio(it.value)}
+              onClick={() => handleChangeRatio(it.value, it.name)}
               disabled={idx === 3 && payload.model !== 'luma'}
             >
               {it.name}
