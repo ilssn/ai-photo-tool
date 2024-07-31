@@ -232,4 +232,29 @@ export default class ImageManager {
     }
   }
 
+  static resetSizeCanvas = async (originCanvas: any, size: {width: number, height: number}) => {
+    return new Promise((resolve) => {
+      const originUrl = originCanvas.toDataURL('image/png')
+      const originImage = new Image()
+      originImage.onload = () => {
+        const newCanvas = document.createElement('canvas')
+        const newContext = newCanvas.getContext('2d')
+        if (newContext && originImage) {
+          newCanvas.width = size.width
+          newCanvas.height = size.height
+          newContext.drawImage(
+            originImage,
+            0,
+            0,
+            newCanvas.width,
+            newCanvas.height
+          )
+          resolve(newCanvas)
+        }
+      }
+      originImage.src = originUrl
+    })
+  }
+
+
 }

@@ -53,7 +53,8 @@ const ImageCropper = ({ src, setSrc, payload, setPayload }: PropsData) => {
     const onChange = (cropper: CropperRef) => {
         // console.log(cropper.getCoordinates(), cropper.getCanvas());
         // const result = cropper.getCanvas()?.toDataURL()
-        setPayload((preData: any) => { return { ...preData, canvas: cropper.getCanvas() } });
+        // setPayload((preData: any) => { return { ...preData, canvas: cropper.getCanvas() } });
+        setPayload((preData: any) => { return { ...preData, canvas: cropperRef.current.getCanvas() } });
     };
 
 

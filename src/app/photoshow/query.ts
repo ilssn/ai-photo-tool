@@ -1022,18 +1022,60 @@ export async function generateVideo(src: string, action: Action): Promise<Result
         res = await getLumaVideo(url, prompt)
       }
 
-      // if array
-      if (res.output.startsWith('[')) {
-        result.videoSrc = JSON.parse(res.output)[0]
-      } else {
-        result.videoSrc = res.output
+      // Kling
+      if (action.payload.model === 'kling') {
+        // url
+        const file = await ImageManager.imageToFile(src) as File
+        const url = await uploadImage(file)
+        result.imageSrc = url
+        // ratio
+        const ratio = action.payload.label
+        // prompt
+        let prompt = action.payload.prompt
+        if (!prompt) {
+          prompt = await aiImageToText(url, VIDEO_PROMPT)
+        }
+        // if (SystemManager.containsChinese(prompt)) {
+        //   prompt = await aiTranslate(prompt)
+        // }
+        res = await getKlingVideo(file, ratio, prompt)
       }
+
+      // Runway
+      if (action.payload.model === 'runway') {
+        // url
+        const file = await ImageManager.imageToFile(src) as File
+        const url = await uploadImage(file)
+        result.imageSrc = url
+        // ratio
+        // const ratio = action.payload.label
+        // prompt
+        let prompt = action.payload.prompt
+        if (!prompt) {
+          prompt = await aiImageToText(url, VIDEO_PROMPT)
+        }
+        if (SystemManager.containsChinese(prompt)) {
+          prompt = await aiTranslate(prompt)
+        }
+        res = await getRunwayVideo(file, prompt)
+      }
+
+
+      // if array
+      // if (res.output.startsWith('[')) {
+      //   result.videoSrc = JSON.parse(res.output)[0]
+      // } else {
+      //   result.videoSrc = res.output
+      // }
+
 
       // online
       // if (!result.imageSrc.startsWith('http')) {
       //   const newFile = await ImageManager.imageToFile(result.imageSrc) as File
       //   result.imageSrc = await uploadImage(newFile)
       // }
+
+      result.videoSrc = res.output
 
       // 返回结果
       if (result.videoSrc) {
@@ -1047,14 +1089,14 @@ export async function generateVideo(src: string, action: Action): Promise<Result
   })
 }
 
-// Luma 视频
+// 视频: Luma
 export async function getLumaVideo(url: string, prompt: string): Promise<any> {
   return new Promise(async (resolve, reject) => {
     try {
-      let result:any = {}
+      let result: any = {}
       // debug
       // setTimeout(() => {
-      //   result.video = 'https://file.302.ai/gpt/imgs/20240625/59e773e2fa1748ada0d293cd3d4795ed.mp4'
+      //   result.output = 'https://file.302.ai/gpt/imgs/20240625/59e773e2fa1748ada0d293cd3d4795ed.mp4'
       //   resolve(result)
       //   return
       // }, 2000);
@@ -1094,7 +1136,7 @@ export async function getLumaVideo(url: string, prompt: string): Promise<any> {
 
 }
 
-// 查询任务
+// 查询: Luma
 async function fetchLumaTask(id: string) {
   const token = getToken()
   return new Promise((resolve, reject) => {
@@ -1118,6 +1160,175 @@ async function fetchLumaTask(id: string) {
             resolve(data);
           } else if (data.state === 'failed') {
             reject('Task failed')
+          } else {
+            if (counter < maxAttempts) {
+              counter++;
+              const task = getTask()
+              if (task.id) {
+                setTimeout(() => fetchApi(id), 10000); // 每隔10秒轮询一次
+              }
+            } else {
+              reject("Max attempts reached");
+            }
+          }
+        })
+        .catch(error => {
+          reject(error);
+        });
+    };
+    fetchApi(id);
+  });
+}
+
+// 视频：Kling
+export async function getKlingVideo(file: File, ratio: string, prompt: string): Promise<any> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let result: any = {}
+      const token = getToken()
+
+      const formdata = new FormData();
+      formdata.append("input_image", file);
+      formdata.append("prompt", prompt);
+      formdata.append("negative_prompt", "");
+      formdata.append("cfg", "0.5");
+      formdata.append("aspect_ratio", ratio);
+      formdata.append("camera_type", "zoom");
+      formdata.append("camera_value", "-5");
+
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/klingai/m2v_img2video`, {
+        method: 'POST',
+        body: formdata,
+        headers: {
+          // "Content-Type": "multipart/form-data",
+          "Authorization": `Bearer ${token}`,
+        },
+      })
+      if (!res.ok) {
+        throw await res.json()
+      }
+
+      result = await res.json()
+      // save task
+      updTask(result.data.task)
+      const video = result.data.works[0]?.resource.resource
+      if (video) {
+        resolve({ output: video })
+        return
+      }
+      result = await fetchKlingTask(result.data.task.id)
+      resolve(result)
+
+    } catch (error) {
+      reject(error)
+    }
+  })
+
+}
+
+// 查询: Kling
+async function fetchKlingTask(id: string) {
+  const token = getToken()
+  return new Promise((resolve, reject) => {
+    let counter = 0;
+    const maxAttempts = 120;
+
+    const fetchApi = (id: string) => {
+      fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/klingai/task/${id}/fetch
+      `, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      })
+        .then(response => response.json())
+        .then(data => {
+          const video = data.data.works[0]?.resource.resource
+          if (video) {
+            resolve({ output: video });
+          } else {
+            if (counter < maxAttempts) {
+              counter++;
+              const task = getTask()
+              if (task.id) {
+                setTimeout(() => fetchApi(id), 10000); // 每隔10秒轮询一次
+              }
+            } else {
+              reject("Max attempts reached");
+            }
+          }
+        })
+        .catch(error => {
+          reject(error);
+        });
+    };
+    fetchApi(id);
+  });
+}
+
+// 视频：Runway
+export async function getRunwayVideo(file: File, prompt: string): Promise<any> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let result: any = {}
+      const token = getToken()
+
+      const formdata = new FormData();
+      formdata.append("init_image", file);
+      formdata.append("text_prompt", prompt);
+      formdata.append("seconds", "5");
+      formdata.append("seed", "");
+
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/runway/submit`, {
+        method: 'POST',
+        body: formdata,
+        headers: {
+          // "Content-Type": "multipart/form-data",
+          "Authorization": `Bearer ${token}`,
+        },
+      })
+      if (!res.ok) {
+        throw await res.json()
+      }
+
+      result = await res.json()
+      // save task
+      updTask(result.task)
+      const video = result.task.artifacts[0]?.url
+      if (video) {
+        resolve({ output: video })
+        return
+      }
+      result = await fetchRunwayTask(result.task.id)
+      resolve(result)
+
+    } catch (error) {
+      reject(error)
+    }
+  })
+
+}
+
+// 查询: Runway
+async function fetchRunwayTask(id: string) {
+  const token = getToken()
+  return new Promise((resolve, reject) => {
+    let counter = 0;
+    const maxAttempts = 120;
+
+    const fetchApi = (id: string) => {
+      fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/runway/task/${id}/fetch
+      `, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      })
+        .then(response => response.json())
+        .then(data => {
+          const video = data.task.artifacts[0]?.url
+          if (video) {
+            resolve({ output: video });
           } else {
             if (counter < maxAttempts) {
               counter++;

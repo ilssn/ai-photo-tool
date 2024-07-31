@@ -61,7 +61,12 @@ function ImageTransfer({ file, tool, onUploadImage, onGenerateImage, onGenerateV
       // 设置图片
       let url = src
       if (payload.canvas) {
-        url = payload.canvas.toDataURL()
+        if (payload.model === 'runway') {
+          const newCanvas = await ImageManager.resetSizeCanvas(payload.canvas, { width: 1280, height: 768 }) as any
+          url = newCanvas.toDataURL()
+        } else {
+          url = payload.canvas.toDataURL()
+        }
       }
       // const file = await ImageManager.imageToFile(local) as File
       // const src = await onUploadImage(file)
@@ -92,7 +97,7 @@ function ImageTransfer({ file, tool, onUploadImage, onGenerateImage, onGenerateV
     // 重置图片
     setResult('')
     // 重置视频
-    setVideoSrc('') 
+    setVideoSrc('')
     // 重置状态
     setStatus('Ready')
   }
