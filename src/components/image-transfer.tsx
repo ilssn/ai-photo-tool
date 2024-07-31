@@ -31,8 +31,9 @@ const ImageMask = dynamic(() => import('./Image-mask'), {
 interface PropsData {
   file: File | null
   tool: Tool
-  onGenerateImage: (action: any) => Promise<any>
-  onGenerateVideo: (action: any) => Promise<any>
+  onUploadImage: (file: File) => Promise<any>
+  onGenerateImage: (src: string, action: any) => Promise<any>
+  onGenerateVideo: (src: string, action: any) => Promise<any>
   src: string
   setSrc: (src: string) => void
   status: string
@@ -41,7 +42,7 @@ interface PropsData {
   setResult: (result: string) => void
 }
 
-function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setSrc, status, setStatus, result, setResult, }: PropsData) {
+function ImageTransfer({ file, tool, onUploadImage, onGenerateImage, onGenerateVideo, src, setSrc, status, setStatus, result, setResult, }: PropsData) {
   const [maxWidth, setMaxWidth] = React.useState('1200px')
   const [errorInfo, setErrorInfo] = React.useState<any>(null)
   const [payload, setPayload] = React.useState<any>(PHOTO_DEFAULT_PAYLOAD)
@@ -54,26 +55,46 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
   // 生成视频
   const handleCreateVideo = async () => {
     try {
-      if (!result) return
       setVideoSrc('')
       setMedia('video')
-      // return
-      setTimeout(async () => {
-        setStatus('Pending')
-        const res = await onGenerateVideo({ type: tool.name, payload, })
-        // 设置媒体
-        setMedia('video')
-        // 设置结果
-        setVideoSrc(res.video)
-        // 设置状态
-        setStatus('Done')
+      setStatus('Pending')
+      // 设置图片
+      let url = src
+      if (payload.canvas) {
+        url = payload.canvas.toDataURL()
+      }
+      // const file = await ImageManager.imageToFile(local) as File
+      // const src = await onUploadImage(file)
+      setResult(url)
+      // if (!result) return
+      const res = await onGenerateVideo(url, { type: tool.name, payload, })
+      // 设置媒体
+      setMedia('video')
+      // 设置结果
+      setVideoSrc(res.videoSrc)
+      // 设置状态
+      setStatus('Done')
+      // 清除图片：
+      setResult('')
 
-      }, 100)
     } catch (error) {
       setMedia('image')
+      setResult('')
       setErrorInfo(error)
       setStatus('Error')
     }
+  }
+
+  // 重置视频
+  const handleResetVideo = async () => {
+    // 设置媒体
+    setMedia('image')
+    // 重置图片
+    setResult('')
+    // 重置视频
+    setVideoSrc('') 
+    // 重置状态
+    setStatus('Ready')
   }
 
   // 开始任务
@@ -83,7 +104,7 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
       setMedia('image')
       // 设置状态
       setStatus('Pending')
-      const res = await onGenerateImage({ type: tool.name, payload, })
+      const res = await onGenerateImage(src, { type: tool.name, payload, })
       // 缓存原图
       setOriginSrc(src)
       // 高阶图片容器缓存原图，因为图片尺寸有变化
@@ -267,6 +288,11 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
         setIsReady(false)
       }
     }
+    // if (tool.name === 'create-video') {
+    //   if (!payload.canvas) {
+    //     setIsReady(false)
+    //   }
+    // }
 
   }, [tool, payload])
 
@@ -287,12 +313,12 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
           className={twMerge("flex-1 w-full rounded-xl overflow-hidden space-y-2 flex items-center justify-center",
             ['inpaint-img', 'remove-obj', 'uncrop'].includes(tool.name) ? 'pb-12' : ''
           )}
-          style={{ maxWidth: tool.name === 'create-video' ? '1200px' : maxWidth }}
+          style={{ maxWidth: tool.name === 'create-video' && !result ? '1200px' : maxWidth }}
         >
           {/* 展示媒体类型 */}
-          {videoSrc &&
+          {/* {videoSrc &&
             <MediaBar media={media} setMedia={setMedia} />
-          }
+          } */}
           {/* 基础通用图片容器 */}
           {!['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img', 'create-video'].includes(tool.name) &&
             <div className={twMerge("w-full relative rounded-xl", media === 'image' ? 'mosaic-bg' : '')}>
@@ -590,41 +616,23 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
 
           {/* 高级定制图片容器5, 生成视频 */}
           {['create-video'].includes(tool.name) &&
-            <div className={twMerge("w-full h-full relative rounded-xl", media === 'image' ? 'mosaic-bg' : '')}>
-              {/* {media === 'image' &&
-                <img width={200} height={200} alt="image" src={src}
-                  className={twMerge('w-full h-auto m-auto rounded-xl opacity-0')}
-                >
-                </img>
-              }
-              {media === 'video' &&
-                <img width={200} height={200} alt="image" src={result}
-                  className={twMerge('w-full h-auto m-auto rounded-xl', status !== 'Pending' ? 'opacity-0' : '')}
-                >
-                </img>
-              } */}
+            <div className={twMerge("w-full h-full relative rounded-xl flex items-center justify-center", media === 'image' ? 'mosaic-bg' : '')}>
 
-              
               {media === 'image' &&
                 <div className={twMerge("absolute top-0 left-0 w-full h-full", result ? 'opacity-0' : '')}>
                   <ImageCropper src={src} setSrc={setSrc} payload={payload} setPayload={setPayload} />
                 </div>
               }
 
-              {/* 
-              {result && media === 'image' &&
-                <div className='w-full absolute top-0'>
-                  <img width={200} height={200} alt="image" src={result} className={
-                    twMerge('w-full h-auto m-auto, rounded-xl')}
-                  >
-                  </img>
-                </div>
-              } */}
-
-              {/* <div className="w-full pb-[100%] mosaic-bg">dd</div> */}
+              {!videoSrc && media === 'video' &&
+                <img width={200} height={200} alt="image" src={result}
+                  className={twMerge('w-full h-auto m-auto rounded-xl', status !== 'Pending' ? 'opacity-0' : '')}
+                >
+                </img>
+              }
 
               {videoSrc && media === 'video' &&
-                <div className='w-full absolute bottom-0 rounded-xl overflow-hidden ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
+                <div className='w-full rounded-xl overflow-hidden ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
                   <VideoPlayer
                     url={videoSrc}
                     width="100%"
@@ -687,7 +695,7 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
                   />
                 </div>
               }
-              {tool.name === 'create-video' &&
+              {tool.name === 'create-video' && !videoSrc &&
                 <div className="w-full mt-2">
                   <RatioBar payload={payload} setPayload={setPayload} />
                 </div>
@@ -727,17 +735,38 @@ function ImageTransfer({ file, tool, onGenerateImage, onGenerateVideo, src, setS
 
         </div>
 
-
-        {result || status === 'Error'
-          ?
-          <Button variant="default" onClick={handleRestart}>
-            {['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img'].includes(tool.name) ? '重做' : '重试'}
-          </Button>
-          :
-          <Button variant="default" disabled={status !== 'Ready' || !isReady || media === 'video'} onClick={handleStart}>
-            {['crop-img', 'filter-img',].includes(tool.name) ? '保存' : '开始'}
-          </Button>
+        {/* 图片 */}
+        {!['read-text', 'create-video',].includes(tool.name) &&
+          <div className="">
+            {result || status === 'Error'
+              ?
+              <Button variant="default" onClick={handleRestart}>
+                {['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img'].includes(tool.name) ? '重做' : '重试'}
+              </Button>
+              :
+              <Button variant="default" disabled={status !== 'Ready' || !isReady || media === 'video'} onClick={handleStart}>
+                {['crop-img', 'filter-img',].includes(tool.name) ? '保存' : '开始'}
+              </Button>
+            }
+          </div>
         }
+
+        {/* 视频 */}
+        {['read-text', 'create-video',].includes(tool.name) &&
+          <div className="">
+            {videoSrc || status === 'Error'
+              ?
+              <Button variant="default" onClick={handleResetVideo}>
+                重做
+              </Button>
+              :
+              <Button variant="default" disabled={status !== 'Ready' || !isReady} onClick={handleCreateVideo}>
+                开始
+              </Button>
+            }
+          </div>
+        }
+
       </div>
     </div>
 

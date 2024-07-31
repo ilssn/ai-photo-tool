@@ -11,7 +11,7 @@ interface PropsData {
 
 const ImageCropper = ({ src, setSrc, payload, setPayload }: PropsData) => {
     const cropperRef = React.useRef<any>(null);
-    const [image, setImage] = React.useState<any>(null)
+    // const [image, setImage] = React.useState<any>(null)
     const [imageRatio, setImageRatio] = React.useState(0)
     const [ratio, setRatio] = React.useState<null | Number>(null)
 
@@ -23,7 +23,7 @@ const ImageCropper = ({ src, setSrc, payload, setPayload }: PropsData) => {
         const img = new Image()
         img.src = src
         img.onload = () => {
-            setImage(img)
+            // setImage(img)
             setImageRatio(img.width / img.height)
         }
         img.onerror = () => {
@@ -45,6 +45,7 @@ const ImageCropper = ({ src, setSrc, payload, setPayload }: PropsData) => {
             }
             setTimeout(() => {
                 cropperRef.current.zoomImage(0.1); // zoom-in 
+                setPayload((preData: any) => { return { ...preData, canvas: cropperRef.current.getCanvas() } });
             }, 30)
         }
     }, [payload.ratio])

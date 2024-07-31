@@ -9,6 +9,7 @@ const VIDEO_PROMPT = '请使用英文一句话描述图像的内容，从而生�
 
 interface Result {
   imageSrc: string
+  videoSrc: string
 }
 
 // Token: get
@@ -142,7 +143,7 @@ export const aiImageToText = (url: string, prompt: string) => {
 
 
 // 上传图片
-async function uploadImage(file: File) {
+export async function uploadImage(file: File) {
   try {
     const formData = new FormData();
     formData.append('file', file);
@@ -229,7 +230,7 @@ function matchImageSize(inputWidth: number, inputHeight: number) {
 export async function generateImage(src: string, action: Action): Promise<Result> {
   return new Promise(async (resolve, reject) => {
     let res = null
-    let result = { imageSrc: '' }
+    let result = { imageSrc: '', videoSrc: '' }
     try {
       if (action.type === 'remove-bg') {
         const file = await ImageManager.imageToFile(src) as File
@@ -998,11 +999,59 @@ export async function filterImage(src: string, canvas: any): Promise<any> {
 
 
 // 生成视频////////////////////
-// 生成视频
-export async function generateVideo(url: string, prompt: string): Promise<any> {
+export async function generateVideo(src: string, action: Action): Promise<Result> {
+  return new Promise(async (resolve, reject) => {
+    let res = null
+    let result = { imageSrc: '', videoSrc: '' }
+    try {
+
+      // Luma
+      if (action.payload.model === 'luma') {
+        // url
+        const file = await ImageManager.imageToFile(src) as File
+        const url = await uploadImage(file)
+        result.imageSrc = url
+        // prompt
+        let prompt = action.payload.prompt
+        if (!prompt) {
+          prompt = await aiImageToText(url, VIDEO_PROMPT)
+        }
+        if (SystemManager.containsChinese(prompt)) {
+          prompt = await aiTranslate(prompt)
+        }
+        res = await getLumaVideo(url, prompt)
+      }
+
+      // if array
+      if (res.output.startsWith('[')) {
+        result.videoSrc = JSON.parse(res.output)[0]
+      } else {
+        result.videoSrc = res.output
+      }
+
+      // online
+      // if (!result.imageSrc.startsWith('http')) {
+      //   const newFile = await ImageManager.imageToFile(result.imageSrc) as File
+      //   result.imageSrc = await uploadImage(newFile)
+      // }
+
+      // 返回结果
+      if (result.videoSrc) {
+        resolve(result)
+      } else {
+        reject('Create image error!')
+      }
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+
+// Luma 视频
+export async function getLumaVideo(url: string, prompt: string): Promise<any> {
   return new Promise(async (resolve, reject) => {
     try {
-      let result: any = {}
+      let result:any = {}
       // debug
       // setTimeout(() => {
       //   result.video = 'https://file.302.ai/gpt/imgs/20240625/59e773e2fa1748ada0d293cd3d4795ed.mp4'
@@ -1011,21 +1060,10 @@ export async function generateVideo(url: string, prompt: string): Promise<any> {
       // }, 2000);
       // reject('errorddd')
       const token = getToken()
-      const file = await ImageManager.imageToFile(url) as File
-      const onlieUrl = await uploadImage(file)
-
-      // 场景描述,没有记录则生成
-      let enPrompt = prompt
-      if (!enPrompt) {
-        enPrompt = await aiImageToText(onlieUrl, VIDEO_PROMPT)
-      }
-      if (SystemManager.containsChinese(enPrompt)) {
-        enPrompt = await aiTranslate(enPrompt)
-      }
 
       const formData = new FormData();
-      formData.append('user_prompt', enPrompt);
-      formData.append('image_url', onlieUrl);
+      formData.append('user_prompt', prompt);
+      formData.append('image_url', url);
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/luma/submit`, {
         method: 'POST',
@@ -1043,11 +1081,11 @@ export async function generateVideo(url: string, prompt: string): Promise<any> {
       // save task
       updTask(result)
       if (result.video) {
-        resolve(result)
+        resolve({ output: result.video })
         return
       }
-      result = await fetchVideoTask(result.id)
-      resolve(result)
+      result = await fetchLumaTask(result.id)
+      resolve({ output: result.video })
 
     } catch (error) {
       reject(error)
@@ -1057,7 +1095,7 @@ export async function generateVideo(url: string, prompt: string): Promise<any> {
 }
 
 // 查询任务
-async function fetchVideoTask(id: string) {
+async function fetchLumaTask(id: string) {
   const token = getToken()
   return new Promise((resolve, reject) => {
     let counter = 0;
