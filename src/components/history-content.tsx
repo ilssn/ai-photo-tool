@@ -11,6 +11,8 @@ import { MdOutlineCleaningServices } from "react-icons/md";
 
 import { RiDownload2Fill } from "react-icons/ri";
 import { PiMagicWandLight } from "react-icons/pi";
+import { FaRegCopy } from "react-icons/fa";
+
 
 import { Tool, History } from '@/types'
 import ImageManager from "@/utils/Image";
@@ -80,7 +82,7 @@ export function HistoryContent({ setTool, setFile, triggerRef }: PropsData) {
                         继续编辑
                       </Button>
 
-                      {it.result && !it.video && 
+                      {it.result && !it.video && !it.text &&
                         <Button size={"sm"} onClick={() => SystemManager.downloadImage(it.result)}>
                           <RiDownload2Fill />
                           下载图片
@@ -88,9 +90,16 @@ export function HistoryContent({ setTool, setFile, triggerRef }: PropsData) {
                       }
 
                       {it.video &&
-                        <Button size={"sm"} disabled={!it.video} onClick={() => SystemManager.downloadVideo(it.video)}>
+                        <Button size={"sm"} onClick={() => SystemManager.downloadVideo(it.video)}>
                           <RiDownload2Fill />
                           下载视频
+                        </Button>
+                      }
+
+                      {it.text &&
+                        <Button size={"sm"} onClick={() => SystemManager.copyToClipboard(it.text)}>
+                          <FaRegCopy />
+                          复制文本
                         </Button>
                       }
 
