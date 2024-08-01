@@ -75,7 +75,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
         const history: History = {
           id: Date.now(),
           tool: tool,
-          src,
+          src: '',
           action,
           result: res.imageSrc,
           base64: '',
@@ -105,7 +105,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
         const history: History = {
           id: Date.now(),
           tool: tool,
-          src,
+          src: '',
           action,
           result: res.imageSrc,
           base64: '',
@@ -133,7 +133,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
         const history: History = {
           id: Date.now(),
           tool: tool,
-          src,
+          src: '',
           action,
           result: res.imageSrc,
           base64: '',
