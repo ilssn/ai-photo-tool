@@ -117,7 +117,7 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
       // 设置状态
       setStatus('Done')
       // 清除图片：
-      setResult('')
+      // setResult('')
 
     } catch (error) {
       setMedia('image')
@@ -193,12 +193,12 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
     // 清空文字
     setTextContent('')
     // 重置图片
-    if (result) {
+    if (result && tool.name !== 'create-video') {
       // const localSrc = await ImageManager.localizeImage(result) as string
       // setSrc(localSrc)
       setSrc(result)
-      setResult('')
     }
+    setResult('')
     setStatus('Ready')
     setPayload(PHOTO_DEFAULT_PAYLOAD)
     updTask({})
@@ -674,7 +674,7 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
                 </div>
               }
 
-              {!videoSrc && media === 'video' &&
+              {media === 'video' &&
                 <img width={200} height={200} alt="image" src={result}
                   className={twMerge('w-full h-auto m-auto rounded-xl', status !== 'Pending' ? 'opacity-0' : '')}
                 >
@@ -682,7 +682,7 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
               }
 
               {videoSrc && media === 'video' &&
-                <div className='w-full rounded-xl overflow-hidden ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
+                <div className='absolute top-[50%] translate-y-[-50%] w-full rounded-xl overflow-hidden ' style={{ background: 'rgb(245, 245, 245, 0.6)' }}>
                   <VideoPlayer
                     url={videoSrc}
                     width="100%"
