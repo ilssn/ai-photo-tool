@@ -1033,9 +1033,9 @@ export async function generateVideo(src: string, action: Action): Promise<Result
         const ratio = action.payload.label
         // prompt
         let prompt = action.payload.prompt
-        if (!prompt) {
-          prompt = await aiImageToText(url, VIDEO_PROMPT)
-        }
+        // if (!prompt) {
+        //   prompt = await aiImageToText(url, VIDEO_PROMPT)
+        // }
         // if (SystemManager.containsChinese(prompt)) {
         //   prompt = await aiTranslate(prompt)
         // }
@@ -1052,10 +1052,10 @@ export async function generateVideo(src: string, action: Action): Promise<Result
         // const ratio = action.payload.label
         // prompt
         let prompt = action.payload.prompt
-        if (!prompt) {
-          prompt = await aiImageToText(url, VIDEO_PROMPT)
-        }
-        if (SystemManager.containsChinese(prompt)) {
+        // if (!prompt) {
+        //   prompt = await aiImageToText(url, VIDEO_PROMPT)
+        // }
+        if (prompt && SystemManager.containsChinese(prompt)) {
           prompt = await aiTranslate(prompt)
         }
         res = await getRunwayVideo(file, prompt)
