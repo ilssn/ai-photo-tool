@@ -178,12 +178,12 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
                       </li>
                     ))
                   }
-                  <li className='w-full h-0'></li>
+                  {/* <li className='w-full h-0'></li> */}
                 </ul>
               </ScrollArea>
             </div>
           </div>
-          <div className={twMerge('w-full', status === 'Pending' ? 'pointer-events-none opacity-60' : '')}>
+          <div className={twMerge('w-full pt-4 bg-white', status === 'Pending' ? 'pointer-events-none opacity-60' : '')}>
             <UploadButton setFile={setFile} />
           </div>
         </div>
