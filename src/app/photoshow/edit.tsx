@@ -9,6 +9,7 @@ import ToolCard from '@/components/tool-card'
 import ImageTransfer from '@/components/image-transfer'
 import UploadButton from '@/components/upload-button'
 import { HistoryModal } from "@/components/history-modal";
+import { InfoModal } from '@/components/info-modal'
 import { SideSheet } from '@/components/side-sheet'
 import { ToolIcon } from '@/components/my-icon'
 import { Tool, Status, History } from '@/types'
@@ -16,6 +17,10 @@ import Locale from '@/locales'
 import { twMerge } from 'tailwind-merge'
 
 import { RiDownload2Fill } from "react-icons/ri";
+import { BiCollapse } from "react-icons/bi";
+import { BiExpand } from "react-icons/bi";
+
+
 
 import { uploadImage, generateImage, generateVideo, generateText, getHistorys, updHistorys } from './query'
 
@@ -38,6 +43,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
   const [result, setResult] = useState('')
   const [videoSrc, setVideoSrc] = React.useState('')
   const [textContent, setTextContent] = React.useState('')
+  const [expand, setExpand] = React.useState(false)
 
   const readRef = React.useRef(null)
 
@@ -153,7 +159,15 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
 
   if (!src) return <div className="w-full h-full flex items-center"><Loading /></div>
   return (
-    <div id="photosho-edit" className='max-w-screen-xl h-full mx-auto flex md:border md:shadow-lg overflow-hidden md:rounded-xl relative'>
+    <div id="photosho-edit" className={
+      twMerge(
+        'w-full h-full relative flex',
+        !expand
+          ? 'max-w-screen-xl mx-auto md:border md:shadow-lg md:rounded-xl'
+          : 'fixed left-0 top-0 w-full h-full z-50'
+      )
+    }
+    >
 
       <div className="md:hidden fixed top-2 left-4 z-50">
         <div className="flex items-center">
@@ -162,7 +176,6 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
       </div>
 
       <div className="hidden md:block left w-[310px] h-full shadow-2xl">
-
         <div className="sider-bar w-full h-full p-4 bg-white flex flex-col">
           <div className="w-full flex items-center justify-center space-x-2 py-2">
             <Image width={32} height={32} alt="logo" src="/logo.png"></Image>
@@ -188,10 +201,9 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
             <UploadButton setFile={setFile} />
           </div>
         </div>
-
       </div>
 
-      <div className="right flex-1 h-full md:px-12 md:py-4 flex flex-col space-y-4">
+      <div className="right flex-1 h-full md:px-12 md:py-4 flex flex-col space-y-4 bg-background">
 
         <div className="w-full flex justify-between items-center">
           <div className="block md:hidden info text-md text-primary">
@@ -223,10 +235,24 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
               <MdModal trigger={readRef} content={textContent} confirm={() => SystemManager.copyToClipboard(textContent)} />
             }
 
-            <div className="fixed top-3 right-12 z-[999] md:static">
-              <div className="flex items-center">
+            <div className="fixed top-3 right-3 z-[50] md:static">
+              <div className="flex items-center space-x-2">
                 <HistoryModal setTool={setTool} setFile={setFile} />
+                <InfoModal />
               </div>
+            </div>
+
+            <div className="absolute right-4">
+              {!expand
+                ?
+                <div className='text-xl text-slate-500 cursor-pointer opacity-60 hover:opacity-100 hover:text-primary hover:scale-110'>
+                  <BiExpand onClick={() => setExpand(true)} />
+                </div>
+                :
+                <div className='text-xl text-slate-500 cursor-pointer opacity-60 hover:opacity-100 hover:text-primary hover:scale-80'>
+                  <BiCollapse onClick={() => setExpand(false)} />
+                </div>
+              }
             </div>
 
           </div>

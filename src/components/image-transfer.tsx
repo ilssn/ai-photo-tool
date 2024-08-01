@@ -50,7 +50,7 @@ interface PropsData {
 }
 
 function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, onGenerateText, src, setSrc, status, setStatus, result, setResult, videoSrc, setVideoSrc, textContent, setTextContent, }: PropsData) {
-  const [maxWidth, setMaxWidth] = React.useState('1200px')
+  const [maxWidth, setMaxWidth] = React.useState('900px')
   const [errorInfo, setErrorInfo] = React.useState<any>(null)
   const [payload, setPayload] = React.useState<any>(PHOTO_DEFAULT_PAYLOAD)
   const [originSrc, setOriginSrc] = React.useState('')
@@ -256,7 +256,7 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
         else if (scale > 1) {
           setMaxWidth('700px')
         } else {
-          setMaxWidth('1200px')
+          setMaxWidth('900px')
         }
       }
     }
@@ -289,7 +289,7 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
         else if (scale > 1) {
           setMaxWidth('700px')
         } else {
-          setMaxWidth('1200px')
+          setMaxWidth('900px')
         }
       }
     }

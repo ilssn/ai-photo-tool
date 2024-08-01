@@ -14,7 +14,7 @@ export function Navbar() {
   // const { token } = useConfigStore();
 
   return (
-    <header className="w-full flex fixed bg-background/95 z-20 justify-between items-center px-2 py-1 shadow-sm md:shadow-none md:py-1">
+    <header className="w-full h-12 flex fixed bg-background/95 z-20 justify-between items-center px-2 py-1 shadow-sm md:shadow-none md:py-1">
       <div className="flex items-center gap-4 p-2">
         {/* <div className="md:hidden flex items-center">
           <InfoModal />
@@ -24,9 +24,9 @@ export function Navbar() {
         <Image width={32} height={32} alt="logo" src="/logo.png"></Image>
         <p className='font-medium text-xl md:text-2xl'>AI图片工具箱</p>
       </div> */}
-      <div className="flex items-center gap-4 p-2">
+      {/* <div className="flex items-center gap-4 p-2">
         <InfoModal />
-      </div>
+      </div> */}
     </header>
   );
 }

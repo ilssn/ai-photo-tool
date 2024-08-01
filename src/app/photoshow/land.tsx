@@ -5,6 +5,7 @@ import Image from 'next/image'
 import UploadFile from '@/components/upload-file'
 import ToolCard from '@/components/tool-card'
 import { HistoryModal } from "@/components/history-modal";
+import { InfoModal } from '@/components/info-modal'
 import { Tool } from '@/types'
 import Locale from '@/locales'
 
@@ -59,9 +60,9 @@ function PhotoshowLand({ setTool, file, setFile }: PropsData) {
         </ul>
       </section>
 
-      <div className='fixed top-3 right-12 z-[999]'>
+      <div className='fixed top-3 right-3 z-50 space-x-2'>
         <HistoryModal setTool={setTool} setFile={setFile} />
-
+        <InfoModal />
       </div>
 
     </div>
