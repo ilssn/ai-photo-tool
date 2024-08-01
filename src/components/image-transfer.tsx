@@ -105,11 +105,12 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
           url = payload.canvas.toDataURL()
         }
       }
+      const local = await ImageManager.localizeImage(url) as string
       // const file = await ImageManager.imageToFile(local) as File
       // const src = await onUploadImage(file)
-      setResult(url)
+      setResult(local)
       // if (!result) return
-      const res = await onGenerateVideo(url, { type: tool.name, payload, })
+      const res = await onGenerateVideo(local, { type: tool.name, payload, })
       // 设置媒体
       // setMedia('video')
       // 设置结果
@@ -187,7 +188,7 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
   // 继续任务
   const handleContinue = async () => {
     // 设置媒体
-    // setMedia('image')
+    setMedia('image')
     // 清空视频
     setVideoSrc('')
     // 清空文字
