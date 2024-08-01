@@ -66,6 +66,8 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
     try {
       // 清除结果
       setTextContent('')
+      // 设置媒体
+      setMedia('text')
       // 设置状态
       setStatus('Pending')
       const res = await onGenerateText(src, { type: tool.name, payload, })
@@ -87,8 +89,11 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
   // 生成视频
   const handleCreateVideo = async () => {
     try {
+      // 清除结果
       setVideoSrc('')
+      // 设置媒体
       setMedia('video')
+      // 设置状态
       setStatus('Pending')
       // 设置图片
       let url = src
@@ -106,7 +111,7 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
       // if (!result) return
       const res = await onGenerateVideo(url, { type: tool.name, payload, })
       // 设置媒体
-      setMedia('video')
+      // setMedia('video')
       // 设置结果
       setVideoSrc(res.videoSrc)
       // 设置状态
@@ -142,16 +147,18 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
       // 设置状态
       setStatus('Pending')
       const res = await onGenerateImage(src, { type: tool.name, payload, })
+      // 载入图片
+      const local = await ImageManager.localizeImage(res.imageSrc) as string
       // 缓存原图
       setOriginSrc(src)
-      // 高阶图片容器缓存原图，因为图片尺寸有变化
+      // 因为图片尺寸有变化
       if (['crop-img', 'uncrop', 'filter-img'].includes(tool.name)) {
-        setSrc(res.imageSrc)
+        setSrc(local)
       }
       // 重置视频
-      setVideoSrc('')
+      // setVideoSrc('')
       // 设置结果
-      setResult(res.imageSrc)
+      setResult(local)
       // 设置状态
       setStatus('Done')
     } catch (error) {
@@ -163,11 +170,12 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
   // 重试任务
   const handleRestart = async () => {
     // 设置媒体
-    setMedia('image')
+    // setMedia('image')
     // 重置视频
-    setVideoSrc('')
+    // setVideoSrc('')
     // 恢复原图
     setSrc(originSrc)
+    // 清除结果
     setResult('')
     if (['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img'].includes(tool.name)) {
       setStatus('Ready')
@@ -179,13 +187,16 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
   // 继续任务
   const handleContinue = async () => {
     // 设置媒体
-    setMedia('image')
+    // setMedia('image')
     // 清空视频
     setVideoSrc('')
-    //
+    // 清空文字
+    setTextContent('')
+    // 重置图片
     if (result) {
-      const localSrc = await ImageManager.localizeImage(result) as string
-      setSrc(localSrc)
+      // const localSrc = await ImageManager.localizeImage(result) as string
+      // setSrc(localSrc)
+      setSrc(result)
       setResult('')
     }
     setStatus('Ready')
@@ -718,9 +729,15 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
         <div className="w-full justify-center items-center">
           {status === 'Pending' &&
             <div className='text-center text-sm text-violet-500'>
-              <p>
-                {media === 'image' ? '图片生成中，请耐心等待1-5分钟~' : '视频生成中，请耐心等待3-10分钟～'}
-              </p>
+              {media === 'image' &&
+                <p>图片生成中，请耐心等待1-5分钟~</p>
+              }
+              {media === 'video' &&
+                <p>视频生成中，请耐心等待3-10分钟~</p>
+              }
+              {media === 'text' &&
+                <p>文字提取中，请耐心等待1-5分钟~</p>
+              }
             </div>
           }
 
@@ -839,7 +856,7 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
               </Button>
               :
               <Button variant="default" disabled={status !== 'Ready' || !isReady} onClick={handleReadText}>
-                开始
+                提取
               </Button>
             }
           </div>
