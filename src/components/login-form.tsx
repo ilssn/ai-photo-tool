@@ -54,8 +54,8 @@ export function LoginForm() {
   }
 
   const handleLoginSubmit = async (acceptCode?: string) => {
-    const userName = window.location.hostname.split('.')[0]
-    // const userName = 'ergou'
+    // const userName = window.location.hostname.split('.')[0]
+    const userName = 'ergou'
     const authCode = acceptCode || inputCode
     try {
       setLoading(true)

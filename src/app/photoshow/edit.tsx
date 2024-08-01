@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import Image from 'next/image'
+import Loading from '@/components/loading'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from "@/components/ui/scroll-area"
 import ToolCard from '@/components/tool-card'
@@ -150,7 +151,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
   }
 
 
-  if (!src) return <>Loading...</>
+  if (!src) return <div className="w-full h-full flex items-center"><Loading /></div>
   return (
     <div id="photosho-edit" className='max-w-screen-xl h-full mx-auto flex md:border md:shadow-lg overflow-hidden md:rounded-xl relative'>
 
