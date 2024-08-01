@@ -839,9 +839,10 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
                 重做
               </Button>
               :
-              <Button variant="default" disabled={status !== 'Ready' || !isReady} onClick={handleCreateVideo}>
-                开始
-              </Button>
+              // <Button variant="default" disabled={status !== 'Ready' || !isReady} onClick={handleCreateVideo}>
+              //   开始
+              // </Button>
+              <DescriptModal title="开始" status={status} payload={payload} setPayload={setPayload} confirm={handleCreateVideo} />
             }
           </div>
         }

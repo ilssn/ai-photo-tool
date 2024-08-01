@@ -25,7 +25,7 @@ interface PropsData {
 export function DescriptModal({ title, status, payload, setPayload, placeHolder, confirm }: PropsData) {
 
   const handleInputChange = ({ target }: any) => {
-    setPayload((preData: any) => { return { ...preData, descript: target.value } });
+    setPayload((preData: any) => { return { ...preData, prompt: target.value } });
   }
 
   return (
@@ -42,7 +42,7 @@ export function DescriptModal({ title, status, payload, setPayload, placeHolder,
           </AlertDialogDescription>
           <div className='w-full flex justify-center px-1 md:px-0'>
             <Input
-              value={payload.descript}
+              value={payload.prompt}
               type="text"
               placeholder={placeHolder ? placeHolder : '请输入视频要求'}
               onChange={handleInputChange}
