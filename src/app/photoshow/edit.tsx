@@ -161,7 +161,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
   return (
     <div id="photosho-edit" className={
       twMerge(
-        'w-full h-full relative flex',
+        'w-full h-full relative flex overflow-hidden',
         !expand
           ? 'max-w-screen-xl mx-auto md:border md:shadow-lg md:rounded-xl'
           : 'fixed left-0 top-0 w-full h-full z-50'
