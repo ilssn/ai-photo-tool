@@ -154,7 +154,7 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
       // 缓存原图
       setOriginSrc(src)
       // 因为图片尺寸有变化
-      if (['crop-img', 'uncrop', 'filter-img'].includes(tool.name)) {
+      if (['crop-img', 'uncrop', 'filter-img', 'character'].includes(tool.name)) {
         setSrc(local)
       }
       // 重置视频
@@ -179,7 +179,7 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
     setSrc(originSrc)
     // 清除结果
     setResult('')
-    if (['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img'].includes(tool.name)) {
+    if (['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img', 'character'].includes(tool.name)) {
       setStatus('Ready')
     } else {
       handleStart()
@@ -372,7 +372,7 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
             <MediaBar media={media} setMedia={setMedia} />
           } */}
           {/* 基础通用图片容器 */}
-          {!['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img', 'create-video', 'read-text'].includes(tool.name) &&
+          {!['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img', 'create-video', 'read-text', 'character'].includes(tool.name) &&
             <div className={twMerge("w-full relative rounded-xl", media === 'image' ? 'mosaic-bg' : '')}>
               {media === 'image' &&
                 <img width={200} height={200} alt="image" src={src}
@@ -416,7 +416,7 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
           }
 
           {/* 高级定制图片容器1a, 尺寸改变 */}
-          {['crop-img'].includes(tool.name) &&
+          {['crop-img', 'character'].includes(tool.name) &&
             <div className={twMerge("w-full relative rounded-xl", media === 'image' ? 'mosaic-bg' : '')}>
               {media === 'image' &&
                 <img width={200} height={200} alt="image" src={src}
@@ -870,7 +870,9 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
           <div className="">
             {result || status === 'Error'
               ?
-              <CharacterModal title="更换滤镜" status={status} payload={payload} setPayload={setPayload} confirm={handleStart} />
+              <Button variant="default" onClick={handleRestart}>
+                重做
+              </Button>
               :
               <CharacterModal title="选择滤镜" status={status} payload={payload} setPayload={setPayload} confirm={handleStart} />
             }

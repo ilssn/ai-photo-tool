@@ -315,7 +315,6 @@ export async function generateImage(src: string, action: Action): Promise<Result
         res = await lightImage(file, prompt, light)
         // result.imageSrc = res.output
       }
-
       if (action.type === 'crop-img') {
         const canvas = action.payload.canvas
         res = await cropImage(src, canvas)
@@ -334,6 +333,12 @@ export async function generateImage(src: string, action: Action): Promise<Result
       if (action.type === 'filter-img') {
         const canvas = action.payload.canvas
         res = await filterImage(src, canvas)
+      }
+      if (action.type === 'character') {
+        const file = await ImageManager.imageToFile(src) as File
+        const online = await uploadImage(file)
+        const character = action.payload.character
+        res = await characterImage(online, character)
       }
 
 
@@ -996,6 +1001,46 @@ export async function filterImage(src: string, canvas: any): Promise<any> {
     }
     resolve(result)
   })
+}
+
+// 增加滤镜
+export async function characterImage(src: string, character: string): Promise<any> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const token = getToken()
+      const raw = JSON.stringify({
+        "inputs": [
+          src,
+          character,
+        ]
+      });
+      const res = await fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/glifapi/cly8jkms00001nknu1ycwjjiz`, {
+        method: 'POST',
+        body: raw,
+        headers: {
+          // "Content-Type": "multipart/form-data",
+          // 'Accept': 'image/*',
+          'Accept': 'application/json',
+          "Authorization": `Bearer ${token}`,
+        },
+      })
+      if (!res.ok) {
+        throw await res.json()
+      }
+
+      const data = await res.json()
+
+      if (data.outputFull) {
+        resolve({ output: data.outputFull.value })
+      } else {
+        reject('Recreate image faild!')
+      }
+
+    } catch (error) {
+      reject(error)
+    }
+  })
+
 }
 
 
