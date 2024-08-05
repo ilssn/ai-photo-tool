@@ -25,4 +25,5 @@ export const PHOTO_DEFAULT_PAYLOAD = {
   model: 'luma',
   ratio: 0,
   label: '1:1',
+  character: 'Haute Couture Illustration',
 }

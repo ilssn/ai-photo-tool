@@ -12,6 +12,7 @@ import LightBar from './light-bar'
 import RatioBar from './ratio-bar'
 import AlertBar from './alert-bar'
 import { DescriptModal } from './descript-modal'
+import { CharacterModal } from './character-modal'
 import { ConfirmModal } from './confirm-modal'
 import { updTask } from '@/app/photoshow/query'
 import { Tool, Status } from '@/types'
@@ -816,7 +817,7 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
         </div>
 
         {/* 图片 */}
-        {!['read-text', 'create-video',].includes(tool.name) &&
+        {!['read-text', 'create-video', 'character'].includes(tool.name) &&
           <div className="">
             {result || status === 'Error'
               ?
@@ -860,6 +861,18 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
               <Button variant="default" disabled={status !== 'Ready' || !isReady} onClick={handleReadText}>
                 提取
               </Button>
+            }
+          </div>
+        }
+
+        {/* 滤镜 */}
+        {['character',].includes(tool.name) &&
+          <div className="">
+            {result || status === 'Error'
+              ?
+              <CharacterModal title="更换滤镜" status={status} payload={payload} setPayload={setPayload} confirm={handleStart} />
+              :
+              <CharacterModal title="选择滤镜" status={status} payload={payload} setPayload={setPayload} confirm={handleStart} />
             }
           </div>
         }
