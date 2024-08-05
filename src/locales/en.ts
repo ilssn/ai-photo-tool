@@ -176,6 +176,13 @@ const en: LocaleType = {
           title: '视频生成',
           desc: '根据图片内容生成视频',
         },
+        {
+          id: 17,
+          name: 'character',
+          icon: 'character',
+          title: '人物滤镜',
+          desc: '为图片增加风格滤镜',
+        },
 
       ]
     }
