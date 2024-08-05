@@ -368,7 +368,7 @@ export const fetchTask = async (id: string) => {
   const token = getToken();
   return new Promise((resolve, reject) => {
     let counter = 0;
-    const maxAttempts = 30;
+    const maxAttempts = 60;
 
     const fetchApi = (id: string) => {
       fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/302/task/${id}/fetch
