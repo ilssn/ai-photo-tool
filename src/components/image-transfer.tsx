@@ -11,6 +11,7 @@ import DescriptBar from './descript-bar'
 import LightBar from './light-bar'
 import RatioBar from './ratio-bar'
 import SizeBar from './size-bar'
+import UploadImages from './upload-images'
 import AlertBar from './alert-bar'
 import { DescriptModal } from './descript-modal'
 import { CharacterModal } from './character-modal'
@@ -852,8 +853,9 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
                 </div>
               }
               {tool.name === 'stitching' && !result &&
-                <div className="w-full mt-2">
+                <div className="w-full flex flex-col space-y-2 items-center justify-center">
                   <SizeBar payload={payload} setPayload={setPayload} />
+                  <UploadImages payload={payload} setPayload={setPayload} />
                 </div>
               }
             </div>

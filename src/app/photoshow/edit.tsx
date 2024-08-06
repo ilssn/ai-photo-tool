@@ -77,6 +77,8 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
         action.payload.canvas = null
         // remove mask
         action.payload.mask = null
+        // remove images
+        action.payload.images = null
         // save history
         const historys = getHistorys() as History[]
         const history: History = {

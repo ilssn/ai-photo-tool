@@ -26,4 +26,5 @@ export const PHOTO_DEFAULT_PAYLOAD = {
   ratio: 0,
   label: '1:1',
   character: 'Haute Couture Illustration',
+  images: [],
 }

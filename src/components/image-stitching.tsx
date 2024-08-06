@@ -139,22 +139,25 @@ const ImageStitching: React.FC<ImageEditorProps> = ({ src, setSrc, payload, setP
               <Transformer ref={trRef} visible={imageDrag} />
             </Layer>
 
-            <Layer>
-              <Img
-                image={image}
-                ref={imageRef1}
-                draggable
-                rotation={rotation}
-                scaleX={scale / 2}
-                scaleY={scale / 2}
-                onDragEnd={handleTransform1}
-                onTransformEnd={handleTransform1}
-                x={50}
-                y={25}
-                align="center"
-              />
-              <Transformer ref={trRef1} visible={imageDrag} />
-            </Layer>
+            {payload.images[0] &&
+              <Layer>
+                <Img
+                  image={payload.images[0]}
+                  ref={imageRef1}
+                  draggable
+                  rotation={rotation}
+                  scaleX={scale / 2}
+                  scaleY={scale / 2}
+                  onDragEnd={handleTransform1}
+                  onTransformEnd={handleTransform1}
+                  x={50}
+                  y={25}
+                  align="center"
+                />
+                <Transformer ref={trRef1} visible={imageDrag} />
+              </Layer>
+
+            }
 
           </Stage>
 
