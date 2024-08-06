@@ -73,19 +73,21 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
     return new Promise(async (resolve, reject) => {
       try {
         const res = await generateImage(src, action)
+        // copy
         // remove canvas
         action.payload.canvas = null
         // remove mask
         action.payload.mask = null
         // remove images
-        action.payload.images = null
+        const actionData = JSON.parse(JSON.stringify(action))
+        actionData.payload.images = []
         // save history
         const historys = getHistorys() as History[]
         const history: History = {
           id: Date.now(),
           tool: tool,
           src: '',
-          action,
+          action: actionData,
           result: res.imageSrc,
           base64: '',
           video: '',

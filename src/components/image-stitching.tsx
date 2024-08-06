@@ -15,9 +15,23 @@ const ImageStitching: React.FC<ImageEditorProps> = ({ src, setSrc, payload, setP
   const containerRef = useRef<any>(null);
   const stageRef = useRef<any>(null);
   const imageRef = useRef<any>(null);
-  const imageRef1 = useRef<any>(null);
   const trRef = useRef<any>(null);
+  // 1
+  const imageRef1 = useRef<any>(null);
   const trRef1 = useRef<any>(null);
+  // 2
+  const imageRef2 = useRef<any>(null);
+  const trRef2 = useRef<any>(null);
+  // 3
+  const imageRef3 = useRef<any>(null);
+  const trRef3 = useRef<any>(null);
+  // 4
+  const imageRef4 = useRef<any>(null);
+  const trRef4 = useRef<any>(null);
+  // 5
+  const imageRef5 = useRef<any>(null);
+  const trRef5 = useRef<any>(null);
+
 
   const [scale, setScale] = useState(0.2);
   const [rotation, setRotation] = useState(0);
@@ -33,10 +47,39 @@ const ImageStitching: React.FC<ImageEditorProps> = ({ src, setSrc, payload, setP
     }
   };
 
+  // 1
   const handleTransform1 = () => {
     if (trRef1.current && imageRef1.current) {
       trRef1.current.setNode(imageRef1.current);
       trRef1.current.getLayer()?.batchDraw();
+    }
+  };
+  // 2
+  const handleTransform2 = () => {
+    if (trRef2.current && imageRef2.current) {
+      trRef2.current.setNode(imageRef2.current);
+      trRef2.current.getLayer()?.batchDraw();
+    }
+  };
+  // 3
+  const handleTransform3 = () => {
+    if (trRef3.current && imageRef3.current) {
+      trRef3.current.setNode(imageRef3.current);
+      trRef3.current.getLayer()?.batchDraw();
+    }
+  };
+  // 4
+  const handleTransform4 = () => {
+    if (trRef4.current && imageRef4.current) {
+      trRef4.current.setNode(imageRef4.current);
+      trRef4.current.getLayer()?.batchDraw();
+    }
+  };
+  // 5
+  const handleTransform5 = () => {
+    if (trRef5.current && imageRef4.current) {
+      trRef5.current.setNode(imageRef4.current);
+      trRef5.current.getLayer()?.batchDraw();
     }
   };
 
@@ -139,6 +182,7 @@ const ImageStitching: React.FC<ImageEditorProps> = ({ src, setSrc, payload, setP
               <Transformer ref={trRef} visible={imageDrag} />
             </Layer>
 
+            {/* 1 */}
             {payload.images[0] &&
               <Layer>
                 <Img
@@ -156,8 +200,85 @@ const ImageStitching: React.FC<ImageEditorProps> = ({ src, setSrc, payload, setP
                 />
                 <Transformer ref={trRef1} visible={imageDrag} />
               </Layer>
-
             }
+            {/* 2 */}
+            {payload.images[1] &&
+              <Layer>
+                <Img
+                  image={payload.images[1]}
+                  ref={imageRef2}
+                  draggable
+                  rotation={rotation}
+                  scaleX={scale / 2}
+                  scaleY={scale / 2}
+                  onDragEnd={handleTransform2}
+                  onTransformEnd={handleTransform2}
+                  x={60}
+                  y={30}
+                  align="center"
+                />
+                <Transformer ref={trRef2} visible={imageDrag} />
+              </Layer>
+            }
+            {/* 3 */}
+            {payload.images[2] &&
+              <Layer>
+                <Img
+                  image={payload.images[2]}
+                  ref={imageRef3}
+                  draggable
+                  rotation={rotation}
+                  scaleX={scale / 2}
+                  scaleY={scale / 2}
+                  onDragEnd={handleTransform3}
+                  onTransformEnd={handleTransform3}
+                  x={70}
+                  y={35}
+                  align="center"
+                />
+                <Transformer ref={trRef3} visible={imageDrag} />
+              </Layer>
+            }
+            {/* 4 */}
+            {payload.images[3] &&
+              <Layer>
+                <Img
+                  image={payload.images[3]}
+                  ref={imageRef4}
+                  draggable
+                  rotation={rotation}
+                  scaleX={scale / 2}
+                  scaleY={scale / 2}
+                  onDragEnd={handleTransform4}
+                  onTransformEnd={handleTransform4}
+                  x={80}
+                  y={40}
+                  align="center"
+                />
+                <Transformer ref={trRef4} visible={imageDrag} />
+              </Layer>
+            }
+            {/* 5 */}
+            {payload.images[4] &&
+              <Layer>
+                <Img
+                  image={payload.images[4]}
+                  ref={imageRef5}
+                  draggable
+                  rotation={rotation}
+                  scaleX={scale / 2}
+                  scaleY={scale / 2}
+                  onDragEnd={handleTransform5}
+                  onTransformEnd={handleTransform5}
+                  x={90}
+                  y={45}
+                  align="center"
+                />
+                <Transformer ref={trRef5} visible={imageDrag} />
+              </Layer>
+            }
+
+
 
           </Stage>
 
