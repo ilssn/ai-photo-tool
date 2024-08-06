@@ -182,7 +182,7 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
     }
     // 清除结果
     setResult('')
-    if (['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img', 'character'].includes(tool.name)) {
+    if (['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img', 'character', 'stitching'].includes(tool.name)) {
       setStatus('Ready')
     } else {
       handleStart()
@@ -316,22 +316,22 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
 
   // 展示比例变化，重设容器尺寸
   React.useEffect(() => {
-    if (!payload.ratio || tool.name !== 'stitching') return
+    if (tool.name !== 'stitching') return
     setMaxWidth('10px')
       const scale = payload.ratio
-      if (scale > 1.8) {
+      if (scale < 1 / 1.8) {
         setMaxWidth('300px')
       }
-      if (scale > 1.6) {
+      if (scale < 1 / 1.6) {
         setMaxWidth('400px')
       }
-      else if (scale > 1.5) {
+      else if (scale < 1 / 1.5) {
         setMaxWidth('500px')
       }
-      else if (scale > 1.3) {
+      else if (scale < 1 / 1.3) {
         setMaxWidth('600px')
       }
-      else if (scale > 1) {
+      else if (scale < 1 / 1) {
         setMaxWidth('700px')
       } else {
         setMaxWidth('900px')
@@ -769,7 +769,7 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
             <div className={twMerge("w-full relative rounded-xl", media === 'image' ? 'mosaic-bg' : '')}>
 
               {media === 'image' &&
-                <div className={twMerge(" w-full h-full", result ? 'opacity-0' : '')}>
+                <div className={twMerge(" w-full h-full", result ? 'hidden' : '')}>
                   <ImageStitching src={src} setSrc={setSrc} payload={payload} setPayload={setPayload} />
                 </div>
               }
@@ -889,7 +889,7 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
             {result || status === 'Error'
               ?
               <Button variant="default" onClick={handleRestart}>
-                {['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img'].includes(tool.name) ? '重做' : '重试'}
+                {['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img', 'stitching'].includes(tool.name) ? '重做' : '重试'}
               </Button>
               :
               <Button variant="default" disabled={status !== 'Ready' || !isReady || media === 'video'} onClick={handleStart}>

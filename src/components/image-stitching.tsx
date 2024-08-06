@@ -50,8 +50,7 @@ const ImageStitching: React.FC<ImageEditorProps> = ({ src, setSrc, payload, setP
           if (image?.width) {
             const conWidth = Number(newWidth)
             const imgWidth = Number(image.width)
-            // const imgScale = (conWidth - 200) / imgWidth
-            const imgScale = (conWidth - 0) / imgWidth
+            const imgScale = (conWidth - 200) / imgWidth
             setScale(imgScale)
             handleTransform()
           }
@@ -74,6 +73,7 @@ const ImageStitching: React.FC<ImageEditorProps> = ({ src, setSrc, payload, setP
       setImage(img)
       if (img) {
         const ratio = img.width / img.height
+        console.log('ratio:::', ratio)
         setPayload((preData: any) => { return { ...preData, ratio } });
       }
     }
@@ -85,6 +85,7 @@ const ImageStitching: React.FC<ImageEditorProps> = ({ src, setSrc, payload, setP
     setImageDrag(false)
     setTimeout(async () => {
       const local = stageRef.current.toDataURL({ pixelRatio: 2 });
+      setPayload((preData: any) => { return { ...preData, mask: local} });
       await ImageManager.loadImage(local)
       setImageDrag(true)
       // console.log('local::', local)
@@ -128,8 +129,8 @@ const ImageStitching: React.FC<ImageEditorProps> = ({ src, setSrc, payload, setP
               scaleY={scale}
               onDragEnd={handleTransform}
               onTransformEnd={handleTransform}
-              // x={100}
-              // y={50}
+              x={100}
+              y={50}
               align="center"
             />
             <Transformer ref={trRef} visible={imageDrag} />
@@ -145,8 +146,8 @@ const ImageStitching: React.FC<ImageEditorProps> = ({ src, setSrc, payload, setP
               scaleY={scale / 2}
               onDragEnd={handleTransform1}
               onTransformEnd={handleTransform1}
-              x={100}
-              y={50}
+              x={50}
+              y={25}
               align="center"
             />
             <Transformer ref={trRef1} visible={imageDrag} />

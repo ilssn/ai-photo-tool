@@ -343,6 +343,11 @@ export async function generateImage(src: string, action: Action): Promise<Result
         const character = action.payload.character
         res = await characterImage(online, character)
       }
+      if (action.type === 'stitching') {
+        const mask = action.payload.mask
+        res = await stitchingImage(src, mask)
+      }
+
 
 
 
@@ -1045,6 +1050,20 @@ export async function characterImage(src: string, character: string): Promise<an
     }
   })
 
+}
+
+// 拼接图片
+export async function stitchingImage(src: string, mask: string): Promise<any> {
+  return new Promise(async (resolve, reject) => {
+    if (!mask) {
+      resolve({ output: src })
+      return
+    }
+    const result = {
+      output: mask
+    }
+    resolve(result)
+  })
 }
 
 
