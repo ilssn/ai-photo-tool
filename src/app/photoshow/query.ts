@@ -359,7 +359,7 @@ export async function generateImage(src: string, action: Action): Promise<Result
       }
 
       // online
-      if (!result.imageSrc.startsWith('http')) {
+      if (!result.imageSrc.startsWith('http') || !result.imageSrc.includes('photoshow')) {
         const newFile = await ImageManager.imageToFile(result.imageSrc) as File
         result.imageSrc = await uploadImage(newFile)
       }
