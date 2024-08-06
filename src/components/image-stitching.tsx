@@ -110,6 +110,10 @@ const ImageStitching: React.FC<ImageEditorProps> = ({ src, setSrc, payload, setP
     };
   }, [image, payload.ratio]);
 
+  useEffect(() => {
+    handleActionDone() 
+  }, [payload.images])
+
 
 
   useEffect(() => {

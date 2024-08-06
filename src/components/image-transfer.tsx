@@ -203,9 +203,8 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
     // 清空文字
     setTextContent('')
     // 重置图片
-    if (result && tool.name !== 'create-video') {
-      // const localSrc = await ImageManager.localizeImage(result) as string
-      // setSrc(localSrc)
+    // if (result && tool.name !== 'create-video') {
+    if (result) {
       setSrc(result)
     }
     setResult('')
