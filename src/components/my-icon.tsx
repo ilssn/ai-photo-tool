@@ -16,6 +16,8 @@ import CropImgIcon from "../icons/crop-img.svg";
 import FilterImgIcon from "../icons/filter-img.svg";
 import ReadTextIcon from "../icons/read-text.svg";
 import CreateVideoIcon from "../icons/create-video.svg";
+import CharacterIcon from "../icons/character.svg";
+import StitchingIcon from "../icons/stitching.svg";
 
 export const ToolIcon = ({ icon }: { icon: string }) => {
   switch (icon) {
@@ -51,6 +53,10 @@ export const ToolIcon = ({ icon }: { icon: string }) => {
       return <ReadTextIcon/>
     case 'create-video':
       return <CreateVideoIcon/>
+    case 'character':
+      return <CharacterIcon/>
+    case 'stitching':
+      return <StitchingIcon/>
     default:
       return <RiImageEditLine className='w-8 h-8' />
   }

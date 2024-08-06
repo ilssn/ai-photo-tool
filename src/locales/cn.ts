@@ -170,8 +170,10 @@ const cn = {
           desc: '根据图片生成文字描述',
         },
         {
+          
           id: 16,
           name: 'create-video',
+
           icon: 'create-video',
           title: '视频生成',
           desc: '根据图片内容生成视频',
@@ -182,6 +184,13 @@ const cn = {
           icon: 'character',
           title: '人物滤镜',
           desc: '为图片增加风格滤镜',
+        },
+        {
+          id: 18,
+          name: 'stitching',
+          icon: 'stitching',
+          title: '图片拼接',
+          desc: '将多张图片拼接成一张',
         },
       ]
     }

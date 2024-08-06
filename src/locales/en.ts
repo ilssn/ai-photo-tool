@@ -183,6 +183,13 @@ const en: LocaleType = {
           title: '人物滤镜',
           desc: '为图片增加风格滤镜',
         },
+        {
+          id: 18,
+          name: 'stitching',
+          icon: 'stitching',
+          title: '图片拼接',
+          desc: '将多张图片拼接成一张',
+        },
 
       ]
     }
