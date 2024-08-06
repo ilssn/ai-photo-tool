@@ -1041,8 +1041,8 @@ export async function characterImage(src: string, character: string): Promise<an
       if (data.outputFull) {
         resolve({ output: data.outputFull.value })
       } else {
-        // reject('Recreate image faild!')
-        reject(data.error)
+        reject('出错啦，可能是图片不符合规范哦！')
+        // reject(data.error)
       }
 
     } catch (error) {
