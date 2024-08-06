@@ -42,8 +42,9 @@ const ImageStitching: React.FC<ImageEditorProps> = ({ src, setSrc, payload, setP
 
   // resize
   useEffect(() => {
+    setContainerWidth(10)
     const handleResize = () => {
-      if (containerRef.current) {
+      if (containerRef.current && payload.ratio) {
         setTimeout(() => {
           const newWidth = containerRef.current.offsetWidth
           setContainerWidth(newWidth);
@@ -53,27 +54,28 @@ const ImageStitching: React.FC<ImageEditorProps> = ({ src, setSrc, payload, setP
             const imgScale = (conWidth - 200) / imgWidth
             setScale(imgScale)
             handleTransform()
+            handleActionDone()
           }
         }, 30)
       }
     };
     window.addEventListener("resize", handleResize);
     handleResize(); // 初始化时获取容器宽度
+
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, [image, payload.ratio]);
 
 
+
   useEffect(() => {
     // hook
     const img = new Image()
     img.onload = () => {
-      console.log('init::Image')
       setImage(img)
       if (img) {
         const ratio = img.width / img.height
-        console.log('ratio:::', ratio)
         setPayload((preData: any) => { return { ...preData, ratio } });
       }
     }
@@ -82,13 +84,13 @@ const ImageStitching: React.FC<ImageEditorProps> = ({ src, setSrc, payload, setP
 
 
   const handleActionDone = async () => {
+    if (!stageRef.current) return
     setImageDrag(false)
     setTimeout(async () => {
       const local = stageRef.current.toDataURL({ pixelRatio: 2 });
-      setPayload((preData: any) => { return { ...preData, mask: local} });
-      await ImageManager.loadImage(local)
+      setPayload((preData: any) => { return { ...preData, mask: local } });
       setImageDrag(true)
-      // console.log('local::', local)
+      await ImageManager.loadImage(local)
     }, 30)
   }
 
@@ -98,62 +100,65 @@ const ImageStitching: React.FC<ImageEditorProps> = ({ src, setSrc, payload, setP
   return (
     <div ref={containerRef}
       id="image-stitching"
-      className="w-full"
+      className="w-full h-full overflow-hidden"
       // onMouseEnter={() => setImageDrag(true)}
       onMouseUp={() => handleActionDone()}
       onTouchEnd={() => handleActionDone()}
     >
       <div className=" w-full relative overflow-hidden bg-white border-[1px] border-solid border-[rgba(222,222,222,1)] rounded-2xl shadow-sm">
-        <Stage
-          ref={stageRef}
-          width={Math.floor(containerWidth)}
-          height={Math.floor(containerWidth / payload.ratio)}
-          className="w-full"
-        >
+        {payload.ratio &&
+          <Stage
+            ref={stageRef}
+            width={Math.floor(containerWidth)}
+            height={Math.floor(containerWidth / payload.ratio)}
+            className="w-full"
+          >
 
-          <Layer>
-            <Rect
-              width={Math.floor(containerWidth)}
-              height={Math.floor(containerWidth / payload.ratio)}
-              fill="#ffffff"
-            />
-          </Layer>
+            <Layer>
+              <Rect
+                width={Math.floor(containerWidth)}
+                height={Math.floor(containerWidth / payload.ratio)}
+                fill="#ffffff"
+              />
+            </Layer>
 
-          <Layer>
-            <Img
-              image={image}
-              ref={imageRef}
-              draggable
-              rotation={rotation}
-              scaleX={scale}
-              scaleY={scale}
-              onDragEnd={handleTransform}
-              onTransformEnd={handleTransform}
-              x={100}
-              y={50}
-              align="center"
-            />
-            <Transformer ref={trRef} visible={imageDrag} />
-          </Layer>
+            <Layer>
+              <Img
+                image={image}
+                ref={imageRef}
+                draggable
+                rotation={rotation}
+                scaleX={scale}
+                scaleY={scale}
+                onDragEnd={handleTransform}
+                onTransformEnd={handleTransform}
+                x={100}
+                y={50}
+                align="center"
+              />
+              <Transformer ref={trRef} visible={imageDrag} />
+            </Layer>
 
-          <Layer>
-            <Img
-              image={image}
-              ref={imageRef1}
-              draggable
-              rotation={rotation}
-              scaleX={scale / 2}
-              scaleY={scale / 2}
-              onDragEnd={handleTransform1}
-              onTransformEnd={handleTransform1}
-              x={50}
-              y={25}
-              align="center"
-            />
-            <Transformer ref={trRef1} visible={imageDrag} />
-          </Layer>
+            <Layer>
+              <Img
+                image={image}
+                ref={imageRef1}
+                draggable
+                rotation={rotation}
+                scaleX={scale / 2}
+                scaleY={scale / 2}
+                onDragEnd={handleTransform1}
+                onTransformEnd={handleTransform1}
+                x={50}
+                y={25}
+                align="center"
+              />
+              <Transformer ref={trRef1} visible={imageDrag} />
+            </Layer>
 
-        </Stage>
+          </Stage>
+
+        }
 
       </div>
     </div>

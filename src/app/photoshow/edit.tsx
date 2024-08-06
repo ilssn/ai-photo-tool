@@ -242,7 +242,7 @@ function PhotoshowEdit({ tool, setTool, file, setFile }: PropsData) {
               </div>
             </div>
 
-            <div className="absolute right-4">
+            <div className="absolute right-4 hidden md:block">
               {!expand
                 ?
                 <div className='text-xl text-slate-500 cursor-pointer opacity-60 hover:opacity-100 hover:text-primary hover:scale-110'>

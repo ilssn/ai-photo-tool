@@ -10,6 +10,7 @@ import PromptBar from './prompt-bar'
 import DescriptBar from './descript-bar'
 import LightBar from './light-bar'
 import RatioBar from './ratio-bar'
+import SizeBar from './size-bar'
 import AlertBar from './alert-bar'
 import { DescriptModal } from './descript-modal'
 import { CharacterModal } from './character-modal'
@@ -20,7 +21,7 @@ import { PHOTO_DEFAULT_PAYLOAD } from '@/constants'
 import ImageManager from '@/utils/Image'
 import { ImageEditor } from './image-editor'
 import ImageUncropper from './Image-uncropper'
-import ImageStitching from './image-stitching'
+// import ImageStitching from './image-stitching'
 import MediaBar from './media-bar'
 import VideoPlayer from './video-player'
 import MdContent from './md-content'
@@ -28,6 +29,9 @@ import MdContent from './md-content'
 // use dynamic import to fixed the canvas require error on next14
 import dynamic from 'next/dynamic'
 const ImageMask = dynamic(() => import('./Image-mask'), {
+  ssr: false,
+})
+const ImageStitching= dynamic(() => import('./image-stitching'), {
   ssr: false,
 })
 
@@ -835,7 +839,6 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
               }
               {tool.name === 'replace-bg' &&
                 <div className="w-full flex flex-col space-y-2">
-                  {/* <LightBar payload={payload} setPayload={setPayload} /> */}
                   <PromptBar
                     payload={payload}
                     setPayload={setPayload}
@@ -846,6 +849,11 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
               {tool.name === 'create-video' && !videoSrc &&
                 <div className="w-full mt-2">
                   <RatioBar payload={payload} setPayload={setPayload} />
+                </div>
+              }
+              {tool.name === 'stitching' && !result &&
+                <div className="w-full mt-2">
+                  <SizeBar payload={payload} setPayload={setPayload} />
                 </div>
               }
             </div>
