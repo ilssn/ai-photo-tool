@@ -20,6 +20,7 @@ import { PHOTO_DEFAULT_PAYLOAD } from '@/constants'
 import ImageManager from '@/utils/Image'
 import { ImageEditor } from './image-editor'
 import ImageUncropper from './Image-uncropper'
+import ImageStitching from './image-stitching'
 import MediaBar from './media-bar'
 import VideoPlayer from './video-player'
 import MdContent from './md-content'
@@ -313,6 +314,31 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
     }
   }, [result])
 
+  // 展示比例变化，重设容器尺寸
+  React.useEffect(() => {
+    if (!payload.ratio || tool.name !== 'stitching') return
+    setMaxWidth('10px')
+      const scale = payload.ratio
+      if (scale > 1.8) {
+        setMaxWidth('300px')
+      }
+      if (scale > 1.6) {
+        setMaxWidth('400px')
+      }
+      else if (scale > 1.5) {
+        setMaxWidth('500px')
+      }
+      else if (scale > 1.3) {
+        setMaxWidth('600px')
+      }
+      else if (scale > 1) {
+        setMaxWidth('700px')
+      } else {
+        setMaxWidth('900px')
+      }
+
+  }, [payload.ratio])
+
   // 参数变化，校验数据
   React.useEffect(() => {
     setIsReady(true)
@@ -386,7 +412,7 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
             <MediaBar media={media} setMedia={setMedia} />
           } */}
           {/* 基础通用图片容器 */}
-          {!['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img', 'create-video', 'read-text', 'character'].includes(tool.name) &&
+          {!['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img', 'create-video', 'read-text', 'character', 'stitching'].includes(tool.name) &&
             <div className={twMerge("w-full relative rounded-xl", media === 'image' ? 'mosaic-bg' : '')}>
               {media === 'image' &&
                 <img width={200} height={200} alt="image" src={src}
@@ -735,6 +761,33 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
                 <div className={twMerge('scan w-full absolute top-0 transition-all duration-200 pointer-events-none',)}>
                 </div>
               }
+            </div>
+          }
+
+          {/* 高级定制图片容器1a, 尺寸改变 */}
+          {['stitching'].includes(tool.name) &&
+            <div className={twMerge("w-full relative rounded-xl", media === 'image' ? 'mosaic-bg' : '')}>
+
+              {media === 'image' &&
+                <div className={twMerge(" w-full h-full", result ? 'opacity-0' : '')}>
+                  <ImageStitching src={src} setSrc={setSrc} payload={payload} setPayload={setPayload} />
+                </div>
+              }
+
+              {result && media === 'image' &&
+                <div className='w-full'>
+                  <img width={200} height={200} alt="image" src={result} className={
+                    twMerge('w-full h-auto m-auto, rounded-xl')}
+                  >
+                  </img>
+                </div>
+              }
+
+              {status === 'Pending' &&
+                <div className={twMerge('scan w-full absolute top-0 transition-all duration-200 pointer-events-none',)}>
+                </div>
+              }
+
             </div>
           }
 

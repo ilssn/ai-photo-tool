@@ -232,7 +232,7 @@ export default class ImageManager {
     }
   }
 
-  static resetSizeCanvas = async (originCanvas: any, size: {width: number, height: number}) => {
+  static resetSizeCanvas = async (originCanvas: any, size: { width: number, height: number }) => {
     return new Promise((resolve) => {
       const originUrl = originCanvas.toDataURL('image/png')
       const originImage = new Image()
@@ -256,5 +256,10 @@ export default class ImageManager {
     })
   }
 
+  // 加载图片
+  static loadImage = async (src: string) => {
+    const img = new Image()
+    img.src = src
+  }
 
 }
