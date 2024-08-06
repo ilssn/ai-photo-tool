@@ -3,13 +3,15 @@ import { CropperRef, Cropper } from 'react-mobile-cropper';
 import 'react-mobile-cropper/dist/style.css'
 
 interface PropsData {
+    initRatio?: number
     src: string
     setSrc: (src: string) => void
     payload: any,
     setPayload: (data: any) => void
 }
 
-const ImageCropper = ({ src, setSrc, payload, setPayload }: PropsData) => {
+const ImageCropper = ({ initRatio, src, setSrc, payload, setPayload }: PropsData) => {
+    // console.log('initRatio::', initRatio)
     const cropperRef = React.useRef<any>(null);
     // const [image, setImage] = React.useState<any>(null)
     const [imageRatio, setImageRatio] = React.useState(0)

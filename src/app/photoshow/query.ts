@@ -335,7 +335,10 @@ export async function generateImage(src: string, action: Action): Promise<Result
         res = await filterImage(src, canvas)
       }
       if (action.type === 'character') {
-        const file = await ImageManager.imageToFile(src) as File
+        // const newCanvas = await ImageManager.resetSizeCanvas(action.payload.canvas, { width: 1016, height: 1016}) as any
+        // const local = newCanvas.toDataURL()
+        const local = action.payload.canvas.toDataURL()
+        const file = await ImageManager.imageToFile(local) as File
         const online = await uploadImage(file)
         const character = action.payload.character
         res = await characterImage(online, character)
@@ -1033,7 +1036,8 @@ export async function characterImage(src: string, character: string): Promise<an
       if (data.outputFull) {
         resolve({ output: data.outputFull.value })
       } else {
-        reject('Recreate image faild!')
+        // reject('Recreate image faild!')
+        reject(data.error)
       }
 
     } catch (error) {

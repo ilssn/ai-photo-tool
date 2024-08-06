@@ -176,7 +176,9 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
     // 重置视频
     // setVideoSrc('')
     // 恢复原图
-    setSrc(originSrc)
+    if (originSrc) {
+      setSrc(originSrc)
+    }
     // 清除结果
     setResult('')
     if (['crop-img', 'uncrop', 'filter-img', 'remove-obj', 'inpaint-img', 'character'].includes(tool.name)) {
@@ -203,6 +205,12 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
     setResult('')
     setStatus('Ready')
     setPayload(PHOTO_DEFAULT_PAYLOAD)
+    // hook
+    if (tool.name === 'character') {
+      setTimeout(() => {
+        setPayload((preData: any) => { return { ...preData, ratio: 1 / 1, label: '1:1' } });
+      }, 30)
+    }
     updTask({})
   }
 
@@ -213,6 +221,12 @@ function ImageTransfer({ file, tool, readRef, onGenerateImage, onGenerateVideo, 
     setTextContent('')
     setStatus('Ready')
     setPayload(PHOTO_DEFAULT_PAYLOAD)
+    // hook
+    if (tool.name === 'character') {
+      setTimeout(() => {
+        setPayload((preData: any) => { return { ...preData, ratio: 1 / 1, label: '1:1' } });
+      }, 30)
+    }
     updTask({})
   }
 
