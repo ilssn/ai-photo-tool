@@ -21,7 +21,7 @@ const models = [
     value: 'luma',
   },
   {
-    name: 'Cog',
+    name: '智谱',
     value: 'cog',
   },
 ]
