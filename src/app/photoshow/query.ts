@@ -1129,20 +1129,22 @@ export async function generateVideo(src: string, action: Action): Promise<Result
         res = await getRunwayVideo(file, prompt)
       }
 
-
-      // if array
-      // if (res.output.startsWith('[')) {
-      //   result.videoSrc = JSON.parse(res.output)[0]
-      // } else {
-      //   result.videoSrc = res.output
-      // }
-
-
-      // online
-      // if (!result.imageSrc.startsWith('http')) {
-      //   const newFile = await ImageManager.imageToFile(result.imageSrc) as File
-      //   result.imageSrc = await uploadImage(newFile)
-      // }
+      // Cog
+      if (action.payload.model === 'cog') {
+        // url
+        const file = await ImageManager.imageToFile(src) as File
+        const url = await uploadImage(file)
+        result.imageSrc = url
+        // prompt
+        let prompt = action.payload.prompt
+        if (!prompt) {
+          prompt = await aiImageToText(url, VIDEO_PROMPT)
+        }
+        if (SystemManager.containsChinese(prompt)) {
+          prompt = await aiTranslate(prompt)
+        }
+        res = await getCogVideo(url, prompt)
+      }
 
       result.videoSrc = res.output
 
@@ -1417,6 +1419,92 @@ async function fetchRunwayTask(id: string) {
     fetchApi(id);
   });
 }
+
+// 视频: Cog
+export async function getCogVideo(url: string, prompt: string): Promise<any> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let result: any = {}
+      const token = getToken()
+      const raw = JSON.stringify({
+        model: 'cogvideox',
+        prompt: prompt,
+        image_url: url,
+
+      })
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/zhipu/api/paas/v4/videos/generations`, {
+        method: 'POST',
+        body: raw,
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json;charset:utf-8;",
+        },
+      })
+      if (!res.ok) {
+        throw await res.json()
+      }
+
+      result = await res.json()
+      // save task
+      updTask(result)
+      if (result.task_status === 'SUCCESS') {
+        resolve({ output: result.video_result[0].url })
+        return
+      }
+      result = await fetchCogTask(result.id)
+      resolve(result)
+
+    } catch (error) {
+      reject(error)
+    }
+  })
+
+}
+
+// 查询: Cog
+async function fetchCogTask(id: string) {
+  const token = getToken()
+  return new Promise((resolve, reject) => {
+    let counter = 0;
+    const maxAttempts = 120;
+
+    const fetchApi = (id: string) => {
+      fetch(`${process.env.NEXT_PUBLIC_302AI_FETCH}/zhipu/api/paas/v4/async-result/${id}`, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            reject(data.error)
+            return
+          }
+          if (data.task_status === 'SUCCESS') {
+            resolve({output: data.video_result[0].url});
+          } else if (data.state === 'failed') {
+            reject('Task failed')
+          } else {
+            if (counter < maxAttempts) {
+              counter++;
+              const task = getTask()
+              if (task.id) {
+                setTimeout(() => fetchApi(id), 10000); // 每隔10秒轮询一次
+              }
+            } else {
+              reject("Max attempts reached");
+            }
+          }
+        })
+        .catch(error => {
+          reject(error);
+        });
+    };
+    fetchApi(id);
+  });
+}
+
 
 // 生成文字////////////////////
 export async function generateText(src: string, action: Action): Promise<Result> {

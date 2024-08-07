@@ -20,6 +20,10 @@ const models = [
     name: 'Luma',
     value: 'luma',
   },
+  {
+    name: 'Cog',
+    value: 'cog',
+  },
 ]
 
 const ratios = [
@@ -38,6 +42,10 @@ const ratios = [
   {
     name: '1280:768',
     value: 1280 / 768,
+  },
+  {
+    name: '3:2',
+    value: 3 / 2,
   },
   {
     name: '自定义',
@@ -59,6 +67,9 @@ function RatioBar({ payload, setPayload }: PropsData) {
     if (payload.model === 'luma') {
       setPayload((preData: any) => { return { ...preData, ratio: 0, label: '' } });
     }
+    else if (payload.model === 'cog') {
+      setPayload((preData: any) => { return { ...preData, ratio: 3 / 2, label: '3:2' } });
+    }
     else if (payload.model === 'runway') {
       setPayload((preData: any) => { return { ...preData, ratio: 1280 / 768, label: '1280:768' } });
     } else {
@@ -73,7 +84,7 @@ function RatioBar({ payload, setPayload }: PropsData) {
         {
           models.map((it, idx) =>
             <Button
-              className={twMerge('border-primary rounded-none', idx === 0 && 'rounded-l-sm', idx === 2 && 'rounded-r-sm', idx == 1 && 'border-x-0')}
+              className={twMerge('border-primary rounded-none', idx === 0 && 'rounded-l-sm', idx === models.length - 1 && 'rounded-r-sm', idx > 0 && idx < models.length - 1 && 'border-x-0')}
               variant={it.value === payload.model ? 'default' : 'outline'}
               size={'sm'}
               key={idx}
@@ -111,8 +122,20 @@ function RatioBar({ payload, setPayload }: PropsData) {
             </Button>
           )
         }
-        {payload.model === 'luma' &&
+        {(payload.model === 'cog') &&
           ratios.slice(4, 5).map((it, idx) =>
+            <Button
+              variant={it.value === payload.ratio ? 'default' : 'outline'}
+              size={'sm'}
+              key={it.name}
+              onClick={() => handleChangeRatio(it.value, it.name)}
+            >
+              {it.name}
+            </Button>
+          )
+        }
+        {(payload.model === 'luma') &&
+          ratios.slice(5, 6).map((it, idx) =>
             <Button
               variant={it.value === payload.ratio ? 'default' : 'outline'}
               size={'sm'}

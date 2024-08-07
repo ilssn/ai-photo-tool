@@ -33,7 +33,7 @@ const nextConfig = {
   },
 
   images: {
-    domains: ['file.302.ai']
+    domains: ['file.302.ai', 'file.302ai.cn']
     // remotePatterns: [
     //   {
     //     protocol: 'https',
