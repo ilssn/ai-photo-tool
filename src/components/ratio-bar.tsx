@@ -84,7 +84,7 @@ function RatioBar({ payload, setPayload }: PropsData) {
         {
           models.map((it, idx) =>
             <Button
-              className={twMerge('border-primary rounded-none', idx === 0 && 'rounded-l-sm', idx === models.length - 1 && 'rounded-r-sm', idx > 0 && idx < models.length - 1 && 'border-x-0')}
+              className={twMerge('border-primary rounded-none', idx === 0 && 'rounded-l-sm', idx === models.length - 1 && 'rounded-r-sm', idx > 0 && 'border-l-0')}
               variant={it.value === payload.model ? 'default' : 'outline'}
               size={'sm'}
               key={idx}
